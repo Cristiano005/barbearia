@@ -15,40 +15,34 @@ use App\Models\Validation;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Curso de PHP - Clube Full Stack</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <main>  
         <header>
-            <nav class="navbar navbar-light bg-primary fixed-top">
+            <nav class="navbar navbar-expand-lg navbar-light bg-primary">
                 <div class="container-fluid">
-                        <a class="navbar-brand text-light" href="index.php">Barbearia</a>
-                        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    <div class="offcanvas offcanvas-end bg-light" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title text-primary" id="offcanvasNavbarLabel">Offcanvas</h5>
-                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand text-light mx-auto" href="?page=home">Barbearia</a>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo03">
+                        <ul class="navbar-nav mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active text-dark" aria-current="page" href="<?= "views/services.php" ?>">Serviços</a>
+                                <a class="nav-link text-light active" aria-current="page" href="?page=home">Página inicial</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active text-dark" aria-current="page" href="views/contact.php">Contato</a>
+                                <a class="nav-link text-light" href="?page=contact">Contato</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="views/about.php">Sobre</a>
+                                <a href="?page=about" class="nav-link text-light">Sobre</a>
                             </li>
                         </ul>
                     </div>
                 </div>
-            </nav>
         </header>
-    <main>  
-        <?php require Validation::validarLoad(); ?>
+        <?php Validation::validarLoad(); ?>
     </main>
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
 </html>

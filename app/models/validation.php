@@ -9,7 +9,7 @@ class Validation {
         try {
             require load();
         } catch(\Exception $e) {
-            "<p> {$e->getMessage()} </p>";
+            echo "<p> {$e->getMessage()} </p>";
         }
 
     }
