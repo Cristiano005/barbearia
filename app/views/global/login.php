@@ -8,16 +8,17 @@
             <form action="/login/store" method="POST">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Digite aqui o seu e-mail" name="email">
+                    <input type="email" class="form-control border-dark" id="exampleInputEmail1" 
+                    aria-describedby="emailHelp" placeholder="Digite aqui o seu e-mail" name="email">
                     <?php echo message("email"); ?>
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Senha</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Digite aqui a sua senha" name="password">
+                    <input type="password" class="form-control border-dark" id="exampleInputPassword1" placeholder="Digite aqui a sua senha" name="password">
                     <?php echo message("password"); ?>
                 </div>
+                <button class="btn btn-primary w-100">Logar</button>
             </form>
-            <a href="/login/store" class="btn btn-primary">Logar</a>
         </div>
     </div>
 </section>

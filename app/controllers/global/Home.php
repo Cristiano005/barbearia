@@ -10,12 +10,12 @@ class Home implements ControllerInterface {
     public string $template = "global/template.php";
     public string $view = "global/home.php";
 
-    public function index(array $args) {
-        $this->data = ["title" => "barbearia"];
+    public function index() {
+        $this->data = ["title" => "Barbearia"];
     }
 
     public function edit(array $args) {
-
+        dd($args);
     }
 
     public function show(array $args) {

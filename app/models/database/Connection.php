@@ -10,7 +10,7 @@ class Connection {
     public static function connection() {
 
         try {
-            return new PDO("mysql:host=127.0.0.1; dbname=barber_shop", "root", "erisvaldo123");
+            return new PDO("mysql:host=127.0.0.1; dbname=barber_shop; charset=utf8", "root", "erisvaldo123");
         }
 
         catch(PDOException $e) {

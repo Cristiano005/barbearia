@@ -6,8 +6,6 @@ use app\classes\messages\Message;
 
 class Validate {
 
-    private static array $message = []; // Tem que estar estático aqui para poder chamar com o self...
-
     public static function validate(array $fields): array|bool {
 
         $filteredValues = [];
@@ -19,11 +17,12 @@ class Validate {
 
                 case "s":
 
-                    if(empty(strlen(request()[$field]))) {
+                    if(empty((request()[$field]))) {
+    
                         $messages[$field] = "Empty {$field} field";
                     } 
 
-                    $filteredValues[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_FULL_SPECIAL_CHARS);     
+                    $filteredValues[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);    
 
                 break;
 
@@ -34,6 +33,12 @@ class Validate {
                      }
 
                      $filteredValues[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_EMAIL);
+
+                break;
+
+                case "d": 
+
+                    $filteredValues[$field] = date("Y-m-d H:i:s", strtotime(filter_input(INPUT_POST, $field, FILTER_SANITIZE_FULL_SPECIAL_CHARS)));
 
                 break;
             }

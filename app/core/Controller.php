@@ -26,7 +26,7 @@ class Controller {
             $controller = CONTROLLER_DEFAULT;
         }
 
-        $controller = $namespaceAndController.$controller; 
+        $controller = $namespaceAndController.ucfirst($controller); 
 
         if(class_exists($controller)) {
            return $controller; 

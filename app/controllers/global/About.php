@@ -7,15 +7,19 @@ use app\classes\messages\Flash;
 class About {
 
     public array $data = [];
-    public string $view;
+    public string $template = "global/template.php";
+    public string $view = "global/about.php";
 
     public function index() {
 
         $this->data = [
-            "title" => "Sobre",
+            "title" => "My History - Barbearia",
         ];
 
-        $this->view = "about.php";
+    }
+
+    public function edit($args) {
+        dd($args);
     }
 
 }

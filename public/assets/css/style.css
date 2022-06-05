@@ -1,12 +1,5 @@
-body {
-    background-color: #e6e7e9;
-    height: 100vh;
-}
-
-main {
-    height: 100%;
-}
-
-#haircut {
-    width: 100%;
+@media (max-width: 1200px) {
+    #location-image {
+        display: none;
+    }
 }

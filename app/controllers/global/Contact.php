@@ -3,6 +3,7 @@
 namespace app\controllers\global;
 
 use app\classes\messages\Message;
+use app\classes\validation\Validate;
 use app\models\Delete;
 use app\models\Insert;
 use app\models\Select;
@@ -15,34 +16,45 @@ class Contact {
 
     public function index() {
 
-        $payments = (new Select)->findAll("payment", "name");
-        $hourly = (new Select)->findAll("hourly", "hours");
-
         $this->data = [
             "title" => "Contato",
-            "payments" => $payments,
-            "hourly" => $hourly
+            "payments" => (new Select)->findAll("payment", "name"),
+            "hourly" => (new Select)->findAll("hourly")
         ];
 
     }
 
     public function store() {
+
+        if(request() == $_GET) {
+            return redirect("/contact"); // verifica se o usuário realmentre preencheu os campos do formulário...
+        }
      
         $fields = [
             "name" => "s",
             "payment" => "s",
-            "hourly" => "s"
+            "hourly" => "d"
         ];
 
-        if((new Insert)->Insert("clients",$fields)) {
-            redirect("/destroy/{$fields}");
+        $validated = Validate::validate($fields);
+
+        if(!$validated) {
+            return redirect("/contact");
         }
 
+        if((new Insert)->Insert("clients",$validated)) {
+
+            $id = (new Select)->findBy("hourly", "id", 'hours', $validated['hourly']);
+    
+            return redirect("/contact/destroy/{$id}");
+        }
     }
 
-    public function destroy(array $fields) {
+    public function destroy(array $id) {
 
-        (new Delete)->delete("hourly", "hours", $fields['hourly']);
+        dd($id);
+
+        (new Delete)->delete("hourly", "id", $id);
 
         Message::set("register", "Seu horário está agendado, volte sempre");
         return redirect("/contact");
