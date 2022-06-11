@@ -9,5 +9,5 @@ define("CONTROLLER_PATH", "app/controllers/");
 
 // 
 
-define("CONTROLLER_DEFAULT", "Home");
+define("CONTROLLER_DEFAULT", "home");
 define("CONTROLLER_FOLDER_DEFAULT", "global");

@@ -2,8 +2,6 @@
 
 namespace app\controllers\global;
 
-use app\classes\messages\Flash;
-
 class Services {
 
     public array $data = [];
@@ -20,8 +18,4 @@ class Services {
         $this->view = "global/services.php";
     }
 
-    public function store() {
-
-    }
-    
 }

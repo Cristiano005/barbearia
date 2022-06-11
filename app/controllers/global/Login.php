@@ -33,7 +33,7 @@ class Login {
             redirect("/login");
         }
 
-        $findBy = (new Select)->findBy("admin", "name,email,password", "email", $validated->email); 
+        $findBy = (new Select)->findBy("admin", "name,email,password", "email", $validated['email']); 
     
         if(!$findBy) {
             Message::set("email", "Seu e-mail não existe");
@@ -42,7 +42,7 @@ class Login {
 
         $data = (object) $findBy[0]; 
     
-        if($data->password !== $validated->password) {
+        if($data->password !== $validated['password']) {
             Message::set("password", "Sua senha está incorreta");
             return redirect("/login");
         }
@@ -52,10 +52,10 @@ class Login {
             "email" => $data->email
         ];
      
-        return redirect("/admin");
+        return redirect("/admin/home/clients");
     }
 
-    public function destroy(array $args) {
+    public function destroy() {
 
         session_destroy();
 

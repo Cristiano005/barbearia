@@ -1,18 +1,18 @@
 <section class="bg-light m-3 p-4">
       <div class="d-flex justify-content-between align-items-center">
-            <h1 class="text-primary"> Contato </h1>
+            <h1 class="text-primary"> Contact </h1>
             <?php echo message("register", "success"); ?>
       </div>
       <div class="card w-10 shadow-lg">
             <div class="card-body">
                   <form action="/contact/store" method="POST" class="row g-3">
                         <div class="col-md-6">
-                              <label for="inputText4" class="form-label">Nome</label>
+                              <label for="inputText4" class="form-label">Name</label>
                               <input type="text" name="name" class="form-control border-dark" id="inputTextl4" placeholder="Por favor, não digite apelidos">
                               <?php echo message("name"); ?>
                         </div>
                         <div class="col-md-4">
-                              <label for="inputState" class="form-label">Horários</label>
+                              <label for="inputState" class="form-label">Hourly</label>
                               <select id="inputState" class="form-select border-dark" name="hourly">
                                     <!--  o name tem que estar no 'select'. -->
                                     <?php foreach ($hourly as $hour) : ?>
@@ -21,7 +21,7 @@
                               </select>
                         </div>
                         <div class="col-md-4">
-                              <label for="inputState" class="form-label">Formas de pagamento</label>
+                              <label for="inputState" class="form-label">Payment methods</label>
                               <select id="inputState" class="form-select border-dark" name="payment">
                                     <?php foreach ($payments as $payment) : ?>
                                           <option> <?= $payment['name'] ?> </option>
@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-12">
                               <button class="btn btn-primary">
-                                    Confirmar agendamento
+                                    Confirm Scheduling
                                     <img class="bg-light rounded p-1" src="assets/img/person-check.svg" alt="Icone de confirmação">
                               </a>
                         </div>
@@ -40,7 +40,7 @@
 </section>
 <section class="bg-light shadow-lg d-flex flex-column p-4">
       <div class="title">
-            <h3 class="text-primary text-center"> Nossa localização: </h3>
+            <h3 class="text-primary text-center"> Our location: </h3>
       </div>
       <div class="d-flex justify-content-center" id="location">
             <img src="assets/img/location.jpg" class="img-fluid rounded" id="location-image" alt="Imagem de uma pessoas segurando o celular com o maps">

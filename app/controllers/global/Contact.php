@@ -45,15 +45,15 @@ class Contact {
         if((new Insert)->Insert("clients",$validated)) {
 
             $id = (new Select)->findBy("hourly", "id", 'hours', $validated['hourly']);
-    
-            return redirect("/contact/destroy/{$id}");
+
+            return redirect("/contact/destroy/{$id[0]['id']}");
         }
     }
 
     public function destroy(array $id) {
 
-        dd($id);
-
+        $id = implode($id);
+        
         (new Delete)->delete("hourly", "id", $id);
 
         Message::set("register", "Seu horário está agendado, volte sempre");

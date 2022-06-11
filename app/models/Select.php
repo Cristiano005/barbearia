@@ -40,4 +40,20 @@ class Select extends Model {
 
     }
 
+    public function findLimit(string $table, int $offset, string $fields = '*', int $limit = 5) {
+
+        try {
+
+            $findLimit = $this->connection->prepare("SELECT {$fields} FROM {$table} LIMIT $offset, $limit");
+            $findLimit->execute();
+         
+            return $findLimit->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        catch(PDOException $e) {
+            echo "<span> {$e->getMessage()} </span>";
+        }
+      
+    }
+
 }

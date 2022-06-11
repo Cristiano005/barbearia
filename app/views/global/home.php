@@ -11,20 +11,20 @@
         <div class="row">
             <div class="col">
                 <figure class="figure m-0">
-                    <img src="assets/img/haircut.jpg" class="figure-img img-fluid rounded" alt="...">
-                    <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
+                    <img src="assets/img/haircut.jpg" class="figure-img img-fluid rounded" alt="Imagem de um barbeiro cortando cabelo">
+                    <figcaption class="figure-caption text-end">We offer haircuts.</figcaption>
                 </figure>
             </div>
             <div class="col">
                 <figure class="figure">
-                    <img src="assets/img/haircut3.jpg" class="figure-img img-fluid rounded" alt="...">
-                    <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
+                    <img src="assets/img/haircut3.jpg" class="figure-img img-fluid rounded" alt="Imagem de um barbeiro fazendo a barba de um cliente">
+                    <figcaption class="figure-caption text-end">We offer beard trimming.</figcaption>
                 </figure>
             </div>
             <div class="col">
                 <figure class="figure">
-                    <img src="assets/img/haircut4.jpg" class="figure-img img-fluid rounded" alt="...">
-                    <figcaption class="figure-caption text-end">A caption for the above image.</figcaption>
+                    <img src="assets/img/haircut4.jpg" class="figure-img img-fluid rounded" alt="Imagem de um barbeiro fazendo a barba de um cliente">
+                    <figcaption class="figure-caption">We offer the best environment for you to leave your hair and beard in that style.</figcaption>
                 </figure>
             </div>
         </div>

@@ -11,9 +11,9 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-light bg-primary fixed-top">
+        <nav class="navbar navbar-light bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand text-light" href="/admin">Painel Administrativo</a>
+                <a class="navbar-brand text-light" href="/admin/home/clients">Painel Admin.</a>
                 <button class="navbar-toggler bg-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -30,9 +30,14 @@
                             <li class="nav-item">
                                 <p class="fw-bold" type="submit"> E-mail: <?= $email ?> </p>
                             </li>
+                            <li>
+                                <p class="fw-bold"> Permissões:  
+                                    <a class="text-decoration-none" href="/admin/register"> Cadastrar novos dados? </a> 
+                                </p>
+                            </li>
                             <li class="nav-item">
                                <p>
-                                    <a href="/admin" class="text-primary text-decoration-none pe-auto"> 
+                                    <a href="/admin/redeem" class="text-primary text-decoration-none pe-auto"> 
                                         Deseja trocar de senha? 
                                     </a>
                                </p> 
@@ -43,6 +48,9 @@
             </div>
         </nav>
     </header>
+    <main>
+        <?php require_once VIEW_PATH.$this->controller->view; ?>
+    </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

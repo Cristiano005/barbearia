@@ -3,6 +3,7 @@
 namespace app\classes\validation;
 
 use app\classes\messages\Message;
+use app\core\Method;
 
 class Validate {
 

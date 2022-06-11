@@ -37,7 +37,7 @@
         <?php require_once VIEW_PATH . $this->controller->view; ?>
         <footer class="bg-primary p-4 d-flex justify-content-around align-items-center flex-wrap">
                 <span class="bg-light text-light rounded"> 
-                    <a href="/login" class="text-decoration-none p-4"> É admin? </a>     
+                    <a href="/login" class="text-decoration-none p-4"> Is admin? </a>     
                 </span>
                 <span class="text-light"> Erisvaldo - Todos os direitos reservados  </span>
             <div class="bg-light rounded p-1">
