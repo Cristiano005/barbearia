@@ -11,13 +11,13 @@ use app\models\Select;
 class Contact {
 
     public array $data = [];
-    public string $template = 'global/template.php';
-    public string $view = 'global/contact.php';
+    public string $view = 'global/contact.latte';
 
     public function index() {
 
         $this->data = [
             "title" => "Contato",
+            "thereIsFooter" => true,
             "payments" => (new Select)->findAll("payment", "name"),
             "hourly" => (new Select)->findAll("hourly")
         ];

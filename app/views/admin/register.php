@@ -1,3 +1,7 @@
+{extends 'template.php'}
+
+{block main}
+
 <section>
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="text-primary"> Contact </h1>
@@ -31,3 +35,5 @@
         </div>
     </div>
 </section>
+
+{/block}

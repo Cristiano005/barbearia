@@ -9,8 +9,7 @@ use app\models\Select;
 class Login {
 
     public array $data = [];
-    public string $template = "/global/template.php";
-    public string $view = "/global/login.php";
+    public string $view = "/global/login.latte";
 
     public function index() {
 

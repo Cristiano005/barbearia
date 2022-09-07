@@ -1,5 +1,23 @@
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
     #location-image {
         display: none;
     }
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+#map {
+    height: 20rem;
+}
+
+#contact {
+    width: 40rem;
+}
+
+textarea {
+    resize: none;
 }

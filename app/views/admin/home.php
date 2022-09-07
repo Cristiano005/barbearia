@@ -1,3 +1,7 @@
+{extends 'template.php'}
+
+{block main}
+
 <section class=" bg-light d-flex flex-column align-items-center p-3" id="tableClients">
     <h2> Visualize todos os seus dados</h2>
     <div id="search">
@@ -60,5 +64,5 @@
         </nav>
     </div>
 </section>
-<section>
-</section>
+
+{/block}

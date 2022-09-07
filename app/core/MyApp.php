@@ -30,16 +30,12 @@ class MyApp {
                 throw new Exception("the 'data' attribute is required");
             }
 
-            if(!isset($this->controller->template)) {
-                throw new Exception("the 'template' attribute is required");
-            }
-    
             if(!array_key_exists('title', $this->controller->data)) {
                 throw new Exception("the title propried is required");
             }
     
-            extract($this->controller->data);
-            require_once "../app/views/{$this->controller->template}";
+            $latte = new \Latte\Engine;
+            $latte->render("../app/views/{$this->controller->view}", $this->controller->data);
         }
     }
 

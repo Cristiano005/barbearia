@@ -10,7 +10,9 @@ class Connection {
     public static function connection() {
 
         try {
-            return new PDO("mysql:host=127.0.0.1; dbname=barbearia; charset=utf8", "root", "");
+            return new PDO("mysql:host={$_ENV['DATABASE_HOST']}; 
+                            dbname={$_ENV['DATABASE_NAME']}; charset={$_ENV['DATABASE_CHARSET']}", 
+                            $_ENV['DATABASE_ROOT'], $_ENV['DATABASE_PASSWORD']);
         } 
         
         catch(PDOException $e) {

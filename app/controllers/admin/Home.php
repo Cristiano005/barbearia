@@ -2,14 +2,11 @@
 
 namespace app\controllers\admin;
 
-use app\core\Method;
-use app\core\Parameter;
 use app\models\Select;
 
 class Home {
 
     public array $data;
-    public string $template = "admin/template.php";
     public string $view = "admin/home.php";
 
     public function index(array $args) {

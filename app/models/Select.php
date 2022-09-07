@@ -15,7 +15,7 @@ class Select extends Model {
             $findBy->bindValue(":{$field}", $value);
             $findBy->execute();
 
-            return $findBy->fetchAll(PDO::FETCH_ASSOC);
+            return $findBy->fetchAll(PDO::FETCH_OBJ);
        }
 
        catch(PDOException $e) {
@@ -31,7 +31,7 @@ class Select extends Model {
             $findAll = $this->connection->query("SELECT {$fields} FROM {$table}");
             $findAll->execute();
 
-            return $findAll->fetchAll(PDO::FETCH_ASSOC);
+            return $findAll->fetchAll(PDO::FETCH_OBJ);
         }
 
         catch(PDOException $e) {
@@ -47,7 +47,7 @@ class Select extends Model {
             $findLimit = $this->connection->prepare("SELECT {$fields} FROM {$table} LIMIT $offset, $limit");
             $findLimit->execute();
          
-            return $findLimit->fetchAll(PDO::FETCH_ASSOC);
+            return $findLimit->fetchAll(PDO::FETCH_OBJ);
         }
 
         catch(PDOException $e) {

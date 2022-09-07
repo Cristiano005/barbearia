@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use app\models\database\Connection;
+use app\database\Connection;
 
 abstract class Model {
 

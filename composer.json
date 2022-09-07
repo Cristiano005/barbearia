@@ -7,7 +7,9 @@
         }
     ],
     "require": {
-        "symfony/var-dumper": "^6.1"
+        "symfony/var-dumper": "^6.1",
+        "latte/latte": "^3.0",
+        "vlucas/phpdotenv": "^5.4"
     },
     "autoload": {
         "psr-4": {
