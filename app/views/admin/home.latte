@@ -1,0 +1,70 @@
+{extends 'template.latte'}
+
+{block main}
+
+<section class="bg-light d-flex flex-column align-items-center p-5" id="tableClients">
+    {include '../components/modal-delete.latte'}
+    {include '../components/modal-edit.latte'}
+    <h2> See every your data. </h2>
+    <div id="search">
+        <div class="input-group mb-3">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Options</button>
+            <ul class="dropdown-menu">
+                <div class="d-flex flex-column align-items-center justify-content-around">
+                    <li><a class="btn btn-outline-dark" href="/admin/home/clients">Clients</a></li>
+                    <li><a class="btn btn-outline-dark m-3" href="/admin/home/hourly">Hourly</a></li>
+                    <li><a class="btn btn-outline-dark" href="/admin/home/payment">Payment</a></li>
+                </div>
+            </ul>
+            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+        </div>
+    </div>
+    <div class="container-fluid table-responsive">
+        <table class="table table-bordered border-light table-dark table-hover text-center" id="table">
+            <thead>
+                {foreach $limit[0] as $field => $value}
+                    <th> {$field} </th>
+                {/foreach}
+                <th colspan="2"> Actions </th>
+            </thead>
+            <tbody class="table-group-divider">
+                {foreach $limit as $index => $values}
+                    <tr>
+                        {foreach $values as $field => $value}
+                            <td> {$value} </td>    
+                        {/foreach}
+                        <td>
+                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-edit"> 
+                                Edit 
+                            </button>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete"> 
+                                Delete 
+                            </button>
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li n:if="$_GET['page'] > 1" class="page-item">
+                    <a class="page-link" href="?page={$pagination - 1}">Previous</a>
+                </li>
+                {for $i = 1; $i <= ceil(count($data) / 5); $i++}
+                    <li class="page-item">
+                        <a class="page-link link-primary bg-dark text-light" href="?page={$i}">
+                            {$i}
+                        </a>
+                    </li>
+                {/for}
+                <li n:if="$_GET['page'] < 15 && count($data) > 5" class="page-item">
+                    <a class="page-link" href="?page={$pagination + 1}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
+
+{/block}

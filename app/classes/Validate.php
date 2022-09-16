@@ -1,9 +1,6 @@
 <?php
 
-namespace app\classes\validation;
-
-use app\classes\messages\Message;
-use app\core\Method;
+namespace app\classes;
 
 class Validate {
 
@@ -23,16 +20,20 @@ class Validate {
                         $messages[$field] = "Empty {$field} field";
                     } 
 
-                    $filteredValues[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);    
+                    $filteredValues[$field] = strip_tags(filter_input(INPUT_POST, $field));    
 
                 break;
 
                 case "e":
-                    
+
                      if(!filter_var(request()[$field], FILTER_VALIDATE_EMAIL)) {
                         $messages[$field] = "Invalid {$field}";
                      }
 
+                     if(empty((request()[$field]))) {
+                        $messages[$field] = "Empty {$field} field";
+                     }
+                    
                      $filteredValues[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_EMAIL);
 
                 break;
@@ -47,23 +48,18 @@ class Validate {
         }
 
         if(!empty($messages)) {
+            
+            return [
+                'isValidated' => false,
+                'values'=> $messages,
+            ]; 
 
-            foreach($messages as $field => $messages) {
-                Message::set("{$field}", $messages);
-            }
-
-            foreach($filteredValues as $field => $value) {
-
-                if(!empty($value)) {
-                    PersistedData::set($field, $value);
-                }
-
-            }
-          
-            return false;
         }
 
-        return $filteredValues;
+        return [
+            'isValidated' => true,
+            'values' => $filteredValues,
+        ];
     }
 
 }

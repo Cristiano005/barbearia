@@ -11,6 +11,7 @@ class About {
 
         $this->data = [
             "title" => "About - Barbearia",
+            "thereIsFooter" => true,
         ];
 
     }

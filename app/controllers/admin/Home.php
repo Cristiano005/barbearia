@@ -7,7 +7,7 @@ use app\models\Select;
 class Home {
 
     public array $data;
-    public string $view = "admin/home.php";
+    public string $view = "admin/home.latte";
 
     public function index(array $args) {
 
@@ -18,10 +18,6 @@ class Home {
             "data" => array_values((new Select)->findAll($args[0])),
         ];
 
-    }
-
-    public function edit(array $args) {
-        dd($args);
     }
 
     public function update() {

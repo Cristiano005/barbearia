@@ -1,1 +1,19 @@
 Arrumar erro quando coloca uma "/" depois de services e as imagens param de aparecer...
+Feature nova para mostrar senha --> realizada
+Trabalhar com o Mailtrap mesmo para envio de e-mails e tratar acentuação.
+Terminar página about, home e services (agendamento)
+Começar a fazer o painel administrativo
+
+Parei na parte de validação com Js da página contato 
+
+Atualizado: parei na parte de sevices, no fgorms para agendar horário
+
+// Tarefas do dia 17/09/22
+
+Terminar a parte de subir imagem para perfil e deixar o máximo seguro possível.
+Começar a
+
+// Possíveis ideias de melhoria para o projeto
+
+Começar a trabalhar com o carbon para mexer com datas.
+Criar uma tabela para horário e data.
