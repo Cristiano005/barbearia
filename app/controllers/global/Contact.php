@@ -2,11 +2,11 @@
 
 namespace app\controllers\global;
 
-use app\classes\Email;
+use app\classes\EmailToContact;
 use app\classes\Validate;
-use app\models\Select;
+use app\controllers\Controller;
 
-class Contact {
+class Contact extends Controller {
 
     public array $data = [];
     public string $view = 'global/contact.latte';
@@ -16,15 +16,13 @@ class Contact {
         $this->data = [
             "title" => "Contact",
             "thereIsFooter" => true,
-            "payments" => (new Select)->findAll("payment", "name"),
-            "hourly" => (new Select)->findAll("hourly")
+            "payments" => $this->select->findAll("payment", "name"),
+            "hourly" => $this->select->findAll("hourly")
         ];
 
     }
 
     public function store() {
-
-        $send = new Email;
 
         $form = [
             'name' => 's',
@@ -34,7 +32,7 @@ class Contact {
         ];
 
         $validated = Validate::validate($form);
-        
+
         if(!$validated['validated']) {
             echo json_encode($validated['values']);
             return;

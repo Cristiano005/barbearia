@@ -11,7 +11,9 @@
         "latte/latte": "^3.0",
         "vlucas/phpdotenv": "^5.4",
         "phpmailer/phpmailer": "^6.6",
-        "tracy/tracy": "^2.9"
+        "tracy/tracy": "^2.9",
+        "intervention/image": "^2.7",
+        "fakerphp/faker": "^1.20"
     },
     "autoload": {
         "psr-4": {

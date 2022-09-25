@@ -2,11 +2,12 @@
 
 namespace app\controllers\global;
 
-// use app\classes\messages\Message;
+use app\classes\EmailToRedefinePassword;
 use app\classes\Validate;
-use app\models\Select;
+use app\controllers\Controller;
+use DateTime;
 
-class Login {
+class Login Extends Controller {
 
     public array $data = [];
     public string $view = "global/login.latte";
@@ -33,7 +34,7 @@ class Login {
             redirect("/login");
         }
         
-        $findBy = (new Select)->findBy("admin", "name,email,password", "email", $validated['values']['email']); 
+        $findBy = $this->select->findBy("admin", "id,name,email,password", "email", $validated['values']['email']); 
     
         if(!$findBy) {
             // Message::set("email", "Seu e-mail não existe");
@@ -48,11 +49,42 @@ class Login {
         }
 
         $_SESSION['admin'] = [
+            "id" => $data->id,
             "name" => $data->name,
             "email" => $data->email
         ];
      
         return redirect("/admin/home/clients");
+    }
+
+    public function update() {
+
+        $form = [
+            'email' => 'e',
+        ];
+
+        $validated = Validate::validate($form);
+
+        $findBy = $this->select->findBy("admin", "id,name,email,password", "email", $validated['values']['email'])[0];
+
+        if(!$findBy) {
+            dd('This email is not registered in our database');
+        }
+
+        $token = md5(uniqid());
+
+        $date = new DateTime();
+        $date->modify('+1 day');
+
+        $deleteOldSolicitation = $this->delete->delete('reset', 'user_id', $findBy->id);
+
+        $email = new EmailToRedefinePassword();
+
+        $email->from('barbershop@gmail.com', 'Barbearia');
+        $email->to($findBy->email, $findBy->name);
+        $email->content($token);
+
+        $email->send();
     }
 
     public function destroy() {

@@ -10,7 +10,8 @@ class Register {
     public function index() {
 
         $this->data = [
-            "title" => "Cadastree novos dados"
+            "title" => "Register a new admin",
+            "thereIsNavbar" => false,
         ];
 
     }

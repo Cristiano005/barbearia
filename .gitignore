@@ -2,5 +2,5 @@ vendor
 .env
 package-lock.json
 composer.lock
-todo.todo
+annotations.todo
 node_modules

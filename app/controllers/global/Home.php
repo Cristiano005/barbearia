@@ -2,9 +2,7 @@
 
 namespace app\controllers\global;
 
-use app\interfaces\ControllerInterface;
-
-class Home implements ControllerInterface {
+class Home {
 
     public array $data = []; 
     public string $view = "global/home.latte";
@@ -16,26 +14,6 @@ class Home implements ControllerInterface {
             "thereIsFooter" => false,
         ];
 
-    }
-
-    public function edit(array $args) {
-        dd($args);
-    }
-
-    public function show(array $args) {
-        
-    }
-    
-    public function update(array $args) {
-        
-    }
-
-    public function store() {
-        
-    }
-
-    public function destroy(array $args) {
-        
     }
 
 }

@@ -114,3 +114,15 @@ if (divMap) {
 //   myInput.focus()
 
 // })
+
+// import  Dropzone  from "dropzone";
+
+// Dropzone.autoDiscover = false
+
+// document.querySelector('#file').addEventListener('click', (event) => {
+
+    
+
+//     console.log(document.querySelector('#file').value)
+
+// })

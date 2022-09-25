@@ -6,12 +6,12 @@ use PDOException;
 
 class Delete extends Model {
 
-    public function delete(string $table, string $field, string $value) {
+    public function delete(string $table, string $where, string $value) {
 
         try {
 
-            $delete = $this->connection->prepare("DELETE FROM {$table} WHERE {$field} = :{$field}");
-            $delete->bindValue(":{$field}", $value);
+            $delete = $this->connection->prepare("DELETE FROM {$table} WHERE {$where} = :{$where}");
+            $delete->bindValue(":{$where}", $value);
 
             return $delete->execute();
         }
