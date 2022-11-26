@@ -2,39 +2,40 @@
 
 {block main}
 
-<section>
-   
+<section class="p-3">
      <div id="content" class="d-flex justify-content-evenly flex-wrap animate__animated animate__fadeInDown">
         <div class="w-50 mb-4">
-            <img class="mw-100 rounded" src="/assets/img/admin.jpg" alt="">
+            <img class="mw-100 rounded" src="/assets/img/admin.jpg" alt="A image">
         </div>
         <div id="login" class="p-2 d-flex flex-column align-items-center justify-content-center">
-            <h4 class="card-title text-center mb-4">Register new Admin</h4>
-                <form action="/login/store" method="POST">
-                    <label for="exampleInputEmail1" class="form-label">Name</label>
+            <h4 class="card-title text-center mb-4">Register new admin</h4>
+                <form action="/admin/register/store" method="POST">
+                    <label for="exampleInputText1" class="form-label">Name</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" class="form-control border-dark" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your E-mail" name="email">
+                        <input type="text" class="form-control border-dark" id="exampleInputText1" 
+                        aria-describedby="textHelp" placeholder="A name" name="name">
                     </div>
                     <label for="exampleInputEmail1" class="form-label">E-mail</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" class="form-control border-dark" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your E-mail" name="email">
+                        <input type="email" class="form-control border-dark" id="exampleInputEmail1" 
+                        aria-describedby="emailHelp" placeholder="An e-mail" name="email">
                     </div>
                     <label for="exampleInputPassword1" class="form-label">Password</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-eye-slash" id="disabledPassword"></i>
                         </span>
-                        <input type="password" class="form-control border-dark" id="exampleInputPassword1" placeholder="Your password" name="password">
+                        <input type="password" class="form-control border-dark" id="exampleInputPassword1" 
+                        placeholder="A password" name="password">
                     </div>
                     <button class="btn btn-dark btn-outline-secondary text-light w-100">
                         Register 
-                        <i class="fa-solid fa-right-to-bracket"></i> 
                     </button>
                 </form>
         </div>   

@@ -2,7 +2,9 @@
 
 namespace app\controllers\global;
 
-class Services {
+use app\controllers\Controller;
+
+class Services extends Controller {
 
     public array $data = [];
     public string $view;
@@ -10,8 +12,10 @@ class Services {
     public function index() {
 
         $this->data = [
-            "title" => "Serviços",
+            "title" => "Services",
             "thereIsFooter" => true,
+            "hourly" => $this->select->findAll('hourly', 'hours'),
+            "payments" => $this->select->findAll('payment', 'name'),
         ];
 
         $this->view = "global/services.latte";

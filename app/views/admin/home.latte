@@ -17,7 +17,8 @@
                     <li><a class="btn btn-outline-dark" href="/admin/home/payment">Payment</a></li>
                 </div>
             </ul>
-            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+            <input type="search" class="form-control" aria-label="Text input with dropdown button"
+            placeholder="Search by name" id="searchData">
         </div>
     </div>
     <div class="container-fluid table-responsive">
@@ -35,7 +36,8 @@
                             <td> {$value} </td>    
                         {/foreach}
                         <td>
-                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-edit"> 
+                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" 
+                            id="btn-edit" data-bs-target="#modal-edit" n:attr="value => $values->id ?? ''"> 
                                 Edit 
                             </button>
                         </td>

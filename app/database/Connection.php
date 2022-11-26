@@ -11,7 +11,7 @@ class Connection {
 
         try {
             return new PDO("mysql:host={$_ENV['DATABASE_HOST']}; 
-                            dbname={$_ENV['DATABASE_NAME']}; charset={$_ENV['DATABASE_CHARSET']}", 
+                            dbname={$_ENV['DATABASE_NAME']}", 
                             $_ENV['DATABASE_ROOT'], $_ENV['DATABASE_PASSWORD']);
         } 
         

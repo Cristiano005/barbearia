@@ -24,10 +24,9 @@ class MyApp {
 
     public function view() {
         
-        if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    
+        if($_SERVER['REQUEST_METHOD'] === 'GET' && !isAjax()) {
             if(!isset($this->controller->data)) {
-                throw new Exception("the 'data' attribute is required");
+                new Exception("the 'data' attribute is required");
             }
 
             if(!array_key_exists('title', $this->controller->data)) {

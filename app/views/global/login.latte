@@ -2,7 +2,7 @@
 
 {block main}
 
-    <section class="p-4 mt-5">
+    <section class="p-3">
         {include '../components/modal-forgot-password.latte'}
         <div id="content" class="d-flex justify-content-evenly flex-wrap animate__animated animate__fadeInDown">
             <div class="w-50 mb-4">
@@ -10,25 +10,28 @@
             </div>
             <div id="login" class="p-2 d-flex flex-column align-items-center justify-content-center">
                 <h4 class="card-title text-center mb-4">Login - Admin</h4>
-                <form action="/login/store" method="POST">
-                    <label for="exampleInputEmail1" class="form-label">E-mail</label>
+                <form action="/login/store" method="post">
+                    <label for="exampleInputEmail1" class="form-label" id="label-email">Email</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" class="form-control border-dark" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Your E-mail" name="email">
+                        <input type="email" class="form-control border-dark email" id="exampleInputEmail1" 
+                        aria-describedby="emailHelp" placeholder="Your E-mail" name="email" value="{$emailRemember}">
                     </div>
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <label for="exampleInputPassword1" class="form-label" id="label-password">Password</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-eye-slash" id="disabledPassword"></i>
                         </span>
-                        <input type="password" class="form-control border-dark" id="exampleInputPassword1" placeholder="Your password" name="password">
+                        <input type="password" class="form-control border-dark password" 
+                        id="exampleInputPassword1" placeholder="Your password" name="password">
                     </div>
-                    <div class="d-flex justify-content-between mt-3 mb-3">
+                    <div class="d-flex justify-content-between justify-content-center flex-wrap mt-3 mb-3">
                         <div class="d-flex align-items-center">
-                            <input class="form-check-input mt-0" id="checkbox" type="checkbox" aria-label="Checkbox for following text input">
-                            <label for="checkbox" class="mx-2"> Keep connected </label>
+                            <input class="form-check-input mt-0" id="remember" type="checkbox" 
+                            aria-label="Checkbox for following text input" name="remember">
+                            <label for="remember" class="mx-2"> Remember </label>
                         </div>
                         <div id="forgot-password">
                             <a class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#modal-delete"> Forgot password </a>

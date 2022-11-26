@@ -89,7 +89,6 @@ class UploadImage {
             @unlink($file['name']);
             return true;
         }
-
-        return false;
+        
     }
 }

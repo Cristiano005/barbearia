@@ -16,7 +16,7 @@
     <header>
        {include '../components/header.latte'}
     </header>
-    <main> 
+    <main n:class="$existClassInMain ? main-specify"> 
         {block main}{/block}
     </main>
     <footer n:if="$thereIsFooter" class="bg-dark p-4 d-flex justify-content-around align-items-center flex-wrap">
@@ -25,8 +25,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a274ff346d.js" crossorigin="anonymous"></script>
     <script src="assets/libraries/leaflet.js"></script>
-     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    <script type="module" src="http://localhost:5173/app.js"></script>
 </body>
 
 </html>
