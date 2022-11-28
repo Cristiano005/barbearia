@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {$title} </title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 
 <body>
@@ -54,7 +54,7 @@
                                 <span class="fw-bold text-dark"> Actions </span>
                             </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item link-dark" href="/admin/register">Register new admin</a></li>
+                                    <li><a class="dropdown-item link-dark" href="/admin/home/create">Register new admin</a></li>
                                     <li><a class="dropdown-item" href="#">Redefine password</a></li>
                                 </ul>
                             </li>
@@ -73,7 +73,6 @@
     <main n:class="$existClassInMain ? main-specify">
         {block main}{/block}
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a274ff346d.js" crossorigin="anonymous"></script>
     <script type="module" src="http://localhost:5173/@vite/client"></script>
     <script type="module" src="http://localhost:5173/app.js"></script>

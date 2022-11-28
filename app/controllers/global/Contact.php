@@ -35,7 +35,7 @@ class Contact extends Controller {
 
         if(!$validated['validated']) {
             echo json_encode($validated['values']);
-            return;
+            die;
         }
 
         // if($send->send($validated['values'])) {

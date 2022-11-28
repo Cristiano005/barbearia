@@ -34,21 +34,21 @@ class Login Extends Controller {
     
         if(!$validated["isValidated"]) {
             echo json_encode($validated["values"]);
-            return;
+            die;
         } 
     
         $findBy = $this->select->findBy("admin", "id,name,email,password", "email", $validated["values"]["email"]); 
         
         if(!$findBy) {
             echo json_encode([array_keys($fields)[0] => "E-mail not found"]);
-            return;
+            die;
         }
     
         $data = (object) $findBy[0]; 
         
         if(!password_verify($validated["values"]["password"], $data->password)) {
             echo json_encode([array_keys($fields)[1] => "Password incorrect"]);
-            return;
+            die;
         }
        
         $_SESSION["admin"] = [
@@ -62,6 +62,7 @@ class Login Extends Controller {
         }
       
         echo json_encode("success"); 
+        die;
     }
 
     public function update() {

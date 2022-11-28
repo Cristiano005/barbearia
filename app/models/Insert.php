@@ -6,21 +6,41 @@ use PDOException;
 
 class Insert extends Model {
 
-    public function insert(string $table, array $fields) {
+    public function insert(string $table, array|object $data) {
 
         try {
-            
-            $insert = $this->connection->prepare("INSERT INTO {$table} (name, payment, hourly) VALUES(:name, :payment, :hourly) ");
 
-            foreach($fields as $field => $value) {
-                $insert->bindValue(":{$field}", "{$value}");
+            $query = "INSERT INTO {$table} (";
+            $values = "VALUES (";
+
+            foreach ($data as $key => $value) {
+                $query .= "$key,";   
+                $values .= ":{$key},";  
             }
-            
+
+            $query = rtrim($query, ',');
+            $values = rtrim($values, ',');
+
+            $query .= ") ";
+            $values .= ")";
+
+            $insert = $this->connection->prepare($query.$values);
+
+            foreach ($data as $key => $value) {
+
+                if($key == 'password') {
+                    $insert->bindValue(":$key", password_hash($value, PASSWORD_DEFAULT));
+                } else {
+                    $insert->bindValue(":$key", $value);
+                }
+
+            }
+
             return $insert->execute();
         }
 
         catch(PDOException $e) {
-            echo "<span> {$e->getMessage()} </span>";
+            echo "{$e->getMessage()}, in line: {$e->getLine()}";
         }
 
     }

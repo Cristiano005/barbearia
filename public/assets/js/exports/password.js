@@ -10,7 +10,7 @@ export default function showOrHide(changeVisiblePassword, inputPassword) {
                 inputPassword.type = 'password'
                 changeVisiblePassword.className = 'fa-solid fa-eye-slash'
             }
-            // Quando colocamos um return no JS, ele mata o processo? Pergntar depois ao Alexandre...
+        
         })
     }
 }

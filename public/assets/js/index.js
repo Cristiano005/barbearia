@@ -14,7 +14,7 @@ const name = document.querySelector('form #name')
 
 showOrHide(changeVisiblePassword, inputPassword)
 viewMap(divMap)
-// validateLogin(formLogin, callAxios)
+validateLogin(formLogin, callAxios)
 search(searchInput)
 
 for (const btnEdit of btnsEdit) {

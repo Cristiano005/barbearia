@@ -4,6 +4,7 @@ namespace app\controllers\admin;
 
 use app\classes\UploadImage;
 use app\controllers\Controller;
+use app\classes\Validate;
 
 class Home extends Controller {
 
@@ -41,14 +42,63 @@ class Home extends Controller {
 
     }
 
+    public function store() {
+
+        $fields = [
+            "name" => "s",
+            "email" => "e",
+            "password" => "s"
+        ];
+
+        $validated = Validate::validate($fields);
+
+        if(!$validated["isValidated"]) {
+            echo json_encode($validated["values"]);
+            die;
+        } 
+    
+        $existName = $this->select->findBy("admin", "name", "name", $validated["values"]["name"]);
+        $existEmail = $this->select->findBy("admin", "email", "email", $validated["values"]["email"]);
+
+        if($existName) {
+            echo json_encode("Sorry, but this name already exist");
+            die;
+        }
+
+        if($existEmail) {
+            echo json_encode("Sorry, but this email already exist");
+            die;
+        }
+
+        $validated['values']['password'] = password_hash($validated['values']['password'], PASSWORD_BCRYPT);
+
+        // $insert = $this->insert->insert('clients', )
+
+        echo json_encode('success');
+        die;
+    }
+
     public function show(array $args) {
 
         if(empty($args[0]) || !in_array($args[0], $this->tables)) {
             $args[0] = 'clients';
         }
 
-        
-        echo json_encode($this->select->findBy($args[0], "name,payment,hourly", "id", $_GET['id']));
+        $findBy = $this->select->findBy($args[0], "name,payment,date,schedule", "id", $_GET['id']);
+
+        echo json_encode($findBy);
+        die;
+    }
+
+    public function create() {
+
+        $this->view = "admin/register.latte";
+
+        $this->data = [
+            "title" => "Register a new admin",
+            "thereIsNavbar" => false,
+            "existClassInMain" => true,
+        ];
     }
 
     public function update(array $args) {
@@ -63,7 +113,7 @@ class Home extends Controller {
         }
 
         $image->delete($file);
-        $image->folder('assets/img/admin');
+        $image->folder('assets/img/profile_admin');
         $image->rename($file);
 
         $upload = $image->upload($temp);
