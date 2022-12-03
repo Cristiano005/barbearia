@@ -25,7 +25,7 @@
                         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Profile</h5>
                         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
-                    <form action="update/{$admin->id}" method="post" enctype="multipart/form-data">
+                    <form action="/admin/Image/update/{$admin->id}" method="post" enctype="multipart/form-data">
                         <div class="d-flex flex-column align-items-center">
                             <label for="file" class="form-label">
                                 {if $admin->photo}
@@ -35,7 +35,7 @@
                                 {/if}
                             </label>
                             <input class="form-control" name="file" type="file" id="file" hidden accept="image/jpeg, image/png, image/jpg">
-                            <button type="submit" class="btn btn-light btn-outline-dark"> Change photo </button>
+                            <button type="submit" class="btn btn-light btn-outline-dark" id="change-photo"> Change photo </button>
                         </div>
                     </form>
                     <div class="offcanvas-body mt-2">

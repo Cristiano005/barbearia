@@ -1,0 +1,1 @@
+const updatePhoto = document.querySelector('#change-photo')

@@ -1,4 +1,11 @@
-export default function validateLogin(form, callAxios) {
+export default function validateFields(form, callAxios, endpoint, response = {
+    isByMessage : {
+        status: false,
+        color: '',
+        message: '',
+    },
+    redirect: ''
+}) {
 
     if (form) {
 
@@ -9,35 +16,26 @@ export default function validateLogin(form, callAxios) {
             try {
 
                 const formData = new FormData(form)
-                const { data } = await callAxios.post('/login/store', formData)
-
-                console.log(typeof data)
+                const { data } = await callAxios.post(endpoint, formData)
 
                 if (data !== 'success') {
 
                     for (const key in data) {
 
-                        console.log(data[key])
-
                         if (data.hasOwnProperty.call(data, key)) {
 
                             if (typeof data[key] === 'string') {
-
-                                console.log(key)
 
                                 const formattedField = `form .${key.toLocaleLowerCase()}`;
                                 const input = document.querySelector(formattedField);
                                 const label = document.querySelector(`#label-${key}`)
 
-                                console.log(formattedField)
-
                                 if (input.value === '') {
-                                    console.log(input)
+                                
                                     input.classList.add('border-danger')
                                     input.classList.remove('border-dark')
                                     label.textContent = data[key]
                                 } else {
-                                    console.log(input)
                                     input.classList.add('border-dark')
                                     input.classList.remove('border-danger')
                                     label.textContent = data[key].charAt(0).toLocaleUpperCase() + data[key].slice(1)
@@ -48,11 +46,27 @@ export default function validateLogin(form, callAxios) {
 
                         }
                     }
-
                 }
 
                 else {
-                    window.location.href = '/admin/home/clients'
+
+                    if(response.isByMessage.status) {
+                    
+                        const flashMessage = document.querySelector('h3#title-section')
+                        const oldValue = flashMessage.textContent
+
+                        flashMessage.textContent = response.isByMessage.message
+                        flashMessage.classList.add(`text-${response.isByMessage.color}`)
+                      
+                        setTimeout(() => {
+                            flashMessage.textContent = oldValue
+                            flashMessage.classList.remove(`text-${response.isByMessage.color}`)
+                        }, 5000);
+
+                    } else {
+                        window.location.href = response.redirect                    
+                    }
+
                 }
 
             } catch (error) {

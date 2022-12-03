@@ -18,13 +18,13 @@ class UploadImage {
 
     public function validation($file) {
 
-        if(!isset($file) || empty($file)) {
+        if(empty($file['name'])) {
             echo json_encode('Please, selected a image.');
             return false;
         }
 
         if($file['size'] > 2097152) {
-            echo json_encode('Limit maximum of 2MB reach)ed.');
+            echo json_encode('Limit maximum of 2MB reached.');
             return false;
         }
 
@@ -33,7 +33,7 @@ class UploadImage {
             return false;
         }
 
-        
+        echo json_encode('succes');
         return true;
     }
 

@@ -24,6 +24,9 @@ class Insert extends Model {
             $query .= ") ";
             $values .= ")";
 
+            // echo json_encode($query);
+            // die;
+
             $insert = $this->connection->prepare($query.$values);
 
             foreach ($data as $key => $value) {
@@ -35,6 +38,8 @@ class Insert extends Model {
                 }
 
             }
+
+
 
             return $insert->execute();
         }

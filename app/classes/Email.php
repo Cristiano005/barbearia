@@ -28,3 +28,12 @@ abstract class Email {
  
     abstract function send();
 }
+
+
+        // <<<HTML
+
+        //     <p>Olá {$this->nameTo}</p>
+        //     <p>Você pediu para redefinir sua senha do site tal, clique no link abaixo</p>
+        //     <p><a href="http://localhost:8000/password/redefine/{$token}">Redefinir sua senha</a></p>
+
+        // HTML;

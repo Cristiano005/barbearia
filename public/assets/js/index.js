@@ -1,41 +1,38 @@
 import callAxios from "./exports/http"
 import showOrHide from "./exports/password"
 import viewMap from "./exports/map"
-import validateLogin from "./exports/validationLogin"
-import search from "./exports/search"
+import search from "./exports/admin/search"
+import edit from "./exports/admin/edit"
+import validateFields from "./exports/validateFields"
+import destroy from "./exports/admin/delete"
 
 const changeVisiblePassword = document.querySelector('#disabledPassword')
 const inputPassword = document.querySelector('#exampleInputPassword1')
-const formLogin = document.querySelector('#login form')
+const formRegisterNewAdmin = document.querySelector('#formRegisterNewAdmin')
+const formLogin = document.querySelector('#formLogin')
 const divMap = document.querySelector('#map')
 const searchInput = document.querySelector('#searchData')
-const btnsEdit = document.querySelectorAll('#btn-edit')
-const name = document.querySelector('form #name')
+const autocomplete = document.querySelector('#autocomplete')
 
 showOrHide(changeVisiblePassword, inputPassword)
 viewMap(divMap)
-validateLogin(formLogin, callAxios)
-search(searchInput)
 
-for (const btnEdit of btnsEdit) {
+validateFields(formLogin, callAxios, '/login/store', {
+    isByMessage: {
+        status: false
+    },
+    'redirect' : '/admin'
+})
 
-    btnEdit.addEventListener('click', async (event) => {
+validateFields(formRegisterNewAdmin, callAxios, '/admin/home/store', {
+    isByMessage: {
+        status: true,
+        color: 'success',
+        message: 'Account registered with success',
+    },
+    'redirect' : '/admin/home'
+})
 
-        try {
-
-            const { data } = await callAxios.get('admin/home/show', {
-                params: {
-                    id: event.target.value
-                }
-            })
-
-            console.log(data)
-        } 
-        
-        catch (error) {
-            console.log(error)
-        }
-
-    })
-
-}
+search(callAxios, searchInput, autocomplete)
+edit(callAxios)
+destroy(callAxios)

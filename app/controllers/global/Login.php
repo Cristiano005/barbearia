@@ -84,7 +84,7 @@ class Login Extends Controller {
         $date = new DateTime();
         $date->modify("+1 day");
 
-        $deleteOldSolicitation = $this->delete->delete("reset", "user_id", $findBy->id);
+        // $deleteOldSolicitation = $this->delete->delete("reset", "user_id", $findBy->id);
 
         $email = new EmailToRedefinePassword();
 

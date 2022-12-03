@@ -8,36 +8,36 @@
             <img class="mw-100 rounded" src="/assets/img/admin.jpg" alt="A image">
         </div>
         <div id="login" class="p-2 d-flex flex-column align-items-center justify-content-center">
-            <h4 class="card-title text-center mb-4">Register new admin</h4>
-                <form action="/admin/home/store" method="POST">
-                    <label for="exampleInputText1" class="form-label">Name</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                        <input type="text" class="form-control border-dark" id="exampleInputText1" 
-                        aria-describedby="textHelp" placeholder="A name" name="name">
-                    </div>
-                    <label for="exampleInputEmail1" class="form-label">E-mail</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa-solid fa-envelope"></i>
-                        </span>
-                        <input type="email" class="form-control border-dark" id="exampleInputEmail1" 
-                        aria-describedby="emailHelp" placeholder="An e-mail" name="email">
-                    </div>
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">
-                            <i class="fa-solid fa-eye-slash" id="disabledPassword"></i>
-                        </span>
-                        <input type="password" class="form-control border-dark" id="exampleInputPassword1" 
-                        placeholder="A password" name="password">
-                    </div>
-                    <button class="btn btn-dark btn-outline-secondary text-light w-100">
-                        Register 
-                    </button>
-                </form>
+            <h3 class="card-title text-center mb-4" id="title-section">Register new admin</h3>
+            <form action="/admin/home/store" method="POST" id="formRegisterNewAdmin">
+                <label for="exampleInputText1" class="form-label" id="label-name">Name</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input type="text" class="form-control border-dark name" id="exampleInputText1" 
+                    aria-describedby="textHelp" placeholder="A name" name="name">
+                </div>
+                <label for="exampleInputEmail1" class="form-label" id="label-email">E-mail</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input type="email" class="form-control border-dark email" id="exampleInputEmail1" 
+                    aria-describedby="emailHelp" placeholder="An e-mail" name="email">
+                </div>
+                <label for="exampleInputPassword1" class="form-label" id="label-password">Password</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="fa-solid fa-eye-slash" id="disabledPassword"></i>
+                    </span>
+                    <input type="password" class="form-control border-dark password" id="exampleInputPassword1" 
+                    placeholder="A password" name="password">
+                </div>
+                <button class="btn btn-dark btn-outline-secondary text-light w-100">
+                    Register 
+                </button>
+            </form>
         </div>   
     </div>
 

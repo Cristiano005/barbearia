@@ -17,8 +17,11 @@
                     <li><a class="btn btn-outline-dark" href="/admin/home/payment">Payment</a></li>
                 </div>
             </ul>
-            <input type="search" class="form-control" aria-label="Text input with dropdown button"
-            placeholder="Search by name" id="searchData">
+            <form method="get">
+                <input type="search" class="form-control" aria-label="Text input with dropdown button"
+                placeholder="Search by name" id="searchData">
+               <div id="autocomplete d-none"></div>
+            </form>
         </div>
     </div>
     <div class="container-fluid table-responsive">
@@ -42,7 +45,8 @@
                             </button>
                         </td>
                         <td>
-                            <button type="submit" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-delete"> 
+                            <button type="submit" class="btn btn-danger" id="btn-delete" data-bs-toggle="modal" 
+                            data-bs-target="#modal-delete" n:attr="value => $values->id ?? ''"> 
                                 Delete 
                             </button>
                         </td>
