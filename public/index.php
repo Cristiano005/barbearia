@@ -22,5 +22,9 @@ try {
     $myApp->view();
 
 } catch (Throwable $th) {
-    echo "<span> Error {$th->getMessage()} </span>";
+    $latte = new \Latte\Engine;
+    $latte->render("../app/views/global/pageNotFound.latte", [
+        "isInPageNotFound" => true, 
+        "message" => $th->getMessage(),
+    ]);
 }

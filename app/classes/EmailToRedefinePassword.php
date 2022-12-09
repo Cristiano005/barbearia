@@ -6,7 +6,7 @@ use app\classes\Email;
 use app\interfaces\EmailRedefinePasswordInterface;
 use Exception;
 
-class EmailToRedefinePassword extends Email implements EmailRedefinePasswordInterface {
+class EmailToRedefinePassword extends Email {
 
     public function from($email, $name) {
         $this->mailer->setFrom($email, $name);
@@ -16,27 +16,24 @@ class EmailToRedefinePassword extends Email implements EmailRedefinePasswordInte
         $this->mailer->addAddress($email, $name);
     }
 
-    public function content(string $token, bool $isHtml = true) {
+    public function isHtml($isHtml = true)
+    {
+        $this->mailer->isHTML($isHtml);
+    }
 
-        $this->mailer->isHTML($isHtml);    
-        
-        $message = 'oii';
-        
+    public function subject($subject)
+    {
+        $this->mailer->Subject = $subject;
+    }
 
-        $this->mailer->Subject = 'Reset your password!';
+    public function message($message, $DoesNotSupportHtmlMessage)
+    {
         $this->mailer->Body = $message;
+        $this->mailer->AltBody = $DoesNotSupportHtmlMessage;
     }
 
     public function send() {
-
-        try {
-            return $this->mailer->send();
-        } 
-        
-        catch (Exception) {
-            echo "<span> Oops, some error occurred {$this->mailer->ErrorInfo} </span>";
-        }
-
+        return $this->mailer->send();
     }
     
 }

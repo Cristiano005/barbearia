@@ -1,9 +1,3 @@
-/* @media (max-width: 1200px) {
-    #location-image {
-        display: none;
-    }
-} */
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
 * {
@@ -28,7 +22,7 @@ main {
     max-height: calc(100vh - 5.5rem);
 } 
 
-/* services */
+/* Services */
 
 #service-card {
     width: 18rem;
@@ -41,9 +35,9 @@ main {
     transform: scale(105%);
 }
 
-/* end services */
+/* End services */
 
-/* contact */
+/* Contact */
 
 #map {
     height: 20rem;
@@ -57,4 +51,25 @@ textarea {
     resize: none;
 }
 
-/* end contact */
+/* End contact */
+
+/* Page not found */
+
+.page-not-found {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    color: #fff;
+}
+
+h1.title-error {
+    font-size: 3rem;
+}
+
+span.text-error {
+    font-size: 1.25rem;
+    color: black;
+}
+
+/* End page not found */

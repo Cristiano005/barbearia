@@ -28,10 +28,9 @@ export default function validateFields(form, callAxios, endpoint, response = {
 
                                 const formattedField = `form .${key.toLocaleLowerCase()}`;
                                 const input = document.querySelector(formattedField);
-                                const label = document.querySelector(`#label-${key}`)
-
+                                const label = document.querySelector(`#label-${key.toLocaleLowerCase()}`)
+                
                                 if (input.value === '') {
-                                
                                     input.classList.add('border-danger')
                                     input.classList.remove('border-dark')
                                     label.textContent = data[key]
@@ -39,6 +38,7 @@ export default function validateFields(form, callAxios, endpoint, response = {
                                     input.classList.add('border-dark')
                                     input.classList.remove('border-danger')
                                     label.textContent = data[key].charAt(0).toLocaleUpperCase() + data[key].slice(1)
+                                    label.classList.add('text-danger')
                                     // Deixa a primeira letra em maiúsculo
                                 }
 
@@ -51,12 +51,14 @@ export default function validateFields(form, callAxios, endpoint, response = {
                 else {
 
                     if(response.isByMessage.status) {
-                    
+
                         const flashMessage = document.querySelector('h3#title-section')
                         const oldValue = flashMessage.textContent
 
                         flashMessage.textContent = response.isByMessage.message
                         flashMessage.classList.add(`text-${response.isByMessage.color}`)
+
+                        form.reset() // limpa o formulário
                       
                         setTimeout(() => {
                             flashMessage.textContent = oldValue

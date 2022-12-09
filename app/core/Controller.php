@@ -32,7 +32,8 @@ class Controller {
            return $controller; 
         }
 
-        throw new Exception("Controller {$controller} inexistente");
+        throw new Exception("Page not found");
+        die;
     }
 
 }
