@@ -2,9 +2,8 @@
 
 namespace app\controllers\admin;
 
-use app\classes\UploadImage;
-use app\controllers\Controller;
 use app\classes\Validate;
+use app\controllers\Controller;
 
 class Home extends Controller {
 
@@ -36,56 +35,13 @@ class Home extends Controller {
             "thereIsNavbar" => true,
             "admin" => $this->select->findBy('admin', 'id, name, email, photo', 'id', $id)[0],
             "pagination" => (isset($_GET['page'])) ? $_GET['page'] : $_GET['page'] = 1,
-            "limit" => 
-                    $this->select->findLimit($args[0] , ($_GET['page'] - 1) * 5)
-                    
-                    ,
+            "limit" => $this->select->findLimit($args[0] , ($_GET['page'] - 1) * 5),
             "data" => array_values($this->select->findAll($args[0])),
         ];
 
     }
 
-    public function store() {
-
-        $fields = [
-            "name" => "s",
-            "email" => "e",
-            "password" => "s"
-        ];
-
-        $validated = Validate::validate($fields);
-
-        if(!$validated["isValidated"]) {
-            echo json_encode($validated["values"]);
-            die;
-        } 
-    
-        $existName = $this->select->findBy("admin", "name", "name", $validated["values"]["name"]);
-        $existEmail = $this->select->findBy("admin", "email", "email", $validated["values"]["email"]);
-
-        if($existName) {
-            echo json_encode([array_keys($fields)[0] => "Sorry, but this name already exist"]);
-            die;
-        }
-
-        if($existEmail) {
-            echo json_encode([array_keys($fields)[1] => "Sorry, but this email already exis"]);
-            die;
-        }
-
-        $validated['values']['password'] = password_hash($validated['values']['password'], PASSWORD_BCRYPT);
-
-        $insert = $this->insert->insert('admin', $validated['values']);
-
-        if($insert) {
-            echo json_encode('success');
-            die;
-        }
-       
-    }
-
-    public function show(array $args) {
-
+    public function show($args) {
         if(empty($args[0]) || !in_array($args[0], $this->tables)) {
             $args[0] = 'clients';
         }
@@ -96,24 +52,45 @@ class Home extends Controller {
         die;
     }
 
-    public function create() {
-
-        $this->view = "admin/register.latte";
-
-        $this->data = [
-            "title" => "Register a new admin",
-            "thereIsNavbar" => false,
-            "existClassInMain" => true,
-        ];
-    }
-
     public function update(array $args) {
 
-        $fields = [
-            "name" => "s",
-            "email" => "e",
-            "password" => "s",
-        ];
+        // $fields = [];
+
+        // if($args[0] === 'clients') {
+        //     $fields = [
+        //         "name" => "s",
+        //         "payment" => "s",
+        //         "date" => "d",
+        //         "schedule" => "s",
+        //     ];
+        // }
+
+        // if($args[0] === 'hourly') {
+        //     $fields = [
+        //         "schedule" => "s",
+        //     ];
+        // }
+
+        // if($args[0] === 'payment') {
+        //     $fields = [
+        //         "payment" => "s",
+        //     ];
+        // }
+
+        // $validated = Validate::validate($fields);
+
+        // if(!$validated['isValidated']) {
+        //     echo json_encode($validated['values']);
+        //     die;
+        // }
+
+        // $update = $this->update->updateWithWhere('admin', 'name,payment,date,schedule', 
+        // $validated['values']['name'],$validated['values']['payment'],$validated['values']['date'],
+        // $validated['values']['schedule'],
+        // ['id', '=', 1]);
+
+        echo json_encode('success');
+        die;
 
     }
 
@@ -128,8 +105,12 @@ class Home extends Controller {
             die;
         }
 
-        echo json_encode($args[1]);
-        die;
+        $delete = $this->delete->delete($args[0], 'id', $args[1]);
+
+        if($delete) {
+            echo json_encode('success');
+            die;
+        }
     }
     
 }

@@ -73,3 +73,40 @@ span.text-error {
 }
 
 /* End page not found */
+
+/* Autocomplete */
+
+#autocomplete {
+    background-color: white;
+    border: solid 1px #333;
+    position: absolute;
+    margin-top: -25px;
+    height: 150px;
+    overflow: scroll;
+    width: 50%;
+  }
+  
+  #autocomplete ul {
+    list-style: none;
+    padding: 2px;
+  }
+  
+  #autocomplete ul li {
+   border-bottom: solid 1px #333;
+  }
+  
+  #autocomplete ul li:hover {
+    background-color: beige;
+    cursor: pointer;
+  }
+  
+  #autocomplete ul li a {
+    text-decoration: none;
+    color: blue;
+  }
+  
+  #autocomplete #notfound {
+    color: blue;
+  }
+
+/* End auto complete */

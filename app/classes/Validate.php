@@ -2,6 +2,8 @@
 
 namespace app\classes;
 
+use DateTime;
+
 class Validate {
 
     public static function validate(array $fields): array|bool {
@@ -40,8 +42,20 @@ class Validate {
 
                 case "d": 
 
-                    $filteredValues[$field] = date("Y-m-d H:i:s", strtotime(filter_input(INPUT_POST, $field, FILTER_SANITIZE_FULL_SPECIAL_CHARS)));
+                    $data = DateTime::createFromFormat('Y-m-d', request()[$field]);
+                    $now = new DateTime();
 
+                    // echo json_encode($data);
+                    // die;
+
+                    if($data && $data->format('Y-m-d') == request()[$field] && $data > $now) {
+                        $filteredValues[$field] = filter_input(INPUT_POST, $field, FILTER_SANITIZE_SPECIAL_CHARS);
+                    } 
+
+                    else {
+                        $messages[$field] = "Invalid {$field}";
+                    }
+                   
                 break;
             }
             

@@ -3,6 +3,8 @@ export default function validateFields(form, callAxios, endpoint, response = {
         status: false,
         color: '',
         message: '',
+        elementToMessage: 'h3#title-section',
+        resetForm: true,
     },
     redirect: ''
 }) {
@@ -52,13 +54,16 @@ export default function validateFields(form, callAxios, endpoint, response = {
 
                     if(response.isByMessage.status) {
 
-                        const flashMessage = document.querySelector('h3#title-section')
+                        const flashMessage = document.querySelector(response.isByMessage.elementToMessage)
                         const oldValue = flashMessage.textContent
 
                         flashMessage.textContent = response.isByMessage.message
                         flashMessage.classList.add(`text-${response.isByMessage.color}`)
 
-                        form.reset() // limpa o formulário
+                        if(response.isByMessage.resetForm) {
+                            form.reset() // limpa o formulário
+                        }
+                        
                       
                         setTimeout(() => {
                             flashMessage.textContent = oldValue

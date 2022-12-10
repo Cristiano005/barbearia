@@ -35,6 +35,11 @@ class Password extends Controller {
 
         $validated = Validate::validate($form);
 
+        if(!$validated['isValidated']) {
+            echo json_encode($validated['values']);
+            die;
+        }
+
         $findBy = $this->select->findBy("admin", "id,name,email", "email", $validated["values"]["email"])[0];
 
         if(!$findBy) {
@@ -77,7 +82,7 @@ class Password extends Controller {
         $emailRedefinedPassword->message($message, 'This message is only for Programs what reads HTML');
 
         if($emailRedefinedPassword->send()) {
-            echo json_encode('Your password recovery request has been granted, please check your email to update your password.');
+            echo json_encode('success');
             die;
         }
         

@@ -28,6 +28,8 @@ export default function destroy(callAxios) {
                         if(data !== 'success') {
 
                             
+                        } else {
+                            window.location.href = '/admin/home/destroy'
                         }
 
                     } 

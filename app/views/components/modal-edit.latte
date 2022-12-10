@@ -7,31 +7,31 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
          </div>
          <div class="modal-body">
-            <form action="" method="POST">
-               <div class="mb-3">
-                  <label for="name" class="col-form-label">Name:</label>
-                  <input type="text" class="form-control" id="name">
+            <form action="/admin/home/update/clients" method="post" id="formUpdateRegister">
+                  <div class="mb-3">
+                     <label for="name" class="col-form-label" id="label-name">Name:</label>
+                     <input type="text" name="name" class="form-control name" id="name">
+                  </div>
+                  <div class="mb-3">
+                     <label for="payment" class="col-form-label" id="label-payment">Payment:</label>
+                     <input type="text" name="payment" class="form-control payment" id="payment">
+                  </div>
+                  <div class="mb-3">
+                     <label for="date" class="col-form-label" id="label-date">Date:</label>
+                     <input type="date" name="date" class="form-control date" id="date" value="2022-09-16">
+                  </div>
+                  <div class="mb-3">
+                     <label for="date" class="col-form-label" id="label-schedule">Schedule:</label>
+                     <input type="time" name="schedule" class="form-control schedule" id="schedule" value="21:00:00">
+                  </div>
                </div>
-               <div class="mb-3">
-                  <label for="payment" class="col-form-label">Payment:</label>
-                  <input type="text" class="form-control" id="payment">
+               <span id="message" class="text-center"></span>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-success">
+                     Update
+                  </button>
                </div>
-               <div class="mb-3">
-                  <label for="date" class="col-form-label">Date:</label>
-                  <input type="date" class="form-control" id="date" value="2022-09-16">
-               </div>
-               <div class="mb-3">
-                  <label for="date" class="col-form-label">Schedule:</label>
-                  <input type="time" class="form-control" id="schedule" value="21:00:00">
-               </div>
-            </form>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            <form action="admin/home/update" method="post">
-               <button type="submit" class="btn btn-success">
-                  Update
-               </button>
             </form>
          </div>
       </div>
