@@ -1,4 +1,8 @@
-export default function showOrHide(changeVisiblePassword, inputPassword) {
+export default function showOrHide() {
+
+    const changeVisiblePassword = document.querySelector('#disabledPassword')
+    const inputPassword = document.querySelector('#exampleInputPassword1')
+
     if (changeVisiblePassword) {
 
         changeVisiblePassword.addEventListener('click', () => {

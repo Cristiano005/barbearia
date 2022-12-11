@@ -18,7 +18,7 @@ export default function edit(callAxios) {
 
                 try {
 
-                    const { data } = await callAxios.get(`admin/home/show/${url[3]}`, {
+                    const { data } = await callAxios.get(`admin/home/edit/${url[3]}`, {
                         params: {
                             id: event.target.value
                         }

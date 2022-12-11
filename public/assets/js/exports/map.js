@@ -1,4 +1,6 @@
-export default function viewMap(divMap) {
+export default function viewMap() {
+
+    const divMap = document.querySelector('#map')
 
     if (divMap) {
         

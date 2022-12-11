@@ -20,6 +20,7 @@ class Home extends Controller {
         if(!$_SESSION['admin']) {
             return redirect('/login');
         } 
+
     }
 
     public function index(array $args) {
@@ -34,22 +35,38 @@ class Home extends Controller {
             "title" => "Home - Admin",
             "thereIsNavbar" => true,
             "admin" => $this->select->findBy('admin', 'id, name, email, photo', 'id', $id)[0],
-            "pagination" => (isset($_GET['page'])) ? $_GET['page'] : $_GET['page'] = 1,
-            "limit" => $this->select->findLimit($args[0] , ($_GET['page'] - 1) * 5),
+            "pagination" => $this->page,
             "data" => array_values($this->select->findAll($args[0])),
         ];
 
     }
 
     public function show($args) {
+
+        $page = intval($_GET['page']);
+
+        if(!isset($page) || empty($page) || !is_integer($page) || $page < 0) {
+            $page = 1;
+        }
+
+        if(empty($args[0]) || !in_array($args[0], $this->tables)) {
+            $args[0] = 'clients';
+        }
+       
+        echo json_encode($this->select->findLimit($args[0] , ($page - 1) * 5));
+        die;
+    }
+
+    public function edit($args) {
+
         if(empty($args[0]) || !in_array($args[0], $this->tables)) {
             $args[0] = 'clients';
         }
 
-        $findBy = $this->select->findBy($args[0], "*", "id", $_GET['id'], true);
+        $findBy = $this->select->findBy($args[0], "*", "id", $this->page, true);
 
         echo json_encode($findBy);
-        die;
+        die; 
     }
 
     public function update(array $args) {
@@ -96,16 +113,21 @@ class Home extends Controller {
 
     public function destroy(array $args) { 
 
+        $id = json_decode(file_get_contents('php://input'));
+
+        echo json_encode($id);
+        die;
+
         if(empty($args[0]) || !in_array($args[0], $this->tables)) {
             $args[0] = 'clients';
         }
 
-        if(empty($args[1])) {
-            echo json_encode('Dado inexistente');
+        if(!$id->id) {
+            echo json_encode('Non-existent data');
             die;
         }
 
-        $delete = $this->delete->delete($args[0], 'id', $args[1]);
+        $delete = $this->delete->delete($args[0], 'id', $id->id);
 
         if($delete) {
             echo json_encode('success');

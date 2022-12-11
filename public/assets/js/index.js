@@ -4,23 +4,18 @@ import viewMap from "./exports/map"
 import edit from "./exports/admin/edit"
 import validateFields from "./exports/validateFields"
 import destroy from "./exports/admin/delete"
+import dataList from "./exports/admin/dataList"
 
 window.onload = () => {
 
-    const changeVisiblePassword = document.querySelector('#disabledPassword')
-    const inputPassword = document.querySelector('#exampleInputPassword1')
     const formRegisterNewAdmin = document.querySelector('#formRegisterNewAdmin')
     const formLogin = document.querySelector('#formLogin')
     const formContact = document.querySelector('#formContact')
     const formSolicitationPassword = document.querySelector('#formSolicitationRedefinePassword')
     const formRedefinePassword = document.querySelector('#formRedefinePassword')
     const formUpdateRegister = document.querySelector('#formUpdateRegister')
-    const divMap = document.querySelector('#map')
 
     const token = window.location.pathname.split('/')
-
-    showOrHide(changeVisiblePassword, inputPassword)
-    viewMap(divMap)
 
     validateFields(formLogin, callAxios, '/login/store', {
         isByMessage: {
@@ -71,6 +66,9 @@ window.onload = () => {
         },
     })
 
+    dataList(callAxios)
     edit(callAxios)
-    destroy(callAxios)
+    destroy(callAxios) 
+    showOrHide()
+    viewMap()
 }

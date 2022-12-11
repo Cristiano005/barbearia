@@ -2,7 +2,7 @@
 
 {block main}
 
-<section class="bg-light d-flex flex-column align-items-center p-5" id="tableClients">
+<section class="d-flex flex-column align-items-center p-5" id="tableClients">
     {include '../components/modal-delete.latte'}
     {include '../components/modal-edit.latte'}
     <h2> See every your data. </h2>
@@ -29,35 +29,17 @@
             </form>
         </div>
     </div>
-    <div class="container-fluid table-responsive">
+    <div class="container-fluid table-responsive" id="table">
         <table class="table table-bordered border-light table-dark table-hover text-center" id="table">
             <thead>
-                {foreach $limit[0] as $field => $value}
-                    <th> {$field} </th>
-                {/foreach}
-                <th colspan="2"> Actions </th>
+               <th> Id</th>
+               <th> Name</th>
+               <th> Payment </th>
+               <th> Date</th>
+               <th> Schedule</th>
+               <th colspan="2"> Actions </th>
             </thead>
-            <tbody class="table-group-divider">
-                {foreach $limit as $index => $values}
-                    <tr>
-                        {foreach $values as $field => $value}
-                            <td> {$value} </td>    
-                        {/foreach}
-                        <td>
-                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" 
-                            id="btn-edit" data-bs-target="#modal-edit" n:attr="value => $values->id ?? ''"> 
-                                Edit 
-                            </button>
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-danger" id="btn-delete" data-bs-toggle="modal" 
-                            data-bs-target="#modal-delete" n:attr="value => $values->id ?? ''"> 
-                                Delete 
-                            </button>
-                        </td>
-                    </tr>
-                {/foreach}
-            </tbody>
+            <tbody class="table-group-divider"> </tbody>
         </table>
         <nav aria-label="Page navigation example">
             <ul class="pagination">

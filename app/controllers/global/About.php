@@ -10,8 +10,8 @@ class About {
     public function index() {
 
         $this->data = [
-            "title" => "About - Barbearia",
-            "thereIsFooter" => true,
+            "title" => "About - Barber Shop",
+            "thereIsFooter" => false,
         ];
 
     }
