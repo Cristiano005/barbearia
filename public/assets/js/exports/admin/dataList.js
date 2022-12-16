@@ -2,6 +2,7 @@ export default async function dataList(callAxios) {
 
     try {
 
+        const thead = document.querySelector('thead')
         const tbody = document.querySelector('tbody')
 
         const page = new URLSearchParams(window.location.search).get('page')
@@ -13,40 +14,69 @@ export default async function dataList(callAxios) {
             },
         })
 
-        console.log(data)
+        let property = Object.keys(data[0]).map(function(key) { 
+            return key; // Transforma um objeto em array para pegar as propriedade
+        });
 
         let render = ''
+        
+        property.forEach((element, index) => {
+
+            render += `
+                <th> ${element} </th>
+            `
+
+            if(property.length === index + 1) {
+                 render += `<th colspan="2"> Actions </th>`
+            }
+
+            thead.innerHTML = render
+        })
 
         if(data.length > 0) {
 
-            data.forEach((element) => {
+            let render = ''
 
-                render += [`
-                    
-                    <tr> 
-                        <td>  ${element.id} </td>
-                        <td>  ${element.name} </td>
-                        <td>  ${element.payment} </td>
-                        <td>  ${element.date} </td>
-                        <td>  ${element.schedule} </td>
-                        <td>
-                            <button type="submit" class="btn btn-primary" data-bs-toggle="modal" 
-                            id="btn-edit" data-bs-target="#modal-edit" value=${element.id}> 
-                                Edit 
-                            </button>
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-danger" id="btn-delete" data-bs-toggle="modal" 
-                            data-bs-target="#modal-delete" value=${element.id}> 
-                                Delete 
-                            </button>
-                        </td>
-                    </tr>
-                        
-                `]
+            for (let i = 0; i < data.length; i++) {
+                
+                let valuesInArray = Object.values(data[i]).map(function(value) {
+                    return value;
+                })
+        
+                valuesInArray.forEach((element, index) => {
     
-                tbody.innerHTML = render
-            })
+                    let id = valuesInArray[0]
+    
+                    render += `  
+                        
+                        <td> ${element} </td>
+                              
+                    `
+    
+                    if(valuesInArray.length === index + 1) {
+    
+                        render += `
+                        
+                            <td>
+                                <button type="submit" class="btn btn-primary" data-bs-toggle="modal" 
+                                id="btn-edit" data-bs-target="#modal-edit" value=${+id}> 
+                                    Edit 
+                                </button>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-danger" id="btn-delete" data-bs-toggle="modal" 
+                                data-bs-target="#modal-delete" value=${+id}> 
+                                    Delete 
+                                </button>
+                            </td>
+                        
+                            </tr>
+                        `
+                    }
+    
+                    tbody.innerHTML = render
+                })
+            } 
 
         }
 

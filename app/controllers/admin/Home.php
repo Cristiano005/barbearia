@@ -35,7 +35,7 @@ class Home extends Controller {
             "title" => "Home - Admin",
             "thereIsNavbar" => true,
             "admin" => $this->select->findBy('admin', 'id, name, email, photo', 'id', $id)[0],
-            "pagination" => $this->page,
+            "pagination" => (isset($_GET['page'])) ? $_GET['page'] : $_GET['page'] = 1,
             "data" => array_values($this->select->findAll($args[0])),
         ];
 
@@ -63,7 +63,7 @@ class Home extends Controller {
             $args[0] = 'clients';
         }
 
-        $findBy = $this->select->findBy($args[0], "*", "id", $this->page, true);
+        $findBy = $this->select->findBy($args[0], "*", "id", $_GET['id']);
 
         echo json_encode($findBy);
         die; 
@@ -71,43 +71,42 @@ class Home extends Controller {
 
     public function update(array $args) {
 
-        // $fields = [];
+        $fields = [];
 
-        // if($args[0] === 'clients') {
-        //     $fields = [
-        //         "name" => "s",
-        //         "payment" => "s",
-        //         "date" => "d",
-        //         "schedule" => "s",
-        //     ];
-        // }
+        if($args[0] === 'clients') {
+            $fields = [
+                "name" => "s",
+                "payment" => "s",
+                "date" => "d",
+                "schedule" => "s",
+            ];
+        }
 
-        // if($args[0] === 'hourly') {
-        //     $fields = [
-        //         "schedule" => "s",
-        //     ];
-        // }
+        if($args[0] === 'hourly') {
+            $fields = [
+                "schedule" => "s",
+            ];
+        }
 
-        // if($args[0] === 'payment') {
-        //     $fields = [
-        //         "payment" => "s",
-        //     ];
-        // }
+        if($args[0] === 'payment') {
+            $fields = [
+                "payment" => "s",
+            ];
+        }
 
-        // $validated = Validate::validate($fields);
+        $validated = Validate::validate($fields);
 
-        // if(!$validated['isValidated']) {
-        //     echo json_encode($validated['values']);
-        //     die;
-        // }
+        if(!$validated['isValidated']) {
+            echo json_encode($validated['values']);
+            die;
+        }
 
-        // $update = $this->update->updateWithWhere('admin', 'name,payment,date,schedule', 
-        // $validated['values']['name'],$validated['values']['payment'],$validated['values']['date'],
-        // $validated['values']['schedule'],
-        // ['id', '=', 1]);
+        $update = $this->update->updateWithWhere('admin', 'name,payment,date,schedule', $validated['values'], ['id', '=', 1]);
 
-        echo json_encode('success');
-        die;
+        if($update) {
+            echo json_encode('success');
+            die;
+        }
 
     }
 
@@ -115,24 +114,25 @@ class Home extends Controller {
 
         $id = json_decode(file_get_contents('php://input'));
 
-        echo json_encode($id);
-        die;
-
+        // echo json_encode($id);
+        // die;
+        
         if(empty($args[0]) || !in_array($args[0], $this->tables)) {
             $args[0] = 'clients';
         }
 
-        if(!$id->id) {
-            echo json_encode('Non-existent data');
+        if(!$this->select->findBy($args[0], '*', 'id', $id)) {
+            echo json_encode($id);
             die;
         }
 
-        $delete = $this->delete->delete($args[0], 'id', $id->id);
+        $delete = $this->delete->delete($args[0], 'id', $id);
 
         if($delete) {
             echo json_encode('success');
             die;
         }
+
     }
     
 }

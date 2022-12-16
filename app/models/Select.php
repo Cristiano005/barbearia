@@ -7,16 +7,12 @@ use PDOException;
 
 class Select extends Model {
 
-    public function findBy(string $table, string $fields = "*", string $field, string $value, bool $haveLike = false): array {
+    public function findBy(string $table, string $fields = "*", string $field, string|int $value): array {
 
        try {
 
-            if($haveLike) {
-                $findBy = $this->connection->prepare("SELECT {$fields} FROM {$table} WHERE {$field} like :{$field}"); 
-            } else {
-                $findBy = $this->connection->prepare("SELECT {$fields} FROM {$table} WHERE {$field} = :{$field}"); 
-            }
-          
+            $findBy = $this->connection->prepare("SELECT {$fields} FROM {$table} WHERE {$field} = :{$field}"); 
+            
             $findBy->bindValue(":{$field}", $value);
             $findBy->execute();
 

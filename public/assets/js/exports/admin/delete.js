@@ -1,10 +1,10 @@
-export default function destroy(callAxios) {
+import dataList from "./dataList"
+
+export default async function destroy(callAxios) {
 
     const btnsDelete = document.querySelectorAll('#btn-delete')
     const confirmDelete = document.querySelector('#confirm-delete')
     const btnCancel = document.querySelector('#btn-cancel')
-
-    // const modal = document.querySelector('#modal-delete')
 
     const url = window.location.pathname.split('/')
 
@@ -12,17 +12,21 @@ export default function destroy(callAxios) {
 
     if (btnsDelete) {
 
+        let id = ''
+
         for (const btnDelete of btnsDelete) {
 
-            btnDelete.addEventListener('click', async (event) => {
+            btnDelete.addEventListener('click', (event) => {
 
-                const id = event.target.value
+                console.log(btnDelete)
 
-                alert('oii')
+                id = +event.target.value
 
                 console.log(id)
 
                 confirmDelete.addEventListener('click', async (event) => {
+
+                    console.log(btnDelete)
 
                     event.preventDefault()
 
@@ -33,17 +37,10 @@ export default function destroy(callAxios) {
                         console.log(data)
 
                         if(data !== 'success') {
-
-                            
+                            alert('Register does not exist.')                            
                         } else {
-
                             btnCancel.click() // simula um evento de clique
-                            // window.location.href = '/admin/home'
-
-                            // setTimeout(() => {
-                            //     flashMessage.textContent = oldValue
-                            //     flashMessage.classList.remove(`text-${response.isByMessage.color}`)
-                            // }, 5000);
+                            dataList(callAxios)
                         }
 
                     } 
@@ -53,8 +50,6 @@ export default function destroy(callAxios) {
                     }
 
                 })
-
-
 
             })
 

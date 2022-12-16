@@ -5,7 +5,7 @@ export default function edit(callAxios) {
     const payment = document.querySelector('form #payment')
     const date = document.querySelector('form #date')
     const schedule = document.querySelector('form #schedule')
-  
+
     if (btnsEdit) {
 
         const url = window.location.pathname.split('/')
@@ -18,11 +18,13 @@ export default function edit(callAxios) {
 
                 try {
 
-                    const { data } = await callAxios.get(`admin/home/edit/${url[3]}`, {
+                    const { data } = await callAxios.get(`/admin/home/edit/${url[3]}`, {
                         params: {
                             id: event.target.value
                         }
                     })
+
+                    console.log(data)
 
                     for (let index = 0; index < formsInputs.length; index++) {
 

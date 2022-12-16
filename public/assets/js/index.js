@@ -56,19 +56,10 @@ window.onload = () => {
         redirect: '/login'
     })
 
-    validateFields(formUpdateRegister, callAxios, `/admin/home/update/${window.location.pathname.split('/')[3]}`, {
-        isByMessage: {
-            status: true,
-            color: 'success',
-            message: 'Data updated with success',
-            elementToMessage: 'span#message',
-            resetForm: false,
-        },
-    })
-
-    dataList(callAxios)
     edit(callAxios)
     destroy(callAxios) 
     showOrHide()
     viewMap()
 }
+
+dataList(callAxios)
