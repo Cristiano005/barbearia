@@ -38,6 +38,11 @@ class UploadImage {
     }
 
     public function folder($folder) {
+
+        if(!file_exists($folder)) {
+            throw new \Exception("This folder does not exist.", 1);
+        }
+
         $this->folder = $folder;
     }
 

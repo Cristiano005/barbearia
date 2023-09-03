@@ -1,65 +1,51 @@
-import callAxios from "./exports/http"
-import showOrHide from "./exports/password"
-import viewMap from "./exports/map"
-import edit from "./exports/admin/edit"
-import validateFields from "./exports/validateFields"
-import destroy from "./exports/admin/delete"
-import dataList from "./exports/admin/dataList"
+import { Password } from "./modules/classes/Password"
+import { Schedules } from "./modules/classes/Schedule"
+import { Map } from "./modules/libraries/Map"
+import { elements } from "./modules/html_selections/elements"
+import { Authentication } from "./modules/auth/Authentication"
+import { Validation } from "./modules/classes/Validation"
+import { Contact } from "./modules/classes/Contact"
+import { Admin } from "./modules/classes/Admin"
+import { Error } from "./modules/classes/Error"
 
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
+    
+    if(elements.contactForm) {
+        
+        elements.contactForm.addEventListener('submit', (event) => {
 
-    const formRegisterNewAdmin = document.querySelector('#formRegisterNewAdmin')
-    const formLogin = document.querySelector('#formLogin')
-    const formContact = document.querySelector('#formContact')
-    const formSolicitationPassword = document.querySelector('#formSolicitationRedefinePassword')
-    const formRedefinePassword = document.querySelector('#formRedefinePassword')
-    const formUpdateRegister = document.querySelector('#formUpdateRegister')
+            event.preventDefault()
 
-    const token = window.location.pathname.split('/')
+            const fields = ['name', 'email', 'subject', 'message']
 
-    validateFields(formLogin, callAxios, '/login/store', {
-        isByMessage: {
-            status: false
-        },
-        'redirect': '/admin'
-    })
+            Validation.validate(fields)
 
-    validateFields(formRegisterNewAdmin, callAxios, '/admin/register/store', {
-        isByMessage: {
-            status: true,
-            color: 'success',
-            message: 'Account registered with success',
-        },
-    })
+            Error.renderError(fields)
 
-    validateFields(formContact, callAxios, '/contact/store', {
-        isByMessage: {
-            status: true,
-            color: 'success',
-            message: 'E-mail sell with success',
-        },
-    })
+            if (Object.keys(Validation.errors).length > 0) {
+                return
+            }
 
-    validateFields(formSolicitationPassword, callAxios, `/password/store`, {
-        isByMessage: {
-            status: true,
-            color: 'success',
-            message: 'Your order has been accepted, check your email.',
-            elementToMessage: 'span#message'
-        },
-    })
+            Contact.sendEmail(Validation.validatedValues)
+        })
+    }
 
-    validateFields(formRedefinePassword, callAxios, `/password/update/${token[3]}`, {
-        isByMessage: {
-            status: false,
-        },
-        redirect: '/login'
-    })
+    Schedules.saveAppointmentScheduled(elements.scheduleForm)
 
-    edit(callAxios)
-    destroy(callAxios) 
-    showOrHide()
-    viewMap()
-}
+    Authentication.auth(elements.loginForm)
 
-dataList(callAxios)
+    Map.createMap(elements.divMap)
+
+    elements.togglePasswordElement ? elements.togglePasswordElement.addEventListener('click', () => Password.toggleShow(elements.inputPasswordFromLogin)) : ''
+
+    Schedules.renderSchedulesInSelect(elements.dateSelect, elements.scheduleSelect)
+
+    elements.dateSelect ? elements.dateSelect.addEventListener('change', () => Schedules.renderSchedulesInSelect(elements.dateSelect, elements.scheduleSelect))
+    : ''
+
+    Admin.register(elements.admin.registerForm, elements.admin.titleFormRegister)
+
+    Admin.edit(elements.admin.editButtons, elements.admin.inputsOfEdit)
+
+    Admin.delete(elements.admin.deleteButtons, elements.admin.confirmDelete)
+})

@@ -3,35 +3,35 @@
 {block main}
 
 <section class="p-3">
-     <div id="content" class="d-flex justify-content-evenly flex-wrap animate__animated animate__fadeInDown">
-        <div class="w-50 mb-4">
-            <img class="mw-100 rounded" src="/assets/img/admin.jpg" alt="A image">
+     <div id="content" class="d-flex gap-3 justify-content-evenly flex-wrap animate__animated animate__fadeInDown">
+        <div class="col-md-6">
+            <img class="mw-100 h-100 rounded" src="/assets/img/admin.jpg" alt="A image">
         </div>
-        <div id="login" class="p-2 d-flex flex-column align-items-center justify-content-center">
-            <h3 class="card-title text-center mb-4" id="title-section">Register new admin</h3>
-            <form action="/admin/register/store" method="POST" id="formRegisterNewAdmin">
-                <label for="exampleInputText1" class="form-label" id="label-name">Name</label>
+        <div class="p-2 d-flex flex-column align-items-center justify-content-center">
+            <h3 class="card-title text-center mb-4 title-form">Register new admin</h3>
+            <form action="/admin/store" id="registerForm">
+                <label for="name" class="form-label" id="label-name">Name</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="fa-solid fa-envelope"></i>
                     </span>
-                    <input type="text" class="form-control border-dark name" id="exampleInputText1" 
+                    <input type="text" class="form-control border-dark name" id="name" 
                     aria-describedby="textHelp" placeholder="A name" name="name">
                 </div>
-                <label for="exampleInputEmail1" class="form-label" id="label-email">E-mail</label>
+                <label for="email" class="form-label" id="label-email">E-mail</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="fa-solid fa-envelope"></i>
                     </span>
-                    <input type="email" class="form-control border-dark email" id="exampleInputEmail1" 
+                    <input type="email" class="form-control border-dark email" id="email" 
                     aria-describedby="emailHelp" placeholder="An e-mail" name="email">
                 </div>
-                <label for="exampleInputPassword1" class="form-label" id="label-password">Password</label>
+                <label for="password" class="form-label" id="label-password">Password</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <i class="fa-solid fa-eye-slash" id="disabledPassword"></i>
                     </span>
-                    <input type="password" class="form-control border-dark password" id="exampleInputPassword1" 
+                    <input type="password" class="form-control border-dark password" id="password" 
                     placeholder="A password" name="password">
                 </div>
                 <button class="btn btn-dark btn-outline-secondary text-light w-100">

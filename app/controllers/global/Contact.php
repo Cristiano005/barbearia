@@ -2,10 +2,10 @@
 
 namespace app\controllers\global;
 
-use app\classes\EmailToContact;
+use app\classes\Email;
+use app\classes\PHPMailerService;
 use app\classes\Validate;
 use app\controllers\Controller;
-
 
 class Contact extends Controller {
 
@@ -17,8 +17,8 @@ class Contact extends Controller {
         $this->data = [
             "title" => "Contact",
             "thereIsFooter" => true,
-            "payments" => $this->select->findAll("payment", "name"),
-            "hourly" => $this->select->findAll("hourly"),
+            // "payments" => $this->select->findAll("payment", "name"),
+            // "hourly" => $this->select->findAll("hourly"),
             "existClassInMain" => false,
         ];
 
@@ -37,21 +37,26 @@ class Contact extends Controller {
 
         if(!$validated['isValidated']) {
             echo json_encode($validated['values']);
-            die;
+            return;
         }
 
-        $emailContact = new EmailToContact();
-        $emailContact->from($validated['values']['email'], $validated['values']['name']);
-        $emailContact->to('erisvaldosilvadesousa38@gmail.com', 'Barber Shop');
-        $emailContact->isHtml();
-        $emailContact->subject($validated['values']['subject']);
-        $emailContact->message($validated['values']['message'], 'This message is only for Programs what reads HTML');
+        $validated = (object) $validated['values'];
+
+        $mailer = new Email(new PHPMailerService());
+
+        $mailer->emailService->from($validated->email, $validated->name);
+        $mailer->emailService->to('erisvaldosilvadesousa38@gmail.com', 'Barber Shop');
+        $mailer->emailService->subject($validated->subject);
+        $mailer->emailService->message($validated->message);
+           
+        $result = $mailer->emailService->send();
+
+        if(!$result) {
+            return;
+        }
         
-        
-        if($emailContact->send()) { 
-            echo json_encode('success');
-            die;
-        }  
+        echo json_encode('success');
+        return;
     }
 
 }

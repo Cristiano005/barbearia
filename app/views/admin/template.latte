@@ -16,7 +16,7 @@
         <nav class="navbar navbar-light bg-dark">
             <div class="container-fluid">
                 {if $thereIsNavbar}
-                   <a class="navbar-brand text-light" href="/admin/home/clients">Painel Admin.</a>
+                   <a class="navbar-brand text-light" href="/admin/home">Painel Admin.</a>
                    <button class="navbar-toggler bg-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                    <span class="navbar-toggler-icon"></span>
                 </button>
@@ -27,11 +27,11 @@
                     </div>
                     <form action="/admin/Image/update/{$admin->id}" method="post" enctype="multipart/form-data">
                         <div class="d-flex flex-column align-items-center">
-                            <label for="file" class="form-label">
+                            <label for="file" class="form-label d-flex justify-content-center">
                                 {if $admin->photo}
-                                    <img src="{$admin->photo}" class="rounded-circle w-100 p-2" alt="Image of your profile" id="image-profile">
+                                    <img src="{$admin->photo}" class="rounded-circle w-50 p-2" alt="Image of your profile" id="image-profile">
                                 {else}
-                                    <span class="fw-bold p-4"> No image selected, Do you want add a photo? </span>
+                                    <img src="/assets/img/user_default.jpg" class="rounded-circle w-50 p-2" alt="Image of your profile" id="image-profile">
                                 {/if}
                             </label>
                             <input class="form-control" name="file" type="file" id="file" hidden accept="image/jpeg, image/png, image/jpg">
@@ -57,7 +57,9 @@
                                     <li><a class="dropdown-item link-dark" href="/admin/register/create">Register new admin</a></li>
                                 </ul>
                             </li>
-                            <a href="/login/destroy" class="btn btn-outline-danger mt-4" type="submit">Logout</a>
+                            <form action="/auth/destroy" method="POST">
+                                <button class="btn btn-outline-danger mt-4" type="submit">Logout</button>
+                            </form>
                         </ul>
                     </div>
                 </div>

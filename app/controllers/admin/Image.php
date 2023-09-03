@@ -25,8 +25,8 @@ class Image extends Controller {
         $upload = $image->upload($temp);
 
         if($upload) {
-            $this->update->updateWithWhere('admin', 'photo', $upload, ['id', '=', $args[0]]);
-            return redirect("/admin/home/clients");
+            $this->update->updateWithWhere('admins', 'photo', $upload, ['id', '=', $args[0]]);
+            return redirect("/admin/home");
         }
 
     }

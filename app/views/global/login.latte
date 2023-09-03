@@ -3,29 +3,29 @@
 {block main}
 
     <section class="p-3">
-        {include '../components/modal-forgot-password.latte'}
-        <div id="content" class="d-flex justify-content-evenly flex-wrap animate__animated animate__fadeInDown">
-            <div class="w-50 mb-4">
+        {include '../components/modal-forgot-password.latte'} 
+        <div id="coforntent" class="d-flex justify-content-evenly flex-wrap animate__animated animate__fadeInDown">
+            <div class="col-md-6 mb-4">
                 <img class="mw-100 rounded" src="/assets/img/admin.jpg" alt="">
             </div>
             <div id="login" class="p-2 d-flex flex-column align-items-center justify-content-center">
                 <h3 class="card-title text-center mb-4" id="title-section">Login - Admin</h3>
-                <form action="/login/store" method="post" id="formLogin">
-                    <label for="exampleInputEmail1" class="form-label" id="label-email">Email</label>
+                <form method="post" id="formLogin">
+                    <label for="email" class="form-label" id="label-email">Email</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-envelope"></i>
                         </span>
-                        <input type="email" class="form-control border-dark email" id="exampleInputEmail1" 
+                        <input type="email" class="form-control border-dark email" id="email" 
                         aria-describedby="emailHelp" placeholder="Your E-mail" name="email" value="{$emailRemember}">
                     </div>
-                    <label for="exampleInputPassword1" class="form-label" id="label-password">Password</label>
+                    <label for="password" class="form-label" id="label-password">Password</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">
                             <i class="fa-solid fa-eye-slash" id="disabledPassword"></i>
                         </span>
                         <input type="password" class="form-control border-dark password" 
-                        id="exampleInputPassword1" placeholder="Your password" name="password">
+                        id="password" placeholder="Your password" name="password">
                     </div>
                     <div class="d-flex justify-content-between justify-content-center flex-wrap mt-3 mb-3">
                         <div class="d-flex align-items-center">

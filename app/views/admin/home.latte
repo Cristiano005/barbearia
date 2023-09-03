@@ -2,55 +2,51 @@
 
 {block main}
 
-<section class="d-flex flex-column align-items-center p-5" id="tableClients">
-    {include '../components/modal-delete.latte'}
+<section class="d-flex flex-column p-5" id="tableClients">
     {include '../components/modal-edit.latte'}
-    <h2> See every your data. </h2>
-    <div id="search">
-        <div class="input-group mb-3">
-            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" 
-            aria-expanded="false">Options</button>
-            <ul class="dropdown-menu">
-                <div class="d-flex flex-column align-items-center justify-content-around">
-                    <li><a class="btn btn-outline-dark" href="/admin/home/clients">Clients</a></li>
-                    <li><a class="btn btn-outline-dark m-3" href="/admin/home/hourly">Hourly</a></li>
-                    <li><a class="btn btn-outline-dark" href="/admin/home/payment">Payment</a></li>
-                </div>
-            </ul>
-            <form method="get">
-                <input type="search" class="form-control" aria-label="Text input with dropdown button"
-                placeholder="Search by name" id="searchData">
-               <div id="autocomplete" class="d-none">
-                    <ul>
-                        <li>
-                        </li>
-                    </ul>
-               </div>
-            </form>
-        </div>
+    {include '../components/modal-delete.latte'}
+    <div class="dropdown">
+        <button class="btn btn-dark dropdown-toggle mb-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter
+                <i class="fa-solid fa-filter"></i>
+        </button>
+        <ul class="dropdown-menu">
+            <a class="dropdown-item" href="/admin?table=appointments_scheduled">Appointments Scheduled</a>
+             <a class="dropdown-item" href="/admin?table=available_schedules">Available Schedules</a>
+        </ul>
     </div>
-    <div class="container-fluid table-responsive" id="table">
-        <table class="table table-bordered border-light table-dark table-hover text-center" id="table">
-            <thead></thead>
-            <tbody class="table-group-divider"> </tbody>
+    <div class="table-responsive-sm">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    {foreach $columns as $column}
+                        {if $column !== 'id'}
+                             <th> {$column} </th>
+                        {/if}
+                   {/foreach}
+                   <th> Actions </th>
+                </tr>
+            </thead>
+            <tbody>
+            {foreach $values as $index => $register}
+                <tr>
+                    {foreach $register as $field => $value}
+                        {if $field !== 'id'}
+                            {if $field === 'day'}
+                                <td> {$value|date:'%d/%m/%Y'} </td>
+                            {else}
+                                <td> {$value} </td>
+                            {/if}
+                        {/if}
+                    {/foreach}
+                     <td>
+                        <button class="btn btn-primary editButton" data-id="{$register['id']}" data-bs-target="#editModal" data-bs-toggle="modal">Edit</button>
+                        <button class="btn btn-danger deleteButton" data-id="{$register['id']}" data-bs-target="#modal-delete" data-bs-toggle="modal">Delete</button>
+                    </td>   
+                </tr>
+            {/foreach}
+            </tbody>
         </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li n:if="$_GET['page'] > 1" class="page-item">
-                    <a class="page-link" href="?page={$pagination - 1}">Previous</a>
-                </li>
-                {for $i = 1; $i <= ceil(count($data) / 5); $i++}
-                    <li class="page-item">
-                        <a class="page-link link-primary bg-dark text-light" href="?page={$i}">
-                            {$i}
-                        </a>
-                    </li>
-                {/for}
-                <li n:if="$_GET['page'] < 15 && count($data) > 5" class="page-item">
-                    <a class="page-link" href="?page={$pagination + 1}">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 </section>
              

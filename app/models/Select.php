@@ -7,13 +7,14 @@ use PDOException;
 
 class Select extends Model {
 
-    public function findBy(string $table, string $fields = "*", string $field, string|int $value): array {
+    public function findBy(string $table, string $fields = "*", string $field, string|int $value) {
 
        try {
 
             $findBy = $this->connection->prepare("SELECT {$fields} FROM {$table} WHERE {$field} = :{$field}"); 
-            
+
             $findBy->bindValue(":{$field}", $value);
+
             $findBy->execute();
 
             return $findBy->fetchAll(PDO::FETCH_OBJ);
@@ -32,7 +33,7 @@ class Select extends Model {
             $findAll = $this->connection->query("SELECT {$fields} FROM {$table}");
             $findAll->execute();
 
-            return $findAll->fetchAll(PDO::FETCH_OBJ);
+            return $findAll->fetchAll(PDO::FETCH_ASSOC);
         }
 
         catch(PDOException $e) {

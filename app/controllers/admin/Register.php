@@ -34,8 +34,8 @@ class Register extends Controller {
             die;
         } 
     
-        $existName = $this->select->findBy("admin", "name", "name", $validated["values"]["name"]);
-        $existEmail = $this->select->findBy("admin", "email", "email", $validated["values"]["email"]);
+        $existName = $this->select->findBy("admins", "name", "name", $validated["values"]["name"]);
+        $existEmail = $this->select->findBy("admins", "email", "email", $validated["values"]["email"]);
 
         if($existName) {
             echo json_encode([array_keys($fields)[0] => "Sorry, but this name already exist"]);
@@ -47,15 +47,16 @@ class Register extends Controller {
             die;
         }
 
+        $validated['values']['photo'] = '';
+
         $validated['values']['password'] = password_hash($validated['values']['password'], PASSWORD_BCRYPT);
 
-        $insert = $this->insert->insert('admin', $validated['values']);
+        $insert = $this->insert->insert('admins', $validated['values']);
 
         if($insert) {
             echo json_encode('success');
             die;
         }
-       
     }
 
     public function create() {

@@ -1,39 +1,74 @@
-<div class="modal fade" id="modal-edit" tabindex="-1"  data-bs-keyboard="false"
-aria-labelledby="exampleModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Update data</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-         <div class="modal-body">
-            <form action="/admin/home/update/clients" method="post" id="formUpdateRegister">
-                  <div class="mb-3">
-                     <label for="name" class="col-form-label" id="label-name">Name:</label>
-                     <input type="text" name="name" class="form-control name" id="name">
-                  </div>
-                  <div class="mb-3">
-                     <label for="payment" class="col-form-label" id="label-payment">Payment:</label>
-                     <input type="text" name="payment" class="form-control payment" id="payment">
-                  </div>
-                  <div class="mb-3">
-                     <label for="date" class="col-form-label" id="label-date">Date:</label>
-                     <input type="date" name="date" class="form-control date" id="date" value="2022-09-16">
-                  </div>
-                  <div class="mb-3">
-                     <label for="date" class="col-form-label" id="label-schedule">Schedule:</label>
-                     <input type="time" name="schedule" class="form-control schedule" id="schedule" value="21:00:00">
-                  </div>
-               </div>
-               <span id="message" class="text-center"></span>
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-success">
-                     Update
-                  </button>
-               </div>
-            </form>
-         </div>
+<div
+  class="modal fade"
+  id="editModal"
+  aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Edit</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
-   </div>
+      <div class="modal-body">
+        <form method="post" id="editForm">
+          {foreach $columns as $column}
+            {if $column !== 'id'}
+              <label for="name" class="form-label" id="label-name"> {$column} </label>
+              <div class="input-group mb-3">
+                <input type="text"
+                  class="form-control border-dark"
+                  n:attr="id => $column, placeholder => $column, name => $column"
+                  aria-describedby="nameHelp"
+                />
+              </div>
+              {/if}
+          {/foreach}
+          <button class="btn btn-primary btn-outline-primary text-light w-100">
+                Edit
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade"
+  id="exampleModalToggle2"
+  aria-hidden="true"
+  aria-labelledby="exampleModalToggleLabel2"
+  tabindex="-1"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Modal 2</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Hide this modal and show the first with the button below.
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-primary"
+          data-bs-target="#exampleModalToggle"
+          data-bs-toggle="modal"
+        >
+          Back to first
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

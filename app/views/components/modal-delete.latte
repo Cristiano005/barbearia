@@ -1,6 +1,6 @@
 <div class="modal fade" id="modal-delete" data-bs-backdrop="static" data-bs-keyboard="false" 
 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Do you really want to do this?</h5>
@@ -11,9 +11,7 @@ tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btn-cancel">Cancel</button>
-                <form action="/admin/home/destroy" method="post">
-                    <button type="submit" class="btn btn-success" id="confirm-delete">Confirm</button>
-                </form>
+                <button type="submit" class="btn btn-success" id="confirm-delete">Confirm</button>
             </div>
         </div>
     </div>

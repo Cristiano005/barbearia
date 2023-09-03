@@ -26,7 +26,7 @@ class Method {
         } else {
             $methodNotExist = (!$folder) ? 2 : 3;
         }
-        
+
         return [
             $method, $methodNotExist
         ];

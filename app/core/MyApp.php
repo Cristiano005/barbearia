@@ -2,12 +2,14 @@
 
 namespace app\core;
 
+use app\classes\Block;
 use app\interfaces\AppInterface;
 use Exception;
 
 class MyApp {
 
     private $controller;
+    private bool $block;
 
     public function __construct(private AppInterface $appInterface) {}
 
@@ -16,16 +18,22 @@ class MyApp {
         $controller = $this->appInterface->controller();
         $method = $this->appInterface->method($controller);
         $params = $this->appInterface->parameters();
-    
-        $this->controller = new $controller; // está instanciando o controller que vem da função controller...
+
+        $this->block = Block::block($method);
+
+        if($this->block && $_SERVER['REQUEST_METHOD'] === "GET") {
+            http_response_code(405);
+            die;
+        }
+         
+        $this->controller = new $controller; // está instanciando o controller que vem da função controller...  
         $this->controller->$method($params);
-    
     }
 
     public function view() {
-        
-        if($_SERVER['REQUEST_METHOD'] === 'GET' && !isAjax()) {
 
+        if(!isAjax()) {
+        
             if(!isset($this->controller->data)) {
                 throw new Exception("the 'data' attribute is required");
             }
@@ -36,6 +44,7 @@ class MyApp {
     
             $latte = new \Latte\Engine;
             $latte->render("../app/views/{$this->controller->view}", $this->controller->data);
+        
         }
     }
 

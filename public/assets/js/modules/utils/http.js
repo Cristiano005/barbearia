@@ -5,7 +5,7 @@ const callAxios = axios.create({
         'Content-type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
     },
-    baseURL: 'http://localhost:9000'
+    baseURL: 'http://localhost:9000/'
 });
 
 export default callAxios
