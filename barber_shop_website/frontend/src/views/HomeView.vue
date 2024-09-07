@@ -8,6 +8,7 @@
                 </p>
                 <button class="d-flex align-items-center justify-content-center btn btn-dark px-5">
                     Schedule an hour
+                    <i class="bi bi-alarm-fill p-2"></i>
                 </button>
             </div>
             <div class="position-relative col-12 col-md-6">
@@ -40,7 +41,7 @@
                 <div class="card col-12 col-md-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
                         <i
-                            class="fa-solid fa-hand-holding-dollar fs-1 bg-dark rounded text-warning p-4"
+                            class="bi bi-piggy-bank-fill fs-1 bg-dark rounded text-white px-4 py-2"
                         ></i>
                     </div>
                     <div class="card-body">
@@ -55,7 +56,7 @@
                 <!-- Second card -->
                 <div class="card col-12 col-md-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
-                        <i class="fa-solid fa-scissors fs-1 bg-dark rounded text-warning p-4"></i>
+                        <i class="bi bi-scissors fs-1 bg-dark rounded text-white px-4 py-2"></i>
                     </div>
                     <div class="card-body">
                         <h3 class="text-center text-dark my-3">Quality</h3>
@@ -69,7 +70,7 @@
                 <!-- Third card -->
                 <div class="card col-12 col-md-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
-                        <i class="fa-solid fa-seedling fs-1 bg-dark rounded text-warning p-4"></i>
+                        <i class="bi bi-shop-window fs-1 bg-dark rounded text-white px-4 py-2"></i>
                     </div>
                     <div class="card-body">
                         <h3 class="text-center text-dark my-3">Healthy ambient</h3>
@@ -84,69 +85,109 @@
     </section>
     <div class="divider"></div>
     <section id="contact">
-        <div id="container-map">
-            <div id="map"></div>
-            <div class="d-flex flex-column align-items-center justify-content-center mt-5">
-                <h3 class="text-secondary">Adress:</h3>
-                <small class="fs-6 mt-2"> Fictional street </small>
-                <small class="mt-2"> Nova Odessa - SP, Brazil </small>
-            </div>
-        </div>
-        <div class="d-flex flex-column justify-content-center align-items-center mt-5">
-            <h3 class="text-secondary" id="title-section">Contact us</h3>
-            <div id="contact" class="mw-100">
-                <form method="post" id="contactForm">
-                    <div class="mb-3">
-                        <label for="name" class="form-label" id="label-name">Name</label>
-                        <input
-                            type="text"
-                            class="form-control border-dark name"
-                            id="name"
-                            placeholder="Erisvaldo"
-                            name="name"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label" id="label-email">Email</label>
-                        <input
-                            type="email"
-                            class="form-control border-dark email"
-                            id="email"
-                            placeholder="name@example.com"
-                            name="email"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="subject" class="form-label" id="label-subject">Subject</label>
-                        <input
-                            type="text"
-                            class="form-control border-dark subject"
-                            id="subject"
-                            placeholder="Travel"
-                            name="subject"
-                        />
-                    </div>
-                    <div class="form-floating">
-                        <textarea
-                            class="form-control border-dark resize-none message"
-                            placeholder="Leave a message here"
-                            id="message"
-                            name="message"
-                        ></textarea>
-                        <label for="message" id="label-message">Message</label>
-                    </div>
-                    <button
-                        class="w-100 mt-4 btn btn-dark btn-outline-secondary text-light"
-                        id="send-email"
-                    >
-                        Send
+        <div class="container">
+            <div class="row gap-5 justify-content-center">
+                <div id="test" class="mt-3 col-lg-5 col-sm-12">
+                    <h4>Contact us on WhatsApp.</h4>
+                    <p class="mt-4 w-75">
+                        Contact us for any questions. We are available today via WhatsApp and email.
+                    </p>
+                    <button class="btn btn-dark px-5">
+                        <i class="bi bi-whatsapp"></i>
+                        WhatsApp
                     </button>
-                </form>
+                </div>
+                <div id="contact" class="col-lg-5 col-sm-12">
+                    <form method="post" id="contactForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label" id="label-name">Name</label>
+                            <input
+                                type="text"
+                                class="form-control border-dark name"
+                                id="name"
+                                placeholder="Erisvaldo"
+                                name="name"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label" id="label-email">Email</label>
+                            <input
+                                type="email"
+                                class="form-control border-dark email"
+                                id="email"
+                                placeholder="name@example.com"
+                                name="email"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label" id="label-subject"
+                                >Subject</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control border-dark subject"
+                                id="subject"
+                                placeholder="Travel"
+                                name="subject"
+                            />
+                        </div>
+                        <div class="form-floating">
+                            <textarea
+                                class="form-control border-dark resize-none message"
+                                placeholder="Leave a message here"
+                                id="message"
+                                name="message"
+                            ></textarea>
+                            <label for="message" id="label-message">Message</label>
+                        </div>
+                        <button
+                            class="w-100 mt-4 btn btn-dark btn-outline-secondary text-light"
+                            id="send-email"
+                        >
+                            Send
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
     <div class="divider"></div>
 </template>
+
+<script setup lang="ts">
+import { map, tileLayer, marker } from 'leaflet'
+import 'leaflet/dist/leaflet.css' // You still need the CSS for styling
+import { onMounted } from 'vue'
+
+onMounted(() => {
+    // Create the map
+    const myMap = map('map', {
+        dragging: false,
+        zoomControl: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        minZoom: 17
+    }).setView([-22.8, -47.3], 17)
+
+    // Add tile layer
+    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(myMap)
+
+    // Add a marker
+    marker([-22.8, -47.3], 17)
+        .addTo(myMap)
+        .bindPopup(
+            `
+        <h6 class="text-center"> Our location: </h6> 
+        456 Trim Street,
+        Clipper District,
+        Beardstown.
+    `
+        )
+        .openPopup()
+})
+</script>
 
 <style scoped>
 #container-home {
@@ -179,5 +220,9 @@ img {
 
 #services-header {
     max-width: 30rem;
+}
+
+#map {
+    height: 20rem;
 }
 </style>
