@@ -1,46 +1,47 @@
 <script setup lang="ts"></script>
 
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark h-100">
-        <div class="container-fluid">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand fw-medium" href="#">Barber Shop</a>
             <button
-                class="navbar-toggler bg-light"
+                class="navbar-toggler"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#navbarTogglerDemo03"
-                aria-controls="navbarTogglerDemo03"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
             >
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand text-light mx-auto link-warning" href="/">Barber Shop</a>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo03">
-                <ul class="navbar-nav mb-2 mb-lg-0">
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav gap-2">
                     <li class="nav-item">
-                        <a
-                            class="nav-link text-light link-warning"
-                            aria-current="page"
-                            href="/services"
-                        >
-                            Services -
-                            <i class="fa-regular fa-hand-scissors"></i>
-                        </a>
+                        <a class="nav-link text-white" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light link-warning" href="/contact">
-                            Contact -
-                            <i class="fa-regular fa-envelope"></i>
-                        </a>
+                        <a class="nav-link text-white" href="#">About</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/about" class="nav-link text-light link-warning">
-                            About -
-                            <i class="fa-regular fa-building"></i>
-                        </a>
+                        <a class="nav-link text-white" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light" type="submit">Sign In</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light" type="submit">Sign Up</button>
                     </li>
                 </ul>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </div>
 </template>
+
+<style scoped></style>

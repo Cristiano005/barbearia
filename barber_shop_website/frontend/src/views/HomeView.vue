@@ -1,32 +1,36 @@
 <template>
     <section id="home">
-        <div class="d-flex gap-4 mx-auto row" id="container-home">
-            <div id="apresentation" class="col-12 col-md-6">
-                <h2 class="lh-base mb-4 fw-bold">Wecolme to Barber Shop in Nova Odessa.</h2>
-                <p class="lh-base mb-4">
-                    Um salão exclusivo em São Paulo, especializado em tratamentos naturais.
-                </p>
-                <button class="d-flex align-items-center justify-content-center btn btn-dark px-5">
-                    Schedule an hour
-                    <i class="bi bi-alarm-fill p-2"></i>
-                </button>
-            </div>
-            <div class="position-relative col-12 col-md-6">
-                <div
-                    id="background-effect"
-                    class="position-absolute bg-dark h-100 z-n1 rounded-1"
-                ></div>
-                <img
-                    class="rounded-1"
-                    src="https://matheuscostadesign.github.io/nlw6-beauty-salon/assets/images/main.jpg"
-                    alt=""
-                />
+        <div class="container">
+            <div class="row justify-content-center">
+                <div id="apresentation" class="col-12 col-md-6">
+                    <h2 class="lh-base mb-4 fw-bold">Wecolme to Barber Shop in Nova Odessa.</h2>
+                    <p class="lh-base mb-4">
+                        Um salão exclusivo em São Paulo, especializado em tratamentos naturais.
+                    </p>
+                    <button
+                        class="d-flex align-items-center justify-content-center btn btn-dark px-5"
+                    >
+                        Schedule an hour
+                        <i class="bi bi-alarm-fill p-2"></i>
+                    </button>
+                </div>
+                <div class="position-relative col-12 col-md-6">
+                    <div
+                        id="background-effect"
+                        class="position-absolute bg-dark h-100 z-n1 rounded-1"
+                    ></div>
+                    <img
+                        class="rounded-1"
+                        src="https://matheuscostadesign.github.io/nlw6-beauty-salon/assets/images/main.jpg"
+                        alt=""
+                    />
+                </div>
             </div>
         </div>
     </section>
     <div class="divider"></div>
     <section id="services">
-        <div class="container-fluid mx-auto">
+        <div class="container mx-auto">
             <div class="row">
                 <header class="text-center mx-auto col-12 mb-5" id="services-header">
                     <h3>Why choose us?</h3>
@@ -86,7 +90,7 @@
     <div class="divider"></div>
     <section id="contact">
         <div class="container">
-            <div class="row gap-5 justify-content-center">
+            <div class="row justify-content-center">
                 <div id="test" class="mt-3 col-lg-5 col-sm-12">
                     <h4>Contact us on WhatsApp.</h4>
                     <p class="mt-4 w-75">
@@ -151,7 +155,6 @@
             </div>
         </div>
     </section>
-    <div class="divider"></div>
 </template>
 
 <script setup lang="ts">
@@ -190,9 +193,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#container-home {
-    max-width: 70rem;
-}
 
 #apresentation {
     max-width: 24rem;
