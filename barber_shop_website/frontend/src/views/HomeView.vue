@@ -40,7 +40,7 @@
                     </p>
                 </header>
             </div>
-            <div class="row gap-4 justify-content-center">
+            <div class="row gap-4 justify-content-center mt-4">
                 <!-- First card -->
                 <div class="card col-12 col-md-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
@@ -84,6 +84,70 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+    <div class="divider"></div>
+    <section class="testimonials">
+        <div class="container">
+            <header class="text-center mx-auto col-12" id="services-header">
+                <h3>Why choose us?</h3>
+                <p class="mt-4">
+                    Com mais de 10 anos no mercado, o Beautysalon já conquistou clientes de inúmeros
+                    países com seus tratamentos exclusivos e totalmente naturais
+                </p>
+            </header>
+            <div class="row justify-content-center mt-6">
+                <swiper-container pagination="true" slides-per-view="2" space-between="30">
+                    <swiper-slide>
+                        <div class="card p-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">
+                                    With supporting text below as a natural lead-in to additional
+                                    content.
+                                </p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <div class="card p-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">
+                                    With supporting text below as a natural lead-in to additional
+                                    content.
+                                </p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <div class="card p-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">
+                                    With supporting text below as a natural lead-in to additional
+                                    content.
+                                </p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </swiper-slide>
+                    <swiper-slide>
+                        <div class="card p-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Special title treatment</h5>
+                                <p class="card-text">
+                                    With supporting text below as a natural lead-in to additional
+                                    content.
+                                </p>
+                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                            </div>
+                        </div>
+                    </swiper-slide>
+                </swiper-container>
             </div>
         </div>
     </section>
@@ -158,42 +222,12 @@
 </template>
 
 <script setup lang="ts">
-import { map, tileLayer, marker } from 'leaflet'
-import 'leaflet/dist/leaflet.css' // You still need the CSS for styling
-import { onMounted } from 'vue'
+import { register } from 'swiper/element/bundle'
 
-onMounted(() => {
-    // Create the map
-    const myMap = map('map', {
-        dragging: false,
-        zoomControl: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
-        minZoom: 17
-    }).setView([-22.8, -47.3], 17)
-
-    // Add tile layer
-    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(myMap)
-
-    // Add a marker
-    marker([-22.8, -47.3], 17)
-        .addTo(myMap)
-        .bindPopup(
-            `
-        <h6 class="text-center"> Our location: </h6> 
-        456 Trim Street,
-        Clipper District,
-        Beardstown.
-    `
-        )
-        .openPopup()
-})
+register()
 </script>
 
 <style scoped>
-
 #apresentation {
     max-width: 24rem;
     margin-right: 4rem;
@@ -214,12 +248,12 @@ img {
     height: auto;
 }
 
-#services div.container div.row:nth-child(2) {
-    margin-top: 6rem;
-}
-
 #services-header {
     max-width: 30rem;
+}
+
+.mt-6 {
+    margin-top: 5rem;
 }
 
 #map {
