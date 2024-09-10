@@ -91,59 +91,111 @@
     <section class="testimonials">
         <div class="container">
             <header class="text-center mx-auto col-12" id="services-header">
-                <h3>Why choose us?</h3>
+                <h3>Testimonials</h3>
                 <p class="mt-4">
                     Com mais de 10 anos no mercado, o Beautysalon já conquistou clientes de inúmeros
                     países com seus tratamentos exclusivos e totalmente naturais
                 </p>
             </header>
             <div class="row justify-content-center mt-6">
-                <swiper-container pagination="true" slides-per-view="2" space-between="30">
+                <swiper-container
+                    class="h-18"
+                    pagination="true"
+                    space-between="30"
+                    :breakpoints="{
+                        280: { slidesPerView: 1 },
+                        720: { slidesPerView: 2 },
+                    }"
+                >
                     <swiper-slide>
-                        <div class="card p-4">
+                        <div class="card p-2">
                             <div class="card-body">
-                                <h5 class="card-title">Special title treatment</h5>
                                 <p class="card-text">
-                                    With supporting text below as a natural lead-in to additional
-                                    content.
+                                    <i class="bi bi-quote fs-4"></i>
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting
+                                    industry. Lorem Ipsum has been the industry's standard dummy
+                                    text ever since the 1500s, when an unknown printer took a galley
+                                    of type and scrambled it to make a type specimen book.
                                 </p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <div
+                                    class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        class="img-fluid"
+                                        alt="..."
+                                    />
+                                    <span> Test </span>
+                                </div>
                             </div>
                         </div>
                     </swiper-slide>
                     <swiper-slide>
-                        <div class="card p-4">
+                        <div class="card p-2">
                             <div class="card-body">
-                                <h5 class="card-title">Special title treatment</h5>
                                 <p class="card-text">
-                                    With supporting text below as a natural lead-in to additional
-                                    content.
+                                    <i class="bi bi-quote fs-4"></i>
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting
+                                    industry. Lorem Ipsum has been the industry's standard dummy
+                                    text ever since the 1500s, when an unknown printer took a galley
+                                    of type and scrambled it to make a type specimen book.
                                 </p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <div
+                                    class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        class="img-fluid"
+                                        alt="..."
+                                    />
+                                    <span> Test </span>
+                                </div>
                             </div>
                         </div>
                     </swiper-slide>
                     <swiper-slide>
-                        <div class="card p-4">
+                        <div class="card p-2">
                             <div class="card-body">
-                                <h5 class="card-title">Special title treatment</h5>
                                 <p class="card-text">
-                                    With supporting text below as a natural lead-in to additional
-                                    content.
+                                    <i class="bi bi-quote fs-4"></i>
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting
+                                    industry. Lorem Ipsum has been the industry's standard dummy
+                                    text ever since the 1500s, when an unknown printer took a galley
+                                    of type and scrambled it to make a type specimen book.
                                 </p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <div
+                                    class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        class="img-fluid"
+                                        alt="..."
+                                    />
+                                    <span> Test </span>
+                                </div>
                             </div>
                         </div>
                     </swiper-slide>
                     <swiper-slide>
-                        <div class="card p-4">
+                        <div class="card p-2">
                             <div class="card-body">
-                                <h5 class="card-title">Special title treatment</h5>
                                 <p class="card-text">
-                                    With supporting text below as a natural lead-in to additional
-                                    content.
+                                    <i class="bi bi-quote fs-4"></i>
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting
+                                    industry. Lorem Ipsum has been the industry's standard dummy
+                                    text ever since the 1500s, when an unknown printer took a galley
+                                    of type and scrambled it to make a type specimen book.
                                 </p>
-                                <a href="#" class="btn btn-primary">Go somewhere</a>
+                                <div
+                                    class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
+                                >
+                                    <img
+                                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        class="clip-path img-fluid"
+                                        alt="..."
+                                    />
+                                    <span> Test </span>
+                                </div>
                             </div>
                         </div>
                     </swiper-slide>
@@ -222,8 +274,9 @@
 </template>
 
 <script setup lang="ts">
+// import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle'
-
+// register Swiper custom elements
 register()
 </script>
 
@@ -243,7 +296,7 @@ button {
     left: 16.8%;
 }
 
-img {
+#home img {
     width: 40rem;
     height: auto;
 }
@@ -258,5 +311,20 @@ img {
 
 #map {
     height: 20rem;
+}
+
+.h-18 {
+    min-height: 18rem;
+}
+
+swiper-container::part(bullet-active) {
+    background-color: #212529;
+}
+
+.testimonial-author img {
+    width: 2.5rem;
+    height: 2.5rem;
+    clip-path: circle();
+    object-fit: cover;
 }
 </style>
