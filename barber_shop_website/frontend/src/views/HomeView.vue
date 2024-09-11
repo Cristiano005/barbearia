@@ -29,10 +29,10 @@
         </div>
     </section>
     <div class="divider"></div>
-    <section id="services">
+    <section id="about">
         <div class="container mx-auto">
             <div class="row">
-                <header class="text-center mx-auto col-12 mb-5" id="services-header">
+                <header class="text-center mx-auto col-12 mb-5 mw-30">
                     <h3>Why choose us?</h3>
                     <p class="mt-4">
                         Com mais de 10 anos no mercado, o Beautysalon já conquistou clientes de
@@ -88,6 +88,49 @@
         </div>
     </section>
     <div class="divider"></div>
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <header class="text-center mx-auto col-12 mb-5 mw-30">
+                    <h3>Our services</h3>
+                </header>
+            </div>
+            <div class="row gap-4 justify-content-center mt-4">
+                <div class="card p-0 col-md-3">
+                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <div class="card-body">
+                        <h5 class="card-title">No fade haircut</h5>
+                        <h6 class="card-text">
+                            USD $10
+                        </h6>
+                        <a href="#" class="btn btn-dark">Schedule</a>
+                    </div>
+                </div>
+                <div class="card p-0 col-md-3">
+                    <img src="https://images.unsplash.com/photo-1533245270348-821d4d5c7514?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <div class="card-body">
+                        <h5 class="card-title">No fade haircut</h5>
+                        <h6 class="card-text">
+                            USD $10
+                        </h6>
+                        <a href="#" class="btn btn-dark">Schedule</a>
+                    </div>
+                </div>
+                <div class="card p-0 col-md-3">
+                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <div class="card-body">
+                        <h5 class="card-title">Beard Trim - $10</h5>
+                        <h6 class="card-text">
+                            <i class="bi bi-clock"></i>
+                            30 min
+                        </h6>
+                        <a href="#" class="btn btn-dark">Schedule</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="divider"></div>
     <section class="testimonials">
         <div class="container">
             <header class="text-center mx-auto col-12" id="services-header">
@@ -104,7 +147,7 @@
                     space-between="30"
                     :breakpoints="{
                         280: { slidesPerView: 1 },
-                        720: { slidesPerView: 2 },
+                        720: { slidesPerView: 2 }
                     }"
                 >
                     <swiper-slide>
@@ -301,7 +344,7 @@ button {
     height: auto;
 }
 
-#services-header {
+.mw-30 {
     max-width: 30rem;
 }
 
