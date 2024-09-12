@@ -40,7 +40,7 @@
                     </p>
                 </header>
             </div>
-            <div class="row gap-4 justify-content-center mt-4">
+            <div class="row gap-4 justify-content-center mt-4 mx-auto">
                 <!-- First card -->
                 <div class="card col-12 col-md-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
@@ -95,34 +95,36 @@
                     <h3>Our services</h3>
                 </header>
             </div>
-            <div class="row gap-4 justify-content-center mt-4">
-                <div class="card p-0 col-md-3">
+            <div class="row gap-4 justify-content-center mt-4 mx-auto">
+                <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
                     <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">No fade haircut</h5>
-                        <h6 class="card-text">
-                            USD $10
+                    <div class="card-body text-center">
+                        <h4 class="card-title">No Fade Haircut - $15</h4>
+                        <h6 class="card-text mt-3 mb-3">
+                            <i class="bi bi-clock"></i>
+                            35 min
                         </h6>
                         <a href="#" class="btn btn-dark">Schedule</a>
                     </div>
                 </div>
-                <div class="card p-0 col-md-3">
+                <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
                     <img src="https://images.unsplash.com/photo-1533245270348-821d4d5c7514?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">No fade haircut</h5>
-                        <h6 class="card-text">
-                            USD $10
-                        </h6>
-                        <a href="#" class="btn btn-dark">Schedule</a>
-                    </div>
-                </div>
-                <div class="card p-0 col-md-3">
-                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
-                    <div class="card-body">
-                        <h5 class="card-title">Beard Trim - $10</h5>
-                        <h6 class="card-text">
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Fade Haircut - $10</h4>
+                        <h6 class="card-text mt-3 mb-3">
                             <i class="bi bi-clock"></i>
                             30 min
+                        </h6>
+                        <a href="#" class="btn btn-dark">Schedule</a>
+                    </div>
+                </div>
+                <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
+                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <div class="card-body text-center">
+                        <h4 class="card-title">Beard Trim - $5</h4>
+                        <h6 class="card-text mt-3 mb-3">
+                            <i class="bi bi-clock"></i>
+                            15 min
                         </h6>
                         <a href="#" class="btn btn-dark">Schedule</a>
                     </div>
@@ -131,9 +133,9 @@
         </div>
     </section>
     <div class="divider"></div>
-    <section class="testimonials">
+    <section id="testimonials">
         <div class="container">
-            <header class="text-center mx-auto col-12" id="services-header">
+            <header class="text-center mx-auto col-12 mw-30" id="services-header">
                 <h3>Testimonials</h3>
                 <p class="mt-4">
                     Com mais de 10 anos no mercado, o Beautysalon já conquistou clientes de inúmeros
@@ -324,6 +326,7 @@ register()
 </script>
 
 <style scoped>
+
 #apresentation {
     max-width: 24rem;
     margin-right: 4rem;

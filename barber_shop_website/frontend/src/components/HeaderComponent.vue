@@ -18,19 +18,19 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav gap-2">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Home</a>
+                        <a class="nav-link text-white" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">About</a>
+                        <a class="nav-link text-white" href="#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Services</a>
+                        <a class="nav-link text-white" href="#services">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Testimonials</a>
+                        <a class="nav-link text-white" href="#testimonials">Testimonials</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Contact</a>
+                        <a class="nav-link text-white" href="#contact">Contact</a>
                     </li>
                     <li class="nav-item">
                         <button class="btn btn-outline-light" type="submit">Sign In</button>
