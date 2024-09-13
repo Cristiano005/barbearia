@@ -18,25 +18,25 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav gap-2">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#home">Home</a>
+                        <RouterLink class="nav-link text-white" to="/#home">Home</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#about">About</a>
+                        <RouterLink class="nav-link text-white" to="/#about">About</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#services">Services</a>
+                        <RouterLink class="nav-link text-white" to="/#services">Services</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#testimonials">Testimonials</a>
+                        <RouterLink class="nav-link text-white" to="/#testimonials">Testimonials</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#contact">Contact</a>
+                        <RouterLink class="nav-link text-white" to="/#contact">Contact</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <button class="btn btn-outline-light" type="submit">Sign In</button>
+                        <RouterLink class="btn btn-outline-light" to="/signin">Sign In</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <button class="btn btn-outline-light" type="submit">Sign Up</button>
+                        <RouterLink class="btn btn-outline-light" to="/signin">Sign Up</RouterLink>
                     </li>
                 </ul>
             </div>

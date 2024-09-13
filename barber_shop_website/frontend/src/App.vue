@@ -1,15 +1,22 @@
 <script setup lang="ts">
+
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const shouldShowAuthPage = computed<boolean>(() => ["signin", "signup"].includes(router.currentRoute.value.name as string));
+
 </script>
 
 <template>
-    <header class="fixed-top p-2 bg-dark">
+    <header class="fixed-top p-2 bg-dark" v-if="!shouldShowAuthPage">
         <HeaderComponent />
     </header>
     <main>
         <RouterView />
     </main>
-    <footer class="bg-dark">
+    <footer class="bg-dark" v-if="!shouldShowAuthPage">
         <div class="container mx-auto">
             <div class="row justify-content-around">
                 <div class="col-lg-6">
