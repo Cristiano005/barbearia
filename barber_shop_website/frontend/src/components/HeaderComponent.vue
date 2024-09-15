@@ -18,25 +18,25 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav gap-2">
                     <li class="nav-item">
-                        <RouterLink class="nav-link text-white" to="/#home">Home</RouterLink>
+                        <a class="nav-link text-white" href="/#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="nav-link text-white" to="/#about">About</RouterLink>
+                        <a class="nav-link text-white" href="/#about">About</a>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="nav-link text-white" to="/#services">Services</RouterLink>
+                        <a class="nav-link text-white" href="/#services">Services</a>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="nav-link text-white" to="/#testimonials">Testimonials</RouterLink>
+                        <a class="nav-link text-white" href="/#testimonials">Testimonials</a>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="nav-link text-white" to="/#contact">Contact</RouterLink>
+                        <a class="nav-link text-white" href="/#contact">Contact</a>
                     </li>
                     <li class="nav-item">
                         <RouterLink class="btn btn-outline-light" to="/signin">Sign In</RouterLink>
                     </li>
                     <li class="nav-item">
-                        <RouterLink class="btn btn-outline-light" to="/signin">Sign Up</RouterLink>
+                        <RouterLink class="btn btn-outline-light" to="/signup">Sign Up</RouterLink>
                     </li>
                 </ul>
             </div>
