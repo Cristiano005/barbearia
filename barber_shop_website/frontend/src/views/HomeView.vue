@@ -3,9 +3,9 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div id="apresentation" class="col-12 col-md-6">
-                    <h2 class="lh-base mb-4 fw-bold">Wecolme to Barber Shop in Nova Odessa.</h2>
+                    <h2 class="lh-base mb-4 fw-bold">Wecolme to Barber Shop in Fiction City.</h2>
                     <p class="lh-base mb-4">
-                        Um salão exclusivo em São Paulo, especializado em tratamentos naturais.
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.
                     </p>
                     <button
                         class="d-flex align-items-center justify-content-center btn btn-dark px-5"
@@ -14,13 +14,9 @@
                         <i class="bi bi-alarm-fill p-2"></i>
                     </button>
                 </div>
-                <div class="position-relative col-12 col-md-6">
-                    <div
-                        id="background-effect"
-                        class="position-absolute bg-dark h-100 z-n1 rounded-1"
-                    ></div>
+                <div class="position-relative col-12 col-md-6" id="container-image">
                     <img
-                        class="rounded-1"
+                        class="position-relative rounded-1 w-100 h-auto"
                         src="https://matheuscostadesign.github.io/nlw6-beauty-salon/assets/images/main.jpg"
                         alt=""
                     />
@@ -35,8 +31,9 @@
                 <header class="text-center mx-auto col-12 mb-5 mw-30">
                     <h3>Why choose us?</h3>
                     <p class="mt-4">
-                        Com mais de 10 anos no mercado, o Beautysalon já conquistou clientes de
-                        inúmeros países com seus tratamentos exclusivos e totalmente naturais
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                        praesentium voluptatum deleniti atque corrupti quos dolores et quas
+                        molestias excepturi sint.
                     </p>
                 </header>
             </div>
@@ -97,7 +94,12 @@
             </div>
             <div class="row gap-4 justify-content-center mt-4 mx-auto">
                 <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
-                    <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <img
+                        src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        style="height: 20rem"
+                        class="card-img-top object-fit-cover"
+                        alt="..."
+                    />
                     <div class="card-body text-center">
                         <h4 class="card-title">No Fade Haircut - $15</h4>
                         <h6 class="card-text mt-3 mb-3">
@@ -108,7 +110,12 @@
                     </div>
                 </div>
                 <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
-                    <img src="https://images.unsplash.com/photo-1533245270348-821d4d5c7514?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <img
+                        src="https://images.unsplash.com/photo-1533245270348-821d4d5c7514?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        style="height: 20rem"
+                        class="card-img-top object-fit-cover"
+                        alt="..."
+                    />
                     <div class="card-body text-center">
                         <h4 class="card-title">Fade Haircut - $10</h4>
                         <h6 class="card-text mt-3 mb-3">
@@ -119,7 +126,12 @@
                     </div>
                 </div>
                 <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
-                    <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" style="height: 20rem;" class="card-img-top object-fit-cover" alt="..." />
+                    <img
+                        src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        style="height: 20rem"
+                        class="card-img-top object-fit-cover"
+                        alt="..."
+                    />
                     <div class="card-body text-center">
                         <h4 class="card-title">Beard Trim - $5</h4>
                         <h6 class="card-text mt-3 mb-3">
@@ -138,8 +150,9 @@
             <header class="text-center mx-auto col-12 mw-30" id="services-header">
                 <h3>Testimonials</h3>
                 <p class="mt-4">
-                    Com mais de 10 anos no mercado, o Beautysalon já conquistou clientes de inúmeros
-                    países com seus tratamentos exclusivos e totalmente naturais
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                    nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 </p>
             </header>
             <div class="row justify-content-center mt-6">
@@ -251,68 +264,71 @@
     <div class="divider"></div>
     <section id="contact">
         <div class="container">
-            <div class="row justify-content-center">
+            <div class="row justify-content-center gap-5">
                 <div id="test" class="mt-3 col-lg-5 col-sm-12">
-                    <h4>Contact us on WhatsApp.</h4>
-                    <p class="mt-4 w-75">
-                        Contact us for any questions. We are available today via WhatsApp and email.
-                    </p>
-                    <button class="btn btn-dark px-5">
-                        <i class="bi bi-whatsapp"></i>
-                        WhatsApp
-                    </button>
-                </div>
-                <div id="contact" class="col-lg-5 col-sm-12">
-                    <form method="post" id="contactForm">
-                        <div class="mb-3">
-                            <label for="name" class="form-label" id="label-name">Name</label>
-                            <input
-                                type="text"
-                                class="form-control border-dark name"
-                                id="name"
-                                placeholder="Erisvaldo"
-                                name="name"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label" id="label-email">Email</label>
-                            <input
-                                type="email"
-                                class="form-control border-dark email"
-                                id="email"
-                                placeholder="name@example.com"
-                                name="email"
-                            />
-                        </div>
-                        <div class="mb-3">
-                            <label for="subject" class="form-label" id="label-subject"
-                                >Subject</label
-                            >
-                            <input
-                                type="text"
-                                class="form-control border-dark subject"
-                                id="subject"
-                                placeholder="Travel"
-                                name="subject"
-                            />
-                        </div>
-                        <div class="form-floating">
-                            <textarea
-                                class="form-control border-dark resize-none message"
-                                placeholder="Leave a message here"
-                                id="message"
-                                name="message"
-                            ></textarea>
-                            <label for="message" id="label-message">Message</label>
-                        </div>
-                        <button
-                            class="w-100 mt-4 btn btn-dark btn-outline-secondary text-light"
-                            id="send-email"
-                        >
-                            Send
+                    <div>
+                        <h4>Contact us on WhatsApp.</h4>
+                        <p class="mt-4 w-75">
+                            Contact us for any questions. We are available today via WhatsApp and
+                            email.
+                        </p>
+                        <button class="btn btn-dark px-5">
+                            <i class="bi bi-whatsapp"></i>
+                            WhatsApp
                         </button>
-                    </form>
+                    </div>
                 </div>
+
+                <form
+                    method="post"
+                    class="d-flex flex-column gap-4 col-lg-5 col-sm-12"
+                    id="contactForm"
+                >
+                    <div class="col-12">
+                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control p-3"
+                            id="exampleInputEmail1"
+                            aria-describedby="emailHelp"
+                            placeholder="Write your e-mail"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            class="form-control p-3"
+                            id="exampleInputPassword1"
+                            placeholder="Write your password"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            class="form-control p-3"
+                            id="exampleInputEmail1"
+                            aria-describedby="emailHelp"
+                            placeholder="Write your e-mail"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            class="form-control p-3"
+                            id="exampleInputPassword1"
+                            placeholder="Write your password"
+                        />
+                    </div>
+                    <button
+                        class="w-100 mt-4 btn btn-dark btn-outline-secondary text-light"
+                        id="send-email"
+                    >
+                        Send
+                    </button>
+                </form>
             </div>
         </div>
     </section>
@@ -325,8 +341,7 @@ import { register } from 'swiper/element/bundle'
 register()
 </script>
 
-<style scoped>
-
+<style lang="scss">
 #apresentation {
     max-width: 24rem;
     margin-right: 4rem;
@@ -336,15 +351,15 @@ button {
     height: 3.125rem;
 }
 
-#background-effect {
-    width: 40rem;
+#container-image::before {
+    content: '';
+    height: 100%;
+    width: 100%;
+    background-color: #212529;
+    position: absolute;
     top: -16.8%;
-    left: 16.8%;
-}
-
-#home img {
-    width: 40rem;
-    height: auto;
+    left: 16.7%;
+    z-index: 0;
 }
 
 .mw-30 {
@@ -372,5 +387,28 @@ swiper-container::part(bullet-active) {
     height: 2.5rem;
     clip-path: circle();
     object-fit: cover;
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        margin: 0;
+    }
+
+    #home {
+        overflow-x: hidden;
+    }
+
+    #container-image {
+        order: -1;
+        margin-bottom: 2rem;
+    }
+
+    #container-image img {
+        right: 2.93rem;
+    }
+
+    #apresentation {
+        margin-right: 0;
+    }
 }
 </style>
