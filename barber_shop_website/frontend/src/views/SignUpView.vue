@@ -60,7 +60,7 @@
 <script setup lang="ts">
 </script>
 
-<style>
+<style scoped lang="scss">
 main {
     margin: 0;
 }

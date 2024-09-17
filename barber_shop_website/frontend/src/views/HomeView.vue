@@ -2,7 +2,7 @@
     <section id="home">
         <div class="container">
             <div class="row justify-content-center">
-                <div id="apresentation" class="col-12 col-md-6">
+                <div id="apresentation" class="col-12 col-lg-6">
                     <h2 class="lh-base mb-4 fw-bold">Wecolme to Barber Shop in Fiction City.</h2>
                     <p class="lh-base mb-4">
                         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.
@@ -14,7 +14,7 @@
                         <i class="bi bi-alarm-fill p-2"></i>
                     </button>
                 </div>
-                <div class="position-relative col-12 col-md-6" id="container-image">
+                <div class="position-relative col-12 col-lg-6" id="container-image">
                     <img
                         class="position-relative rounded-1 w-100 h-auto"
                         src="https://matheuscostadesign.github.io/nlw6-beauty-salon/assets/images/main.jpg"
@@ -24,7 +24,7 @@
             </div>
         </div>
     </section>
-    <div class="divider"></div>
+    <div class="left-to-right-divider"></div>
     <section id="about">
         <div class="container mx-auto">
             <div class="row">
@@ -39,7 +39,7 @@
             </div>
             <div class="row gap-4 justify-content-center mt-4 mx-auto">
                 <!-- First card -->
-                <div class="card col-12 col-md-3 py-5 px-4">
+                <div class="card col-12 col-md-5 col-xl-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
                         <i
                             class="bi bi-piggy-bank-fill fs-1 bg-dark rounded text-white px-4 py-2"
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Second card -->
-                <div class="card col-12 col-md-3 py-5 px-4">
+                <div class="card col-12 col-md-5 col-xl-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
                         <i class="bi bi-scissors fs-1 bg-dark rounded text-white px-4 py-2"></i>
                     </div>
@@ -69,7 +69,7 @@
                 </div>
 
                 <!-- Third card -->
-                <div class="card col-12 col-md-3 py-5 px-4">
+                <div class="card col-12 col-md-5 col-xl-3 py-5 px-4">
                     <div class="icon d-flex justify-content-center">
                         <i class="bi bi-shop-window fs-1 bg-dark rounded text-white px-4 py-2"></i>
                     </div>
@@ -84,7 +84,7 @@
             </div>
         </div>
     </section>
-    <div class="divider"></div>
+    <div class="right-to-left-divider"></div>
     <section id="services">
         <div class="container">
             <div class="row">
@@ -144,7 +144,7 @@
             </div>
         </div>
     </section>
-    <div class="divider"></div>
+    <div class="left-to-right-divider"></div>
     <section id="testimonials">
         <div class="container">
             <header class="text-center mx-auto col-12 mw-30" id="services-header">
@@ -261,7 +261,7 @@
             </div>
         </div>
     </section>
-    <div class="divider"></div>
+    <div class="right-to-left-divider"></div>
     <section id="contact">
         <div class="container">
             <div class="row justify-content-center gap-5">
@@ -341,7 +341,8 @@ import { register } from 'swiper/element/bundle'
 register()
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+
 #apresentation {
     max-width: 24rem;
     margin-right: 4rem;
