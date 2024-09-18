@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex p-0 m-0 min-vh-100">
-        <div class="col-xl-6 col-sm-12 d-flex" id="form-container">
-            <div class="container custom-width">
+        <div class="col-xl-6 col-sm-12 d-flex justify-content-center align-items-center">
+            <div class="container custom-width p-4">
                 <div id="header">
                     <h2 class="fs-2 mb-5">
                         <RouterLink class="text-dark text-decoration-none" to="/"> Barber Shop </RouterLink>
@@ -11,41 +11,39 @@
                 </div>
                 <form class="row mt-5 gap-4">
                     <div class="col-12">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name*</label>
                         <input
                             type="text"
                             class="form-control p-3"
                             id="name"
-                            aria-describedby="emailHelp"
-                            placeholder="Write your name"
+                            placeholder="Enter your name"
                         />
                     </div>
                     <div class="col-12">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email*</label>
                         <input
                             type="email"
                             class="form-control p-3"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Write your e-mail"
+                            id="email"
+                            placeholder="Enter your e-mail"
                         />
                     </div>
                     <div class="col-12">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <label for="password" class="form-label">Password*</label>
                         <input
                             type="password"
                             class="form-control p-3"
-                            id="exampleInputPassword1"
-                            placeholder="Write your password"
+                            id="password"
+                            placeholder="Enter your password"
                         />
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-dark p-3 w-100">Sign in</button>
+                        <button type="submit" class="btn btn-dark p-3 w-100">Sign Up</button>
                     </div>
                 </form>
                 <p class="mt-4">
                     Already have an account?
-                    <RouterLink to="/signin"> Sign In </RouterLink>
+                    <RouterLink class="text-dark fw-bold" to="/signin"> Sign In </RouterLink>
                 </p>
             </div>
         </div>
@@ -61,39 +59,17 @@
 </script>
 
 <style scoped lang="scss">
-main {
-    margin: 0;
-}
-
-#header {
-    padding-top: 2rem;
-}
-
-@media (min-width: 1400px) {
-    /* Bootstrap's xxl breakpoint */
-    .custom-width {
-        width: 60%;
-    }
-}
 
 @media (min-width: 768px) {
-    /* Bootstrap's lg breakpoint */
     .custom-width {
         width: 75%;
-        padding: 2rem;
     }
 }
 
 @media (max-width: 768px) {
-    /* Bootstrap's lg breakpoint */
     .custom-width {
         width: 100%;
-        padding: 2rem;
     }
 }
 
-#form-container {
-    justify-content: center;
-    align-items: center;
-}
 </style>

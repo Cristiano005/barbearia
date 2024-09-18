@@ -64,30 +64,28 @@ const shouldApplyMainMargin = computed<StyleValue>(() =>
         <RouterView />
     </main>
     <footer class="bg-dark" v-show="!shouldShowAuthPage">
-        <div class="container mx-auto">
-            <div class="row justify-content-around">
-                <div class="col-lg-6">
-                    <h4 class="text-white">Barber shop</h4>
-                    <p class="text-white mt-4">2024 Barber shop</p>
-                    <p class="text-white">Diretos reservados</p>
-                </div>
-                <div id="social-medias" class="row col-lg-2 gap-5">
-                    <a href="#" class="social-media col-md-1">
-                        <i class="bi bi-facebook text-white fs-4 cursor-pointer"></i>
-                    </a>
-                    <a href="#" class="social-media col-md-1">
-                        <i class="bi bi-instagram text-white fs-4 cursor-pointer"></i>
-                    </a>
-                    <a href="#" class="social-media col-md-1">
-                        <i class="bi bi-youtube text-white fs-4 cursor-pointer"></i>
-                    </a>
-                </div>
+        <div class="d-flex container mx-auto justify-content-center justify-content-sm-between flex-wrap gap-2">
+            <div class="d-flex flex-column align-items-center align-items-sm-start col-12 col-sm-6">
+                <h4 class="text-white">Barber shop</h4>
+                <p class="text-white mt-4">2024 Barber shop</p>
+                <p class="text-white">Diretos reservados</p>
+            </div>
+            <div id="social-medias" class="d-flex gap-5">
+                <a href="#" class="social-media">
+                    <i class="bi bi-facebook text-white fs-4 cursor-pointer"></i>
+                </a>
+                <a href="#" class="social-media">
+                    <i class="bi bi-instagram text-white fs-4 cursor-pointer"></i>
+                </a>
+                <a href="#" class="social-media">
+                    <i class="bi bi-youtube text-white fs-4 cursor-pointer"></i>
+                </a>
             </div>
         </div>
     </footer>
 </template>
 
-<style>
+<style lang="scss">
 * {
     font-family: 'Poppins', sans-serif;
 }
@@ -108,5 +106,11 @@ footer {
 .right-to-left-divider {
     height: 1px;
     background: linear-gradient(270deg, rgb(219, 219, 219), rgb(0, 0, 0));
+}
+
+@media (min-width: 765px) and (max-width: 1000px) {
+    #social-medias {
+        justify-content: end;
+    }
 }
 </style>

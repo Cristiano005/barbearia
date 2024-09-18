@@ -1,8 +1,8 @@
 <template>
     <div class="d-flex p-0 m-0 min-vh-100">
-        <div class="col-xl-6 col-sm-12 d-flex" id="form-container">
-            <div class="container custom-width">
-                <div id="header">
+        <div class="col-xl-6 col-sm-12 d-flex justify-content-center align-items-center">
+            <div class="container custom-width p-4">
+                <div class="mt-4">
                     <h2 class="fs-2 mb-5">
                         <RouterLink class="text-dark text-decoration-none" to="/">
                             Barber Shop
@@ -15,22 +15,22 @@
                 </div>
                 <form class="row mt-5 gap-4">
                     <div class="col-12">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email*</label>
                         <input
                             type="email"
                             class="form-control p-3"
-                            id="exampleInputEmail1"
+                            id="email"
                             aria-describedby="emailHelp"
-                            placeholder="Write your e-mail"
+                            placeholder="Enter your e-mail"
                         />
                     </div>
                     <div class="col-12">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <label for="password" class="form-label">Password*</label>
                         <input
                             type="password"
                             class="form-control p-3"
-                            id="exampleInputPassword1"
-                            placeholder="Write your password"
+                            id="password"
+                            placeholder="Enter your password"
                         />
                     </div>
                     <div class="col-12">
@@ -45,7 +45,7 @@
                 </form>
                 <p class="mt-4">
                     Don't have an account?
-                    <RouterLink to="/signup"> Create one right now. </RouterLink>
+                    <RouterLink class="text-dark fw-bold" to="/signup"> Create one right now. </RouterLink>
                 </p>
             </div>
         </div>
@@ -60,40 +60,18 @@
 <script setup lang="ts">
 </script>
 
-<style>
-main {
-    margin: 0;
-}
-
-#header {
-    padding-top: 2rem;
-}
-
-@media (min-width: 1400px) {
-    /* Bootstrap's xxl breakpoint */
-    .custom-width {
-        width: 60%;
-    }
-}
+<style scoped lang="scss">
 
 @media (min-width: 768px) {
-    /* Bootstrap's lg breakpoint */
     .custom-width {
         width: 75%;
-        padding: 2rem;
     }
 }
 
 @media (max-width: 768px) {
-    /* Bootstrap's lg breakpoint */
     .custom-width {
         width: 100%;
-        padding: 2rem;
     }
 }
 
-#form-container {
-    justify-content: center;
-    align-items: center;
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <section id="home">
+    <section class="overflow-hidden" id="home">
         <div class="container">
             <div class="row justify-content-center">
                 <div id="apresentation" class="col-12 col-lg-6">
@@ -285,41 +285,39 @@
                     id="contactForm"
                 >
                     <div class="col-12">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <label for="name" class="form-label">Name*</label>
                         <input
                             type="email"
                             class="form-control p-3"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Write your e-mail"
+                            id="name"
+                            placeholder="Enter your namer"
                         />
                     </div>
                     <div class="col-12">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <label for="contact-email" class="form-label">Email*</label>
                         <input
-                            type="password"
+                            type="text"
                             class="form-control p-3"
-                            id="exampleInputPassword1"
-                            placeholder="Write your password"
+                            id="contact-email"
+                            placeholder="Enter your email"
                         />
                     </div>
                     <div class="col-12">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <label for="subject" class="form-label">Subject*</label>
                         <input
-                            type="email"
+                            type="text"
                             class="form-control p-3"
-                            id="exampleInputEmail1"
-                            aria-describedby="emailHelp"
-                            placeholder="Write your e-mail"
+                            id="subject"
+                            placeholder="Enter your subject"
                         />
                     </div>
                     <div class="col-12">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <label for="message" class="form-label">Message*</label>
                         <input
-                            type="password"
+                            type="text"
                             class="form-control p-3"
-                            id="exampleInputPassword1"
-                            placeholder="Write your password"
+                            id="message"
+                            placeholder="Enter your message"
                         />
                     </div>
                     <button
@@ -335,9 +333,7 @@
 </template>
 
 <script setup lang="ts">
-// import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle'
-// register Swiper custom elements
 register()
 </script>
 
@@ -410,6 +406,12 @@ swiper-container::part(bullet-active) {
 
     #apresentation {
         margin-right: 0;
+    }
+}
+
+@media (min-width: 280px) and (max-width: 1000px) {
+    .h-18 {
+        min-height: 20rem;
     }
 }
 </style>
