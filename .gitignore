@@ -1,6 +1,0 @@
-vendor
-.env
-package-lock.json
-composer.lock
-annotations.todo
-node_modules
