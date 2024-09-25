@@ -7,7 +7,7 @@ services:
     build:
       context: ./barbershop_customer
       dockerfile: Dockerfile
-    container_name: frontend-container
+    container_name: barbershop_customer
     volumes:
       - ./barbershop_customer:/var/www/frontend
       - /var/www/frontend/node_modules

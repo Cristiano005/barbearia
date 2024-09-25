@@ -209,7 +209,7 @@
                         consequat.
                     </p>
                 </header>
-                <div class="row justify-content-center mt-6">
+                <div class="row justify-content-center" style="margin-top: 5rem">
                     <swiper-container
                         class="h-18"
                         pagination="true"
@@ -394,9 +394,9 @@
             class="d-flex container mx-auto justify-content-center justify-content-sm-between flex-wrap gap-2"
         >
             <div class="d-flex flex-column align-items-center align-items-sm-start col-12 col-sm-6">
-                <h4 class="text-white">Barber shop</h4>
-                <p class="text-white mt-4">2024 Barber shop</p>
-                <p class="text-white">Diretos reservados</p>
+                <h4 class="text-white">Barber Shop.</h4>
+                <p class="text-white mt-4">2024 Barber Shop.</p>
+                <p class="text-white">All rights reserved.</p>
             </div>
             <div id="social-medias" class="d-flex gap-5">
                 <a href="#" class="social-media">
@@ -438,77 +438,86 @@ html.sr .load-hidden {
     visibility: hidden;
 }
 
+header #navbarContent ul li:nth-last-child(n+3) a {
+    position: relative;
+    top: 0;
+    transition: color 0.25s !important;
+
+    &:hover {
+        color: white !important;
+    }
+
+    &::after {
+        content: '';
+        width: 0%;
+        height: 0.1rem;
+        position: absolute;
+        left: 0;
+        bottom: -0.8rem;
+        transition: width 0.25s !important;
+        background-color: rgb(255, 255, 255) !important; // Ensure visibility
+    }
+
+    &:hover::after {
+        width: 100% !important;
+    }
+}
+
 main {
     margin-top: 4.5rem;
-}
 
-#apresentation {
-    max-width: 24rem;
-    margin-right: 4rem;
-}
+    #apresentation {
+        max-width: 24rem;
+        margin-right: 4rem;
+    }
 
-button {
-    height: 3.125rem;
-}
+    #container-image::before {
+        content: '';
+        height: 100%;
+        width: 100%;
+        background-color: #212529;
+        position: absolute;
+        top: -16.8%;
+        left: 16.7%;
+        z-index: 0;
+    }
 
-#container-image::before {
-    content: '';
-    height: 100%;
-    width: 100%;
-    background-color: #212529;
-    position: absolute;
-    top: -16.8%;
-    left: 16.7%;
-    z-index: 0;
+    swiper-container::part(bullet-active) {
+        background-color: #212529;
+    }
+
+    .testimonial-author img {
+        width: 2.5rem;
+        height: 2.5rem;
+        clip-path: circle();
+        object-fit: cover;
+    }
 }
 
 .mw-30 {
     max-width: 30rem;
 }
 
-.mt-6 {
-    margin-top: 5rem;
-}
-
-#map {
-    height: 20rem;
-}
-
 .h-18 {
     min-height: 18rem;
-}
-
-swiper-container::part(bullet-active) {
-    background-color: #212529;
-}
-
-.testimonial-author img {
-    width: 2.5rem;
-    height: 2.5rem;
-    clip-path: circle();
-    object-fit: cover;
 }
 
 @media screen and (max-width: 768px) {
     main {
         margin: 0;
-    }
 
-    #home {
-        overflow-x: hidden;
-    }
+        #apresentation {
+            margin-right: 0;
+        }
 
-    #container-image {
-        order: -1;
-        margin-bottom: 2rem;
-    }
+        #container-image {
+            order: -1;
+            margin-bottom: 2rem;
+        }
 
-    #container-image img {
-        right: 2.93rem;
-    }
-
-    #apresentation {
-        margin-right: 0;
+        #container-image img {
+            right: 2.93rem;
+        }
     }
 }
 
