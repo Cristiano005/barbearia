@@ -1,18 +1,32 @@
 networks:
-  barbershop-network:
-    driver: bridge
+    barbershop-network:
+        driver: bridge
 
 services:
-  frontend:
-    build:
-      context: ./barbershop_customer
-      dockerfile: Dockerfile
-    container_name: barbershop_customer
-    volumes:
-      - ./barbershop_customer:/var/www/frontend
-      - /var/www/frontend/node_modules
-    ports:  
-      - 8000:8000
-    restart: unless-stopped
-    networks:
-      - barbershop-network
+    barbershop-customer:
+        build:
+            context: ./barbershop-customer
+            dockerfile: Dockerfile
+        container_name: barbershop-customer
+        volumes:
+            - ./barbershop-customer:/var/www/barbershop-customer
+            - /var/www/barbershop-customer/node_modules
+        ports:
+            - 8000:8000
+        restart: unless-stopped
+        networks:
+            - barbershop-network
+    barbershop-admin:
+        build:
+            context: ./barbershop-admin
+            dockerfile: Dockerfile
+        container_name: barbershop-admin
+        volumes:
+            - ./babershop-admin:/var/www/barbershop-admin
+            - /var/www/babershop-admin/node_modules
+        ports:
+            - 8001:8001
+        restart: 
+            unless-stopped
+        networks:
+            - barbershop-network

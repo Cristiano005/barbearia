@@ -1,6 +1,6 @@
 FROM node:20
 
-WORKDIR /var/www/frontend
+WORKDIR /var/www/barbershop-customer
 
 COPY package*.json ./
 
