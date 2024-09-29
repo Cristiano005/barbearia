@@ -1,0 +1,74 @@
+<template>
+    <div class="d-flex p-0 m-0 min-vh-100">
+        <div class="col-xl-6 col-sm-12 d-flex justify-content-center align-items-center">
+            <div class="container custom-width p-4">
+                <div class="mt-4">
+                    <h2 class="fs-2 mb-5">
+                        <RouterLink class="text-dark text-decoration-none" to="/">
+                            Barber Shop
+                        </RouterLink>
+                    </h2>
+                    <h3>Access our platform.</h3>
+                    <p class="mt-3">
+                        Welcome back! Sign in to manage your appointments or book a new haircut.
+                    </p>
+                </div>
+                <form class="row mt-5 gap-4">
+                    <div class="col-12">
+                        <label for="email" class="form-label">Email*</label>
+                        <input
+                            type="email"
+                            class="form-control p-3"
+                            id="email"
+                            aria-describedby="emailHelp"
+                            placeholder="Enter your e-mail"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <label for="password" class="form-label">Password*</label>
+                        <input
+                            type="password"
+                            class="form-control p-3"
+                            id="password"
+                            placeholder="Enter your password"
+                        />
+                    </div>
+                    <div class="col-12">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
+                        <label class="form-check-label ms-2" for="exampleCheck1"
+                            >Check me out</label
+                        >
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-dark p-3 w-100">Sign In</button>
+                    </div>
+                </form>
+                <p class="mt-4">
+                    Don't have an account?
+                    <RouterLink class="text-dark fw-bold" to="/signup"> Create one right now. </RouterLink>
+                </p>
+            </div>
+        </div>
+        <img
+            src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Barber Shop"
+            class="d-none d-xl-block vh-100 object-fit-cover col-xl-6"
+        />
+    </div>
+</template>
+
+<style scoped>
+
+@media (min-width: 768px) {
+    .custom-width {
+        width: 75%;
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-width {
+        width: 100%;
+    }
+}
+
+</style>
