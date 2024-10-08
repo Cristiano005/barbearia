@@ -42,11 +42,11 @@
             </div>
         </div>
     </div>
-    <main class="mvh-100 p-5">
-        <div class="table-header row flex-wrap justify-content-between gap-2">
-            <h2 class="col-12 col-lg-6">Services</h2>
-            <div class="d-flex col-12 col-lg-5 filters flex-wrap gap-3">
-                <div class="col-12 col-lg-5">
+    <main class="p-5">
+        <div class="table-header row flex-wrap align-items-center justify-content-between gap-2">
+            <h2 class="col-12 col-lg-3 col-xxl-6 mb-0">Services</h2>
+            <div class="d-flex col-12 col-lg-8 col-xxl-5 filters flex-wrap justify-content-end gap-3">
+                <div class="col-12 col-lg-4">
                     <input
                         class="form-control me-2 h-100 p-2"
                         type="search"
@@ -61,7 +61,7 @@
                         <option value="3">Three</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-success col-12 col-lg-2 p-2">
+                <button type="button" class="btn btn-success col-12 col-lg-3">
                     + Add service
                 </button>
             </div>
