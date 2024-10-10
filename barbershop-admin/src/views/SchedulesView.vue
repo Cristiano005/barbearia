@@ -24,12 +24,31 @@
                                 </select>
                             </div>
                             <div class="mb-3">
+                                <label for="payment-to-schedule" class="col-form-label">Payment:</label>
+                                <select class="form-select h-100 p-2" id="payment-to-schedule" v-model="selectedPayment">
+                                    <option v-for="(payment, index) of payments" :key="index">
+                                        {{ payment }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
                                 <label for="customer" class="col-form-label">Date and Hour:</label>
-                                <input type="text" class="form-control" id="customer" />
+                                <VueDatePicker
+                                    v-model="selectedDateInterval"
+                                    placeholder="Select a date interval"
+                                    :type="false"
+                                    format="dd/MM/yyyy"
+                                    range
+                                    multi-calendars />
                             </div>
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label">Note:</label>
-                                <textarea class="form-control" placeholder="Any notes..." id="message-text"></textarea>
+                                <textarea
+                                    @input="autosize($event)"
+                                    class="form-control overflow-hidden"
+                                    placeholder="Any notes..."
+                                    id="message-text"
+                                    style="resize: none"></textarea>
                             </div>
                         </form>
                     </div>
@@ -128,6 +147,22 @@
     </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { reactive, ref } from 'vue';
+
 import TheHeader from '@/components/TheHeader.vue';
+
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
+const payments = reactive<string[]>(['money', 'pix', 'credit-card', 'debit-card']);
+
+const selectedDateInterval = ref<string>("");
+const selectedPayment = ref<string>(payments[0]);
+
+const autosize = (event: Event): void => {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+};
 </script>
