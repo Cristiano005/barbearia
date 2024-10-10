@@ -12,11 +12,11 @@
                         <form>
                             <div class="mb-3">
                                 <label for="customer" class="col-form-label">Customer:</label>
-                                <input type="text" class="form-control" placeholder="Enter with the name" id="customer" />
+                                <input type="text" class="form-control border border-dark" placeholder="Enter with the name" id="customer" />
                             </div>
                             <div class="mb-3">
                                 <label for="service-to-schedule" class="col-form-label">Service:</label>
-                                <select class="form-select h-100 p-2" aria-label="Default select example" id="service-to-schedule">
+                                <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example" id="service-to-schedule">
                                     <option selected>All</option>
                                     <option value="1">One</option>
                                     <option value="2">Two</option>
@@ -25,7 +25,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="payment-to-schedule" class="col-form-label">Payment:</label>
-                                <select class="form-select h-100 p-2" id="payment-to-schedule" v-model="selectedPayment">
+                                <select class="form-select h-100 p-2 border border-dark" id="payment-to-schedule" v-model="selectedPayment">
                                     <option v-for="(payment, index) of payments" :key="index">
                                         {{ payment }}
                                     </option>
@@ -34,6 +34,7 @@
                             <div class="mb-3">
                                 <label for="customer" class="col-form-label">Date and Hour:</label>
                                 <VueDatePicker
+                                    class="border border-dark rounded"
                                     v-model="selectedDateInterval"
                                     placeholder="Select a date interval"
                                     :type="false"
@@ -45,7 +46,7 @@
                                 <label for="message-text" class="col-form-label">Note:</label>
                                 <textarea
                                     @input="autosize($event)"
-                                    class="form-control overflow-hidden"
+                                    class="form-control overflow-hidden border border-dark"
                                     placeholder="Any notes..."
                                     id="message-text"
                                     style="resize: none"></textarea>
