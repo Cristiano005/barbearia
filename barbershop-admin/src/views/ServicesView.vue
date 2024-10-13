@@ -12,11 +12,13 @@
                         <form>
                             <div class="mb-3">
                                 <label for="customer" class="col-form-label">Service:</label>
-                                <input type="text" class="form-control border border-dark" placeholder="service" id="customer" />
+                                <input type="text" class="form-control border border-dark" placeholder="Enter your service" id="customer" />
                             </div>
                             <div class="mb-3">
                                 <label for="customer" class="col-form-label">Price:</label>
                                 <input
+                                    v-model="servicePrice"
+                                    ref="service-price"
                                     type="text"
                                     class="form-control border border-dark"
                                     placeholder="R$ 0,00"
@@ -137,24 +139,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, useTemplateRef } from 'vue';
+import { ref, onMounted, useTemplateRef, onBeforeUnmount } from 'vue';
 
 import TheHeader from '@/components/TheHeader.vue';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
+import { setMask, removeMask, formatToCurrency } from 'simple-mask-money'; // import mask
 import '@vuepic/vue-datepicker/dist/main.css';
 
 const serviceModal = useTemplateRef<HTMLDivElement | null>('service-modal');
+const servicePriceInput = useTemplateRef<HTMLInputElement | null>('service-price');
+
+const servicePrice = ref<string>('');
 
 onMounted(() => {
-    serviceModal.value?.addEventListener(
-        'show.bs.modal',
-        () =>
-            (durationTime.value = {
-                hours: 0,
-                minutes: 0
-            })
-    );
+    setMask(servicePriceInput.value, {
+        cursor: 'move',
+        decimalSeparator: ',',
+        fixed: false,
+        fractionDigits: 2,
+        negativeSignAfter: false,
+        prefix: 'R$',
+        suffix: '',
+        thousandsSeparator: '.'
+    });
+
+    serviceModal.value?.addEventListener('show.bs.modal', () => {
+        durationTime.value = {
+            hours: 0,
+            minutes: 0
+        };
+        servicePrice.value = formatToCurrency('', {
+            cursor: 'move',
+            decimalSeparator: ',',
+            fixed: false,
+            fractionDigits: 2,
+            negativeSignAfter: false,
+            prefix: 'R$',
+            suffix: '',
+            thousandsSeparator: '.'
+        });
+    });
+});
+
+onBeforeUnmount(() => {
+    removeMask(servicePriceInput.value); // destroy the mask effect.
 });
 
 interface Duration {
@@ -166,7 +195,6 @@ const durationTime = ref<Duration>({
     hours: 0,
     minutes: 0
 });
-
 </script>
 
 <style>
