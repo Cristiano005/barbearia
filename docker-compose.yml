@@ -29,3 +29,15 @@ services:
         restart: unless-stopped
         networks:
             - barbershop-network
+    barbershop-api:
+        build:
+            context: ./barbershop-api
+            dockerfile: Dockerfile
+        container_name: barbershop-api
+        volumes:
+            - ./barbershop-api:/var/www/barbershop-api
+        ports:
+            - 9000:9000
+        restart: unless-stopped
+        networks:
+            - barbershop-network
