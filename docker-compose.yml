@@ -41,3 +41,17 @@ services:
         restart: unless-stopped
         networks:
             - barbershop-network
+    barbershop-mysql:
+        build: 
+            context: ./docker/mysql
+            dockerfile: Dockerfile
+        container_name: barbershop-mysql
+        volumes: 
+            - ./docker/mysql/data:/var/lib/mysql
+        ports:
+            - 3307:3306
+        restart: unless-stopped
+        networks:
+            - barbershop-network
+        environment:
+            MYSQL_ROOT_PASSWORD: root
