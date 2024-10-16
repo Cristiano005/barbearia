@@ -11,12 +11,12 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
 
             $table->id();
-            $table->unsignedSmallInteger("customer_id");
-            $table->unsignedSmallInteger("service_id");
-            $table->time("scheduled")->nullable(false);
+            $table->unsignedBigInteger("customer_id");
+            $table->unsignedBigInteger("service_id");
+            $table->time("scheduled")->nullable(false)->unique();
             $table->enum("status", [
-                "finished", "absent", "cancelled"
-            ])->nullable(false)->unique();
+                "success", "absent", "cancelled"
+            ])->nullable(false);
             $table->timestamps();
 
             $table->foreign("customer_id")->references("id")->on("customers")->onUpdate("cascade")->onDelete("cascade");
