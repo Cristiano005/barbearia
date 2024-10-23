@@ -19,7 +19,7 @@
                     aria-labelledby="offcanvasDarkNavbarLabel">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
-                            Dark offcanvas
+                            Menu
                         </h5>
                         <button
                             type="button"
@@ -44,6 +44,11 @@
                                     Services
                                 </router-link>
                             </li>
+                            <li>
+                                <button class="btn btn-outline-danger" to="/logout">
+                                    Logout
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -51,3 +56,9 @@
         </nav>
     </header>
 </template>
+
+<script setup lang="ts">
+
+// stopped here, on logout!!
+
+</script>

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import { axiosInstance } from '@/helpers/helper';
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -24,6 +26,20 @@ const router = createRouter({
       component: () => import('../views/ServicesView.vue')
     }
   ]
+});
+
+router.beforeEach(async (to, from, next) => {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/auth/check");
+        if(to.name !== "signin" && !data) next({name: "signin"});
+        else next();
+    } 
+    
+    catch (error) {
+        next();    
+    }
+
 });
 
 export default router;
