@@ -45,7 +45,7 @@
                                 </router-link>
                             </li>
                             <li>
-                                <button class="btn btn-outline-danger" to="/logout">
+                                <button class="btn btn-outline-danger" @click="logout">
                                     Logout
                                 </button>
                             </li>
@@ -59,6 +59,25 @@
 
 <script setup lang="ts">
 
-// stopped here, on logout!!
+import router from '@/router';
+
+import { axiosInstance } from '@/helpers/helper';
+
+async function logout() {
+
+    try {
+        const { data } = await axiosInstance.get("api/v1/auth/logout");
+        if(data.success) {
+            router.push({
+                path: "/",
+            });
+        }
+    } 
+    
+    catch (error) {
+        console.log(error);
+    }
+
+}
 
 </script>

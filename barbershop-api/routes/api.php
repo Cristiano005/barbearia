@@ -14,4 +14,5 @@ Route::middleware("auth:sanctum")->apiResource(
 );
 
 Route::get("/auth/check", [AuthController::class, "check"]);
+Route::get("/auth/logout", [AuthController::class, "logout"]);
 Route::post("/auth/login", [AuthController::class, "authenticate"]);

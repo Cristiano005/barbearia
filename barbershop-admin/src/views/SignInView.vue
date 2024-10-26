@@ -10,13 +10,21 @@
                     <p class="mt-3">Welcome back! Sign in to manage your appointments or book a new haircut.</p>
                 </div>
                 <form class="row mt-5 gap-4" @submit.prevent="authenticate">
-                    <div class="col-12">
+                    <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
-                        <input type="email" class="form-control p-3" id="email" placeholder="Enter your e-mail" v-model="email" />
+                        <input type="email" class="form-control p-3" id="email" placeholder="Enter your e-mail" ref="emailInput" v-model="email" />
+                        <div ref="emailMessageContainer"></div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 has-validation">
                         <label for="password" class="form-label">Password*</label>
-                        <input type="password" class="form-control p-3" id="password" placeholder="Enter your password" v-model="password" />
+                        <input
+                            type="password"
+                            class="form-control p-3"
+                            id="password"
+                            placeholder="Enter your password"
+                            ref="passwordInput"
+                            v-model="password" />
+                        <div ref="passwordMessageContainer"></div>
                     </div>
                     <div class="col-12">
                         <input type="checkbox" class="form-check-input" id="exampleCheck1" />
@@ -26,10 +34,6 @@
                         <button type="submit" class="btn btn-dark p-3 w-100">Sign In</button>
                     </div>
                 </form>
-                <p class="mt-4">
-                    Don't have an account?
-                    <RouterLink class="text-dark fw-bold" to="/signup"> Create one right now. </RouterLink>
-                </p>
             </div>
         </div>
         <img
@@ -40,7 +44,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { ref } from 'vue';
 import router from '@/router';
 
@@ -49,24 +52,73 @@ import { axiosInstance } from '@/helpers/helper';
 const email = ref<string>('');
 const password = ref<string>('');
 
-function validate(): boolean {
-    if (email.value.trim().length === 0) {
-        return false;
+const emailInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<HTMLInputElement | null>(null);
+
+const emailMessageContainer = ref<HTMLDivElement | null>(null);
+const passwordMessageContainer = ref<HTMLDivElement | null>(null);
+
+interface FieldAndRule {
+    name: string;
+    rules: string[];
+    value: string;
+}
+
+function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLDivElement | null, fieldsAndRules: FieldAndRule): boolean {
+    let issuesNotFound = true;
+
+    fieldsAndRules.rules.forEach((rule) => {
+        if (issuesNotFound) {
+            switch (rule) {
+                case 'empty':
+                    if (fieldsAndRules.value.trim().length === 0) {
+                        issuesNotFound = false;
+
+                        if (elementInput && messageContainer) {
+                            elementInput.classList.add('is-invalid');
+                            messageContainer.classList.add('invalid-feedback');
+                            messageContainer.textContent = `Empty ${fieldsAndRules.name}`;
+                        }
+                    }
+
+                    break;
+
+                case 'email':
+                 
+                  
+
+                    break;
+
+                case 'password':
+                    break;
+            }
+        }
+    });
+
+    if (issuesNotFound && elementInput && messageContainer) {
+        elementInput.classList.remove('is-invalid');
+        messageContainer.classList.remove('invalid-feedback');
+        messageContainer.textContent = '';
     }
 
-    if (password.value.trim().length === 0) {
-        return false;
-    }
-
-    return true;
+    return issuesNotFound;
 }
 
 async function authenticate() {
-
     try {
+        const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
+            name: 'email',
+            rules: ['empty', 'email'],
+            value: email.value
+        });
 
-        if (validate() === false) {
-            console.log('There is a issue here');
+        const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
+            name: 'password',
+            rules: ['empty', 'password'],
+            value: password.value
+        });
+
+        if (!validatedEmail || !validatedPassword) {
             return;
         }
 
@@ -77,12 +129,11 @@ async function authenticate() {
             password: password.value
         });
 
-        if(data.success === true) {
-            router.push({ path: '/' }); 
+        if (data.success === true) {
+            router.push({ path: '/' });
         }
-
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
 </script>
