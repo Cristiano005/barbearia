@@ -69,7 +69,7 @@ async function logout() {
         const { data } = await axiosInstance.get("api/v1/auth/logout");
         if(data.success) {
             router.push({
-                path: "/",
+                path: "/signin",
             });
         }
     } 

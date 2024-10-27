@@ -17,7 +17,7 @@ class AuthController extends Controller
         if(!Auth::attempt($validatedData)) {
             return response()->json([
                 "success" => false,
-                "message" => "User not found",
+                "message" => "Email or Password are invalid",
             ])->setStatusCode(401);
         }
 

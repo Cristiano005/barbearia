@@ -12,7 +12,7 @@
                 <form class="row mt-5 gap-4" @submit.prevent="authenticate">
                     <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
-                        <input type="email" class="form-control p-3" id="email" placeholder="Enter your e-mail" ref="emailInput" v-model="email" />
+                        <input type="text" class="form-control p-3" id="email" placeholder="Enter your e-mail" ref="emailInput" v-model="email" />
                         <div ref="emailMessageContainer"></div>
                     </div>
                     <div class="col-12 has-validation">
@@ -49,6 +49,8 @@ import router from '@/router';
 
 import { axiosInstance } from '@/helpers/helper';
 
+import Swal from 'sweetalert2';
+
 const email = ref<string>('');
 const password = ref<string>('');
 
@@ -69,6 +71,11 @@ function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLD
 
     fieldsAndRules.rules.forEach((rule) => {
         if (issuesNotFound) {
+            const capitalizeWord = `${fieldsAndRules.name.charAt(0).toUpperCase()}${fieldsAndRules.name.slice(1)}`;
+
+            const emailRegex = /([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})/;
+            const passwordRegex = /^.{8,}$/;
+
             switch (rule) {
                 case 'empty':
                     if (fieldsAndRules.value.trim().length === 0) {
@@ -77,19 +84,36 @@ function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLD
                         if (elementInput && messageContainer) {
                             elementInput.classList.add('is-invalid');
                             messageContainer.classList.add('invalid-feedback');
-                            messageContainer.textContent = `Empty ${fieldsAndRules.name}`;
+                            messageContainer.textContent = `Empty ${capitalizeWord}`;
                         }
                     }
 
                     break;
 
                 case 'email':
-                 
-                  
+                    if (!emailRegex.test(fieldsAndRules.value)) {
+                        issuesNotFound = false;
+
+                        if (elementInput && messageContainer) {
+                            elementInput.classList.add('is-invalid');
+                            messageContainer.classList.add('invalid-feedback');
+                            messageContainer.textContent = `Invalid ${capitalizeWord}`;
+                        }
+                    }
 
                     break;
 
                 case 'password':
+                    if (!passwordRegex.test(fieldsAndRules.value)) {
+                        issuesNotFound = false;
+
+                        if (elementInput && messageContainer) {
+                            elementInput.classList.add('is-invalid');
+                            messageContainer.classList.add('invalid-feedback');
+                            messageContainer.textContent = `${capitalizeWord} must have at least 8 characters`;
+                        }
+                    }
+
                     break;
             }
         }
@@ -132,8 +156,18 @@ async function authenticate() {
         if (data.success === true) {
             router.push({ path: '/' });
         }
+        
     } catch (error) {
         console.log(error);
+        Swal.fire({
+            title: 'Error!',
+            text: error.response.data.message,
+            icon: 'error',
+            confirmButtonText: 'I got it',
+            customClass: {
+                confirmButton: "btn btn-dark"
+            }
+        });
     }
 }
 </script>
