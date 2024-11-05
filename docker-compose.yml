@@ -54,4 +54,4 @@ services:
         networks:
             - barbershop-network
         environment:
-            MYSQL_ROOT_PASSWORD: root
+            MYSQL_ROOT_PASSWORD: cristiano

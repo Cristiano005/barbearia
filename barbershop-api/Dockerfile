@@ -21,8 +21,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-RUN composer install
-
 RUN docker-php-ext-install pdo pdo_mysql
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=9000"]

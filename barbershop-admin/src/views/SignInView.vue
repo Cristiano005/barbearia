@@ -148,7 +148,7 @@ async function authenticate() {
 
         await axiosInstance.get('/sanctum/csrf-cookie');
 
-        const { data } = await axiosInstance.post('/api/v1/auth/login', {
+        const { data } = await axiosInstance.post('/api/v1/auth/authenticate', {
             email: email.value,
             password: password.value
         });
@@ -158,7 +158,6 @@ async function authenticate() {
         }
         
     } catch (error) {
-        console.log(error);
         Swal.fire({
             title: 'Error!',
             text: error.response.data.message,

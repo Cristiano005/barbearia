@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
 
             $table->id();
-            $table->unsignedBigInteger("customer_id");
+            $table->unsignedBigInteger("user_id");
             $table->unsignedBigInteger("service_id");
             $table->time("scheduled")->nullable(false)->unique();
             $table->enum("status", [
@@ -19,7 +19,7 @@ return new class extends Migration
             ])->nullable(false);
             $table->timestamps();
 
-            $table->foreign("customer_id")->references("id")->on("customers")->onUpdate("cascade")->onDelete("cascade");
+            $table->foreign("user_id")->references("id")->on("users")->onUpdate("cascade")->onDelete("cascade");
             $table->foreign("service_id")->references("id")->on("services")->onUpdate("cascade")->onDelete("cascade");
         });
     }

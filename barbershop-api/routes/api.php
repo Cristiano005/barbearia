@@ -1,18 +1,23 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AdminAuthController;
 use App\Http\Controllers\Api\V1\ServiceController;
-use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\UserAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::middleware("auth:sanctum")->apiResource(
-    'services', ServiceController::class,
+    'services',
+    ServiceController::class,
 );
 
-Route::get("/auth/check", [AuthController::class, "check"]);
-Route::get("/auth/logout", [AuthController::class, "logout"]);
-Route::post("/auth/login", [AuthController::class, "authenticate"]);
+Route::prefix("/auth")->controller(UserAuthController::class)->group(function () {
+    Route::get("/check", "check");
+    Route::get("/logout", "logout");
+    Route::post("/authenticate", "authenticate");
+});
+
+Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(function () {
+    Route::get("/check", "check");
+    Route::get("/logout", "logout");
+    Route::post("/authenticate", "authenticateAdmin");
+});
