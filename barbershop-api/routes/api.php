@@ -14,6 +14,7 @@ Route::prefix("/auth")->controller(UserAuthController::class)->group(function ()
     Route::get("/check", "check");
     Route::get("/logout", "logout");
     Route::post("/authenticate", "authenticate");
+    Route::post("/register", "register");
 });
 
 Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(function () {

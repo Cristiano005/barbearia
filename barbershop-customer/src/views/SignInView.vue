@@ -14,33 +14,20 @@
                     </p>
                 </div>
                 <form class="row mt-5 gap-4">
-                    <div class="col-12">
+                    <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
-                        <input
-                            type="email"
-                            class="form-control p-3"
-                            id="email"
-                            aria-describedby="emailHelp"
-                            placeholder="Enter your e-mail"
-                        />
+                        <input type="email" class="form-control p-3" id="email" aria-describedby="emailHelp"
+                            placeholder="Enter your e-mail" ref="emailInput" v-model="email"/>
+                        <div ref="emailMessageContainer"></div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 has-validation">
                         <label for="password" class="form-label">Password*</label>
-                        <input
-                            type="password"
-                            class="form-control p-3"
-                            id="password"
-                            placeholder="Enter your password"
-                        />
+                        <input type="password" class="form-control p-3" id="password"
+                            placeholder="Enter your password" ref="passwordInput" v-model="password"/>
+                        <div ref="passwordMessageContainer"></div>
                     </div>
                     <div class="col-12">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                        <label class="form-check-label ms-2" for="exampleCheck1"
-                            >Check me out</label
-                        >
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-dark p-3 w-100">Sign In</button>
+                        <button type="button" class="btn btn-dark p-3 w-100" @click="authenticate">Sign In</button>
                     </div>
                 </form>
                 <p class="mt-4">
@@ -49,19 +36,81 @@
                 </p>
             </div>
         </div>
-        <img
-            src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Barber Shop"
-            class="d-none d-xl-block vh-100 object-fit-cover col-xl-6"
-        />
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Barber Shop" class="d-none d-xl-block vh-100 object-fit-cover col-xl-6" />
     </div>
 </template>
 
 <script setup lang="ts">
+
+import { ref } from 'vue';
+import router from '@/router';
+
+import { axiosInstance, validate } from '@/helpers/helper';
+
+import Swal from 'sweetalert2';
+
+const email = ref<string>('');
+const password = ref<string>('');
+
+const emailInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<HTMLInputElement | null>(null);
+
+const emailMessageContainer = ref<HTMLDivElement | null>(null);
+const passwordMessageContainer = ref<HTMLDivElement | null>(null);
+
+interface FieldAndRule {
+    name: string;
+    rules: string[];
+    value: string;
+}
+
+async function authenticate() {
+
+    try {
+        const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
+            name: 'email',
+            rules: ['empty', 'email'],
+            value: email.value
+        });
+
+        const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
+            name: 'password',
+            rules: ['empty', 'password'],
+            value: password.value
+        });
+
+        if (!validatedEmail || !validatedPassword) {
+            return;
+        }
+
+        await axiosInstance.get('/sanctum/csrf-cookie');
+
+        const { data } = await axiosInstance.post('/api/v1/auth/authenticate', {
+            email: email.value,
+            password: password.value
+        });
+
+        if (data.success === true) {
+            router.push({ path: '/' });
+        }
+
+    } catch (error) {
+        Swal.fire({
+            title: 'Error!',
+            text: error.response.data.message,
+            icon: 'error',
+            confirmButtonText: 'I got it',
+            customClass: {
+                confirmButton: "btn btn-dark"
+            }
+        });
+    }
+}
+
 </script>
 
 <style scoped lang="scss">
-
 @media (min-width: 768px) {
     .custom-width {
         width: 75%;
@@ -73,5 +122,4 @@
         width: 100%;
     }
 }
-
 </style>
