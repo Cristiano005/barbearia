@@ -27,9 +27,9 @@ body {
         padding: 3.75rem 0;
     }
 
-    button {
-        height: 3.5rem;
-    }
+    // button {
+    //     height: 3.5rem;
+    // }
 
     .left-to-right-divider {
         height: 1px;

@@ -3,15 +3,8 @@
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <a class="navbar-brand fw-medium" href="#">Barber Shop</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarContent"
-                    aria-controls="navbarContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
@@ -31,16 +24,32 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/#contact">Contact</a>
                         </li>
-                        <li class="nav-item">
-                            <RouterLink class="btn btn-outline-light" to="/signin"
-                                >Sign In</RouterLink
-                            >
-                        </li>
-                        <li class="nav-item">
-                            <RouterLink class="btn btn-outline-light" to="/signup"
-                                >Sign Up</RouterLink
-                            >
-                        </li>
+                        <template v-if="!user.isAuthenticated">
+                            <li class="nav-item">
+                                <RouterLink class="btn btn-outline-light" to="/signin">Sign In</RouterLink>
+                            </li>
+                            <li class="nav-item">
+                                <RouterLink class="btn btn-outline-light" to="/signup">Sign Up</RouterLink>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="nav-item dropdown">
+                                <button class="btn btn-outline-light dropdown-toggle border-0" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="bi bi-person fs-5"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            My Schedules
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </template>
                     </ul>
                 </div>
             </nav>
@@ -58,19 +67,15 @@
                             Sed ut perspiciatis unde omnis iste natus error sit voluptatem
                             accusantium.
                         </p>
-                        <button
-                            class="d-flex align-items-center justify-content-center btn btn-dark px-5"
-                        >
+                        <button class="d-flex align-items-center justify-content-center btn btn-dark px-5">
                             Schedule an hour
                             <i class="bi bi-alarm-fill p-2"></i>
                         </button>
                     </div>
                     <div class="position-relative col-12 col-lg-6" id="container-image">
-                        <img
-                            class="position-relative rounded-1 w-100 h-auto"
+                        <img class="position-relative rounded-1 w-100 h-auto"
                             src="https://matheuscostadesign.github.io/nlw6-beauty-salon/assets/images/main.jpg"
-                            alt=""
-                        />
+                            alt="" />
                     </div>
                 </div>
             </div>
@@ -92,9 +97,7 @@
                     <!-- First card -->
                     <div class="card col-12 col-md-5 col-xl-3 py-5 px-4">
                         <div class="icon d-flex justify-content-center">
-                            <i
-                                class="bi bi-piggy-bank-fill fs-1 bg-dark rounded text-white px-4 py-2"
-                            ></i>
+                            <i class="bi bi-piggy-bank-fill fs-1 bg-dark rounded text-white px-4 py-2"></i>
                         </div>
                         <div class="card-body">
                             <h3 class="text-center text-dark my-3">Low price</h3>
@@ -122,9 +125,7 @@
                     <!-- Third card -->
                     <div class="card col-12 col-md-5 col-xl-3 py-5 px-4">
                         <div class="icon d-flex justify-content-center">
-                            <i
-                                class="bi bi-shop-window fs-1 bg-dark rounded text-white px-4 py-2"
-                            ></i>
+                            <i class="bi bi-shop-window fs-1 bg-dark rounded text-white px-4 py-2"></i>
                         </div>
                         <div class="card-body">
                             <h3 class="text-center text-dark my-3">Healthy ambient</h3>
@@ -147,12 +148,8 @@
                 </div>
                 <div class="row gap-4 justify-content-center mt-4 mx-auto">
                     <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
-                        <img
-                            src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            style="height: 20rem"
-                            class="card-img-top object-fit-cover"
-                            alt="..."
-                        />
+                        <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            style="height: 20rem" class="card-img-top object-fit-cover" alt="..." />
                         <div class="card-body text-center">
                             <h4 class="card-title">No Fade Haircut - $15</h4>
                             <h6 class="card-text mt-3 mb-3">
@@ -163,12 +160,8 @@
                         </div>
                     </div>
                     <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
-                        <img
-                            src="https://images.unsplash.com/photo-1533245270348-821d4d5c7514?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            style="height: 20rem"
-                            class="card-img-top object-fit-cover"
-                            alt="..."
-                        />
+                        <img src="https://images.unsplash.com/photo-1533245270348-821d4d5c7514?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            style="height: 20rem" class="card-img-top object-fit-cover" alt="..." />
                         <div class="card-body text-center">
                             <h4 class="card-title">Fade Haircut - $10</h4>
                             <h6 class="card-text mt-3 mb-3">
@@ -179,12 +172,8 @@
                         </div>
                     </div>
                     <div class="card p-0 col-lg-3 col-md-5 col-sm-12">
-                        <img
-                            src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            style="height: 20rem"
-                            class="card-img-top object-fit-cover"
-                            alt="..."
-                        />
+                        <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            style="height: 20rem" class="card-img-top object-fit-cover" alt="..." />
                         <div class="card-body text-center">
                             <h4 class="card-title">Beard Trim - $5</h4>
                             <h6 class="card-text mt-3 mb-3">
@@ -210,15 +199,10 @@
                     </p>
                 </header>
                 <div class="row justify-content-center" style="margin-top: 5rem">
-                    <swiper-container
-                        class="h-18"
-                        pagination="true"
-                        space-between="30"
-                        :breakpoints="{
-                            280: { slidesPerView: 1 },
-                            720: { slidesPerView: 2 }
-                        }"
-                    >
+                    <swiper-container class="h-18" pagination="true" space-between="30" :breakpoints="{
+                        280: { slidesPerView: 1 },
+                        720: { slidesPerView: 2 }
+                    }">
                         <swiper-slide>
                             <div class="card p-2">
                                 <div class="card-body">
@@ -231,13 +215,9 @@
                                         type specimen book.
                                     </p>
                                     <div
-                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
-                                    >
-                                        <img
-                                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            class="img-fluid"
-                                            alt="..."
-                                        />
+                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            class="img-fluid" alt="..." />
                                         <span> Test </span>
                                     </div>
                                 </div>
@@ -255,13 +235,9 @@
                                         type specimen book.
                                     </p>
                                     <div
-                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
-                                    >
-                                        <img
-                                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            class="img-fluid"
-                                            alt="..."
-                                        />
+                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            class="img-fluid" alt="..." />
                                         <span> Test </span>
                                     </div>
                                 </div>
@@ -279,13 +255,9 @@
                                         type specimen book.
                                     </p>
                                     <div
-                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
-                                    >
-                                        <img
-                                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            class="img-fluid"
-                                            alt="..."
-                                        />
+                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            class="img-fluid" alt="..." />
                                         <span> Test </span>
                                     </div>
                                 </div>
@@ -303,13 +275,9 @@
                                         type specimen book.
                                     </p>
                                     <div
-                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author"
-                                    >
-                                        <img
-                                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                            class="clip-path img-fluid"
-                                            alt="..."
-                                        />
+                                        class="d-flex justify-content-start align-items-center gap-2 testimonial-author">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            class="clip-path img-fluid" alt="..." />
                                         <span> Test </span>
                                     </div>
                                 </div>
@@ -337,51 +305,25 @@
                         </div>
                     </div>
 
-                    <form
-                        method="post"
-                        class="d-flex flex-column gap-4 col-lg-5 col-sm-12"
-                        id="contactForm"
-                    >
+                    <form method="post" class="d-flex flex-column gap-4 col-lg-5 col-sm-12" id="contactForm">
                         <div class="col-12">
                             <label for="name" class="form-label">Name*</label>
-                            <input
-                                type="email"
-                                class="form-control p-3"
-                                id="name"
-                                placeholder="Enter your namer"
-                            />
+                            <input type="email" class="form-control p-3" id="name" placeholder="Enter your namer" />
                         </div>
                         <div class="col-12">
                             <label for="contact-email" class="form-label">Email*</label>
-                            <input
-                                type="text"
-                                class="form-control p-3"
-                                id="contact-email"
-                                placeholder="Enter your email"
-                            />
+                            <input type="text" class="form-control p-3" id="contact-email"
+                                placeholder="Enter your email" />
                         </div>
                         <div class="col-12">
                             <label for="subject" class="form-label">Subject*</label>
-                            <input
-                                type="text"
-                                class="form-control p-3"
-                                id="subject"
-                                placeholder="Enter your subject"
-                            />
+                            <input type="text" class="form-control p-3" id="subject" placeholder="Enter your subject" />
                         </div>
                         <div class="col-12">
                             <label for="message" class="form-label">Message*</label>
-                            <input
-                                type="text"
-                                class="form-control p-3"
-                                id="message"
-                                placeholder="Enter your message"
-                            />
+                            <input type="text" class="form-control p-3" id="message" placeholder="Enter your message" />
                         </div>
-                        <button
-                            class="w-100 mt-4 btn btn-dark btn-outline-secondary text-light"
-                            id="send-email"
-                        >
+                        <button class="w-100 mt-4 btn btn-dark btn-outline-secondary text-light" id="send-email">
                             Send
                         </button>
                     </form>
@@ -390,9 +332,7 @@
         </section>
     </main>
     <footer class="bg-dark">
-        <div
-            class="d-flex container mx-auto justify-content-center justify-content-sm-between flex-wrap gap-2"
-        >
+        <div class="d-flex container mx-auto justify-content-center justify-content-sm-between flex-wrap gap-2">
             <div class="d-flex flex-column align-items-center align-items-sm-start col-12 col-sm-6">
                 <h4 class="text-white">Barber Shop.</h4>
                 <p class="text-white mt-4">2024 Barber Shop.</p>
@@ -414,12 +354,18 @@
 </template>
 
 <script setup lang="ts">
+
 import { register } from 'swiper/element/bundle'
 import { onMounted } from 'vue'
 
+import { useUserStore } from '@/stores/user';
+
+const user = useUserStore();
+
 register()
 
-onMounted(() => {
+onMounted(async () => {
+
     const scrollReveal = ScrollReveal({
         origin: 'top',
         distance: '30px',
@@ -429,7 +375,9 @@ onMounted(() => {
 
     scrollReveal.reveal(`#home, #about, #services, #testimonials, #contact`, {
         interval: 300
-    })
+    });
+
+    await user.check();
 })
 </script>
 
@@ -438,7 +386,7 @@ html.sr .load-hidden {
     visibility: hidden;
 }
 
-header #navbarContent ul li:nth-last-child(n+3) a {
+header #navbarContent ul li:nth-last-child(n+1) a {
     position: relative;
     top: 0;
     transition: color 0.25s !important;

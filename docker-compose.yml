@@ -10,7 +10,8 @@ services:
         container_name: barbershop-customer
         volumes:
             - ./barbershop-customer:/var/www/barbershop-customer
-            - /var/www/barbershop-customer/node_modules
+        command: >
+            sh -c "if [ ! -d node_modules ]; then npm install; fi && npm run dev -- --host=0.0.0.0 --port=8000"
         ports:
             - 8000:8000
         restart: unless-stopped
@@ -21,9 +22,10 @@ services:
             context: ./barbershop-admin
             dockerfile: Dockerfile
         container_name: barbershop-admin
+        command: >
+            sh -c "if [ ! -d node_modules ]; then npm install; fi && npm run dev -- --host=0.0.0.0 --port=8001"
         volumes:
             - ./barbershop-admin:/var/www/barbershop-admin
-            - /var/www/barbershop-admin/node_modules
         ports:
             - 8001:8001
         restart: unless-stopped
@@ -34,6 +36,8 @@ services:
             context: ./barbershop-api
             dockerfile: Dockerfile
         container_name: barbershop-api
+        command: >
+            sh -c "if [ ! -d vendor ]; then composer install; fi && php artisan serve --host=0.0.0.0 --port=9000"
         volumes:
             - ./barbershop-api:/var/www/barbershop-api
         ports:

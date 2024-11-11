@@ -1,1 +1,2 @@
-✔ Add new filed called "is_admin" @done(24-11-05 18:11)
+☐ Separate check route on "Admin" and "User"
+☐ Create a "User Store" for store authentication.
