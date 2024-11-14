@@ -40,9 +40,9 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-dark">
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <RouterLink class="dropdown-item" to="/my-schedules">
                                             My Schedules
-                                        </a>
+                                        </RouterLink>
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="#">Logout</a>
