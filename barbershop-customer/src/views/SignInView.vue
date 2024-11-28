@@ -59,12 +59,6 @@ const passwordInput = ref<HTMLInputElement | null>(null);
 const emailMessageContainer = ref<HTMLDivElement | null>(null);
 const passwordMessageContainer = ref<HTMLDivElement | null>(null);
 
-interface FieldAndRule {
-    name: string;
-    rules: string[];
-    value: string;
-}
-
 async function authenticate() {
 
     try {

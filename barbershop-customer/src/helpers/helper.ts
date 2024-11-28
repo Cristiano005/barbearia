@@ -25,7 +25,17 @@ function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLD
 
             switch (rule) {
                 case 'empty':
-                    if (fieldsAndRules.value.trim().length === 0) {
+
+                    let isEmpty = false;
+
+                    if (typeof fieldsAndRules.value === "string") {
+                        if (fieldsAndRules.value.trim().length === 0) isEmpty = true;
+                    } else {
+                        if (!fieldsAndRules.value) isEmpty = true;
+                    }
+
+                    if (isEmpty) {
+
                         issuesNotFound = false;
 
                         if (elementInput && messageContainer) {
