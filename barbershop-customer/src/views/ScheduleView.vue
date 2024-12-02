@@ -23,12 +23,14 @@
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Date*</label>
-                        <VueDatePicker v-model="selectedDate" ref="dateInput" :enableTimePicker="false" />
+                        <VueDatePicker v-model="selectedDate" :min-date="new Date()" ref="dateInput" :enableTimePicker="false" :format="format" locale="pt-BR"
+                         placeholder="Select a date" />
                         <div ref="dateMessageContainer"></div>
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Time*</label>
-                        <VueDatePicker v-model="selectedTime" ref="timeInput" time-picker>
+                        <VueDatePicker v-model="selectedTime" ref="timeInput" minutes-increment="30" time-picker
+                            locale="pt-BR" placeholder="Select a time">
                             <template #input-icon>
                                 <i class="bi bi-clock" id="clock-icon"></i>
                             </template>
@@ -65,8 +67,15 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const services = ref<string[]>(['Service 1', 'Service 2']);
 const payments = ref<string[]>(['Payment 1', 'Payment 2']);
 
-const selectedDate = ref<string>("");
+const selectedDate = ref<Date | null>(null);
 const selectedTime = ref<string>("");
+
+const format = (date: Date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
 
 const dateInput = ref<HTMLInputElement | null>(null);
 const timeInput = ref<HTMLInputElement | null>(null);
@@ -90,7 +99,7 @@ async function schedule() {
             value: selectedTime.value
         });
 
-        if(!validatedDate || validatedTime) {
+        if (!validatedDate || validatedTime) {
             return;
         }
 
@@ -103,7 +112,6 @@ async function schedule() {
 </script>
 
 <style scoped lang="scss">
-
 #clock-icon {
     margin-left: 0.75rem;
 }
@@ -119,5 +127,4 @@ async function schedule() {
         width: 100%;
     }
 }
-
 </style>
