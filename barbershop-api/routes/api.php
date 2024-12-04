@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AvailabilityController;
 use App\Http\Controllers\Api\V1\AdminAuthController;
 use App\Http\Controllers\Api\V1\ServiceController;
 use App\Http\Controllers\Api\V1\UserAuthController;
@@ -9,6 +10,8 @@ Route::middleware("auth:sanctum")->apiResource(
     'services',
     ServiceController::class,
 );
+
+Route::middleware("auth:sanctum")->apiResource("availabilities", AvailabilityController::class);
 
 Route::prefix("/auth")->controller(UserAuthController::class)->group(function () {
     Route::get("/check", "check");
