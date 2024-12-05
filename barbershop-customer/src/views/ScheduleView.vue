@@ -23,18 +23,17 @@
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Date*</label>
-                        <VueDatePicker v-model="selectedDate" :min-date="new Date()" ref="dateInput" :enableTimePicker="false" :format="format" locale="pt-BR"
-                         placeholder="Select a date" />
+                        <VueDatePicker :model-value="selectedDate" :min-date="new Date()" ref="dateInput"
+                            :enableTimePicker="false" :format="format" locale="pt-BR"
+                            @update:model-value="searchTimesAvailable" placeholder="Select a date" id="date" />
                         <div ref="dateMessageContainer"></div>
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Time*</label>
-                        <VueDatePicker v-model="selectedTime" ref="timeInput" minutes-increment="30" time-picker
-                            locale="pt-BR" placeholder="Select a time">
-                            <template #input-icon>
-                                <i class="bi bi-clock" id="clock-icon"></i>
-                            </template>
-                        </VueDatePicker>
+                        <select v-model="selectedTime" class="form-control p-3" ref="timeInput" disabled>
+                            <option disabled selected value=""> Select a time </option>
+                            <option v-for="time of times" :value="time.time"> {{ time.time }} </option>
+                        </select>
                         <div ref="timeMessageContainer"></div>
                     </div>
                     <div class="col-12 has-validation mb-3">
@@ -57,14 +56,15 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { axiosInstance, validate } from '@/helpers/helper';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import '@vuepic/vue-datepicker/dist/main.css';
 
 const services = ref<string[]>(['Service 1', 'Service 2']);
+const times = ref<{ time: string }[]>([]);
 const payments = ref<string[]>(['Payment 1', 'Payment 2']);
 
 const selectedDate = ref<Date | null>(null);
@@ -83,6 +83,31 @@ const timeInput = ref<HTMLInputElement | null>(null);
 const dateMessageContainer = ref<HTMLDivElement | null>(null);
 const timeMessageContainer = ref<HTMLDivElement | null>(null);
 
+async function searchTimesAvailable(date: Date | null) {
+
+    selectedDate.value = date
+
+    if (date) {
+
+        try {
+            const formattedDate = new Date(date).toISOString().split("T")[0];
+            const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
+            timeInput.value?.removeAttribute("disabled");
+            return times.value = data.data;
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    else {
+        timeInput.value?.setAttribute("disabled", "true");
+        selectedTime.value = "";
+    }
+}
+
 async function schedule() {
 
     try {
@@ -93,7 +118,7 @@ async function schedule() {
             value: selectedDate.value
         });
 
-        const validatedTime: boolean = validate(timeInput.value.$el, timeMessageContainer.value, {
+        const validatedTime: boolean = validate(timeInput.value, timeMessageContainer.value, {
             name: "time",
             rules: ["empty"],
             value: selectedTime.value
@@ -114,6 +139,10 @@ async function schedule() {
 <style scoped lang="scss">
 #clock-icon {
     margin-left: 0.75rem;
+}
+
+::v-deep(#date input) {
+    height: 3.625rem;
 }
 
 @media (min-width: 768px) {
