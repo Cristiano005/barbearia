@@ -17,7 +17,10 @@
                     <div class="col-12 has-validation mb-3">
                         <label for="service" class="form-label">Service*</label>
                         <select class="form-control p-3" id="service">
-                            <option v-for="service of services" value=""> {{ service }} </option>
+                            <option v-for="service of services" value="">
+                                {{ service.name.toUpperCase() }} -
+                                {{ currentFormatter(Number(service.price)) }}
+                            </option>
                         </select>
                         <div ref="emailMessageContainer"></div>
                     </div>
@@ -63,7 +66,12 @@ import { axiosInstance, validate } from '@/helpers/helper';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-const services = ref<string[]>(['Service 1', 'Service 2']);
+interface ServiceInterface {
+    name: string,
+    price: string,
+}
+
+const services = ref<ServiceInterface[]>([]);
 const times = ref<{ time: string }[]>([]);
 const payments = ref<string[]>(['Payment 1', 'Payment 2']);
 
@@ -77,11 +85,31 @@ const format = (date: Date) => {
     return `${day}/${month}/${year}`;
 }
 
+const currentFormatter = (price: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(price);
+}
+
 const dateInput = ref<HTMLInputElement | null>(null);
 const timeInput = ref<HTMLInputElement | null>(null);
 
 const dateMessageContainer = ref<HTMLDivElement | null>(null);
 const timeMessageContainer = ref<HTMLDivElement | null>(null);
+
+async function getAllServices() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/services");
+        return data.data
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
 
 async function searchTimesAvailable(date: Date | null) {
 
@@ -133,6 +161,10 @@ async function schedule() {
     }
 
 }
+
+onMounted(async () => {
+    services.value = await getAllServices();
+});
 
 </script>
 
