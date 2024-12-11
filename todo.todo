@@ -1,8 +1,0 @@
-☐ Separate check route on "Admin" and "User"
-☐ Create a "User Store" for store authentication.
-
-✔ I must create a new table called "Free Date Time" for example, to differently between Schedule and Time free. @done(24-12-05 18:09)
-✔ List all services on select. @done(24-12-07 20:12)
-
-☐ Create table for list all types of payments
-☐ List all types of payment on select.

@@ -42,7 +42,7 @@
                     <div class="col-12 has-validation mb-3">
                         <label for="password" class="form-label">Payment Type*</label>
                         <select class="form-control p-3" id="service">
-                            <option v-for="payment of payments" value=""> {{ payment }} </option>
+                            <option v-for="payment of payments" :value="payment.id"> {{ payment.payment_type }} </option>
                         </select>
                         <div ref="passwordMessageContainer"></div>
                     </div>
@@ -71,9 +71,14 @@ interface ServiceInterface {
     price: string,
 }
 
+interface PaymentTypeInterface {
+    id: number,
+    payment_type: string,
+}
+
 const services = ref<ServiceInterface[]>([]);
 const times = ref<{ time: string }[]>([]);
-const payments = ref<string[]>(['Payment 1', 'Payment 2']);
+const payments = ref<PaymentTypeInterface[]>([]);
 
 const selectedDate = ref<Date | null>(null);
 const selectedTime = ref<string>("");
@@ -162,8 +167,22 @@ async function schedule() {
 
 }
 
+async function getAllTypeOfPayments() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/payments");
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
 onMounted(async () => {
     services.value = await getAllServices();
+    payments.value = await getAllTypeOfPayments();
 });
 
 </script>
