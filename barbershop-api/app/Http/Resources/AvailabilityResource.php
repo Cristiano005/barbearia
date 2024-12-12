@@ -10,6 +10,7 @@ class AvailabilityResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            "id" => $this->id,
             "date" => $this->schedule_date,
             "time" => $this->schedule_time
         ];

@@ -13,14 +13,17 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("user_id");
             $table->unsignedBigInteger("service_id");
-            $table->time("scheduled")->nullable(false)->unique();
+            $table->unsignedBigInteger("payment_id");
+            $table->date("date")->nullable(false);
+            $table->time("time")->nullable(false);
             $table->enum("status", [
                 "success", "absent", "cancelled"
             ])->nullable(false);
             $table->timestamps();
 
-            $table->foreign("user_id")->references("id")->on("users")->onUpdate("cascade")->onDelete("cascade");
-            $table->foreign("service_id")->references("id")->on("services")->onUpdate("cascade")->onDelete("cascade");
+            $table->foreign("user_id")->references("id")->on("users");
+            $table->foreign("service_id")->references("id")->on("services");
+            $table->foreign("payment_id")->references("id")->on("payment_types");
         });
     }
 

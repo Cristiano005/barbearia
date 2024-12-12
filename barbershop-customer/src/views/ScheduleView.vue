@@ -17,7 +17,7 @@
                     <div class="col-12 has-validation mb-3">
                         <label for="service" class="form-label">Service*</label>
                         <select class="form-control p-3" id="service">
-                            <option v-for="service of services" value="">
+                            <option v-for="service of services" :value="service.id">
                                 {{ service.name.toUpperCase() }} -
                                 {{ currentFormatter(Number(service.price)) }}
                             </option>
@@ -35,7 +35,7 @@
                         <label for="password" class="form-label">Time*</label>
                         <select v-model="selectedTime" class="form-control p-3" ref="timeInput" disabled>
                             <option disabled selected value=""> Select a time </option>
-                            <option v-for="time of times" :value="time.time"> {{ time.time }} </option>
+                            <option v-for="time of times" :value="time.id"> {{ time.time }} </option>
                         </select>
                         <div ref="timeMessageContainer"></div>
                     </div>
@@ -67,8 +67,15 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 interface ServiceInterface {
+    id: number,
     name: string,
     price: string,
+}
+
+interface AvailabilityInterface {
+    id: number,
+    date: string,
+    time: string,
 }
 
 interface PaymentTypeInterface {
@@ -77,7 +84,7 @@ interface PaymentTypeInterface {
 }
 
 const services = ref<ServiceInterface[]>([]);
-const times = ref<{ time: string }[]>([]);
+const times = ref<AvailabilityInterface[]>([]);
 const payments = ref<PaymentTypeInterface[]>([]);
 
 const selectedDate = ref<Date | null>(null);
@@ -157,9 +164,13 @@ async function schedule() {
             value: selectedTime.value
         });
 
-        if (!validatedDate || validatedTime) {
+        if (!validatedDate || !validatedTime) {
             return;
         }
+
+        // const { data } = await axiosInstance.post("http://localhost:9000/api/v1/schedules", {
+        //     service_id: 
+        // });
 
     } catch (error) {
         console.log(error)
