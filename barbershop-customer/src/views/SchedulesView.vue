@@ -43,17 +43,19 @@
                 </header>
             </div>
             <div class="gap-3 mt-4 mx-auto">
-                <div class="row align-items-center text-bg-dark p-3 rounded">
+                <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules" :key="`schedule${schedule.id}`"> 
                     <div class="col-auto">
                         <i class="bi bi-calendar-check fs-1"></i>
                     </div>
                     <div class="col-10 border-end">
                         <h6>
-                            31/10/2024 - 09:30h
-                            <span class="badge text-bg-success">Success</span>
+                            {{ schedule.date }} - {{ schedule.time }}
+                            <span class="badge text-bg-success">
+                                {{ schedule.status }}
+                            </span>
                         </h6>
                         <small>
-                            NO FAID - R$ 15,00
+                            {{ schedule.service.name }} - {{ schedule.service.price }}
                         </small>
                     </div>
                     <div class="d-flex col-auto gap-4 ps-5">
@@ -68,6 +70,40 @@
 
 <script setup lang="ts">
 
+import { onMounted, ref } from "vue";
+
+import { axiosInstance } from "@/helpers/helper";
+
+interface ScheduleInterface {
+    id: number,
+    service: {
+        name: string,
+        price: string,
+    },
+    payment: string,
+    status: string,
+    date: string,
+    time: string,
+};
+
+const schedules = ref<ScheduleInterface[]>([]);
+
+async function getMyAllSchedules() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/schedules");
+        return data.data;
+    } 
+    
+    catch (error) {
+        console.log(error);    
+    }
+
+}
+
+onMounted(async () => {
+    schedules.value = await getMyAllSchedules();
+});
 
 </script>
 

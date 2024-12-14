@@ -3,24 +3,23 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ScheduleResource;
+use App\Models\Availability;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class ScheduleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return ScheduleResource::collection(Schedule::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -30,47 +29,56 @@ class ScheduleController extends Controller
             "time" => ["required", "date_format:H:i:s"],
         ]);
 
-        $schedule = Schedule::create([
-            "user_id" => Auth::id(),
-            "service_id" => $validatedData["service_id"],
-            "payment_id" => $validatedData["payment_id"],
-            "date" => Carbon::createFromFormat("d/m/Y", $validatedData["date"])->format("Y-m-d"),
-            "time" => $validatedData["time"],
-            "status" => "success",
-        ]);
+        $validatedData["date"] = Carbon::createFromFormat("d/m/Y", $validatedData["date"])->format("Y-m-d");
 
-        if ($schedule) {
+        try {
+
+            $result = DB::transaction(function () use($validatedData): bool {
+
+                Schedule::create([
+                    "user_id" => Auth::id(),
+                    "service_id" => $validatedData["service_id"],
+                    "payment_id" => $validatedData["payment_id"],
+                    "date" => $validatedData["date"],
+                    "time" => $validatedData["time"],
+                    "status" => "success",
+                ]);
+
+                Availability::where("schedule_date", $validatedData["date"])->where("schedule_time", $validatedData["time"])->delete();
+
+                return true;
+            });
+
+        } 
+        
+        catch (Throwable $th) {
+
+            Log::error("Schedule creation failed: {$th->getMessage()}");
+
+            return response()->json([
+                "success" => false,
+                "message" => "An error occurred while creating the schedule. Please try again."
+            ])->setStatusCode(500);
+        } 
+
+        if($result) {
             return response()->json([
                 "success" => true,
                 "message" => "Schedule created successfully"
             ])->setStatusCode(200);
         }
-
-        return response()->json([
-            "success" => false,
-            "message" => "Occurred failed"
-        ])->setStatusCode(500);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //

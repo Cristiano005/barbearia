@@ -67,10 +67,10 @@
                             Sed ut perspiciatis unde omnis iste natus error sit voluptatem
                             accusantium.
                         </p>
-                        <button class="d-flex align-items-center justify-content-center btn btn-dark px-5">
+                        <RouterLink class="d-flex align-items-center justify-content-center btn btn-dark px-5" to="/schedule">
                             Schedule an hour
                             <i class="bi bi-alarm-fill p-2"></i>
-                        </button>
+                        </RouterLink>
                     </div>
                     <div class="position-relative col-12 col-lg-6" id="container-image">
                         <img class="position-relative rounded-1 w-100 h-auto"
