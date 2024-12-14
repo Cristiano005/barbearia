@@ -16,7 +16,8 @@
                 <form class="row mt-5">
                     <div class="col-12 has-validation mb-3">
                         <label for="service" class="form-label">Service*</label>
-                        <select class="form-control p-3" id="service">
+                        <select class="form-control p-3" id="service" v-model="selectedService">
+                            <option disabled selected :value="0"> SELECT SERVICE </option>
                             <option v-for="service of services" :value="service.id">
                                 {{ service.name.toUpperCase() }} -
                                 {{ currentFormatter(Number(service.price)) }}
@@ -35,13 +36,14 @@
                         <label for="password" class="form-label">Time*</label>
                         <select v-model="selectedTime" class="form-control p-3" ref="timeInput" disabled>
                             <option disabled selected value=""> Select a time </option>
-                            <option v-for="time of times" :value="time.id"> {{ time.time }} </option>
+                            <option v-for="time of times" :value="time.time"> {{ time.time }} </option>
                         </select>
                         <div ref="timeMessageContainer"></div>
                     </div>
                     <div class="col-12 has-validation mb-3">
                         <label for="password" class="form-label">Payment Type*</label>
-                        <select class="form-control p-3" id="service">
+                        <select class="form-control p-3" id="service" v-model="selectedPayment">
+                            <option disabled selected :value="0"> SELECT A TYPE OF PAYMENT </option>
                             <option v-for="payment of payments" :value="payment.id"> {{ payment.payment_type }} </option>
                         </select>
                         <div ref="passwordMessageContainer"></div>
@@ -87,8 +89,10 @@ const services = ref<ServiceInterface[]>([]);
 const times = ref<AvailabilityInterface[]>([]);
 const payments = ref<PaymentTypeInterface[]>([]);
 
-const selectedDate = ref<Date | null>(null);
+const selectedService = ref<number>(0);
+const selectedDate = ref<Date>();
 const selectedTime = ref<string>("");
+const selectedPayment = ref<number>(0);
 
 const format = (date: Date) => {
     const day = date.getDate();
@@ -125,12 +129,14 @@ async function getAllServices() {
 
 async function searchTimesAvailable(date: Date | null) {
 
+    console.log(date)
+
     selectedDate.value = date
 
     if (date) {
 
         try {
-            const formattedDate = new Date(date).toISOString().split("T")[0];
+            const formattedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
             const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
             timeInput.value?.removeAttribute("disabled");
             return times.value = data.data;
@@ -164,13 +170,24 @@ async function schedule() {
             value: selectedTime.value
         });
 
-        if (!validatedDate || !validatedTime) {
-            return;
+        console.log(selectedService.value === 0, !validatedDate, !validatedTime, selectedPayment.value === 0)
+
+        if (selectedService.value === 0 || !validatedDate || !validatedTime || selectedPayment.value === 0) {
+            return; 
         }
 
-        // const { data } = await axiosInstance.post("http://localhost:9000/api/v1/schedules", {
-        //     service_id: 
-        // });
+        console.log(selectedService.value);
+
+        const { data } = await axiosInstance.post("/api/v1/schedules", {
+            service_id: selectedService.value,
+            payment_id: selectedPayment.value,
+            date: format(selectedDate.value),
+            time: selectedTime.value,
+        });
+
+        if(data.success === true) {
+            alert("nice!")
+        }
 
     } catch (error) {
         console.log(error)

@@ -27,7 +27,7 @@ class ScheduleController extends Controller
             "service_id" => ["required", "integer", "exists:App\Models\Service,id"],
             "payment_id" => ["required", "integer", "exists:App\Models\PaymentTypes,id"],
             "date" => ["required", "date_format:d/m/Y"],
-            "time" => ["required", "date_format:H:i"],
+            "time" => ["required", "date_format:H:i:s"],
         ]);
 
         $schedule = Schedule::create([
