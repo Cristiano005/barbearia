@@ -1,4 +1,31 @@
 <template>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit your schedule</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="service-to-schedule" class="col-form-label">Service:</label>
+                            <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
+                                id="service-to-schedule" v-model="selectedService">
+                                <option v-for="service of services">
+                                    {{ service.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning">Edit Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <header class="p-2 bg-dark">
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -43,7 +70,8 @@
                 </header>
             </div>
             <div class="gap-3 mt-4 mx-auto">
-                <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules" :key="`schedule${schedule.id}`"> 
+                <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
+                    :key="`schedule${schedule.id}`">
                     <div class="col-auto">
                         <i class="bi bi-calendar-check fs-1"></i>
                     </div>
@@ -59,8 +87,10 @@
                         </small>
                     </div>
                     <div class="d-flex col-auto gap-4 ps-5">
-                        <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"></i>
-                        <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"></i>
+                        <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
+                            @click="openEditModal(schedule.service)"></i>
+                        <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
+                            @click="deleteSchedule(schedule.id)"></i>
                     </div>
                 </div>
             </div>
@@ -73,6 +103,10 @@
 import { onMounted, ref } from "vue";
 
 import { axiosInstance } from "@/helpers/helper";
+
+import { Modal } from "bootstrap";
+
+import Swal from 'sweetalert2';
 
 interface ScheduleInterface {
     id: number,
@@ -87,23 +121,83 @@ interface ScheduleInterface {
 };
 
 const schedules = ref<ScheduleInterface[]>([]);
+const services = ref([])
+const selectedService = ref();
+
+onMounted(async () => {
+    schedules.value = await getMyAllSchedules();
+});
 
 async function getMyAllSchedules() {
 
     try {
         const { data } = await axiosInstance.get("/api/v1/schedules");
         return data.data;
-    } 
-    
+    }
+
     catch (error) {
-        console.log(error);    
+        console.log(error);
     }
 
 }
 
-onMounted(async () => {
-    schedules.value = await getMyAllSchedules();
-});
+async function openEditModal(service) {
+
+    const modal = new Modal(document.getElementById('exampleModal'), {});
+    modal.show();
+
+    selectedService.value = service.name
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/services");
+        services.value = data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
+async function deleteSchedule(id: number) {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+
+    const result = await swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You'll need to schedule again.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, cancel it!",
+        cancelButtonText: "No, i don't cancel it!",
+        reverseButtons: true
+    });
+
+    if (result.isConfirmed) {
+
+        try {
+
+            const { data } = await axiosInstance.delete(`/api/v1/schedules/${id}`);
+
+            if (data.success) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Schedule was cancelled successfully!",
+                });
+            }
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+    }
+}
 
 </script>
 

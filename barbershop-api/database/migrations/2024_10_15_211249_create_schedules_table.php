@@ -20,6 +20,7 @@ return new class extends Migration
                 "success", "absent", "cancelled"
             ])->nullable(false);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign("user_id")->references("id")->on("users");
             $table->foreign("service_id")->references("id")->on("services");

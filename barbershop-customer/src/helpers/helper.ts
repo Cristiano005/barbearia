@@ -98,6 +98,21 @@ function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLD
     return issuesNotFound;
 }
 
+async function getAllServices() {
+
+    // stopped here, i need create a new field in avaibaliweies, field like "ava_exc", you know?
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/services");
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
 export {
-    axiosInstance, validate
+    axiosInstance, validate, getAllServices
 }

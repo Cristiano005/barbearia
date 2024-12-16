@@ -33,7 +33,7 @@ class ScheduleController extends Controller
 
         try {
 
-            $result = DB::transaction(function () use($validatedData): bool {
+            $result = DB::transaction(function () use ($validatedData): bool {
 
                 Schedule::create([
                     "user_id" => Auth::id(),
@@ -48,10 +48,7 @@ class ScheduleController extends Controller
 
                 return true;
             });
-
-        } 
-        
-        catch (Throwable $th) {
+        } catch (Throwable $th) {
 
             Log::error("Schedule creation failed: {$th->getMessage()}");
 
@@ -59,9 +56,9 @@ class ScheduleController extends Controller
                 "success" => false,
                 "message" => "An error occurred while creating the schedule. Please try again."
             ])->setStatusCode(500);
-        } 
+        }
 
-        if($result) {
+        if ($result) {
             return response()->json([
                 "success" => true,
                 "message" => "Schedule created successfully"
@@ -79,8 +76,25 @@ class ScheduleController extends Controller
         //
     }
 
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        //
+        try {
+
+            $result = Schedule::where("id", $id)->delete();
+
+            if ($result) {
+                return response()->json([
+                    "success" => true,
+                    "message" => "Schedule cancelled successfully",
+                ])->setStatusCode(200);
+            }
+
+        } catch (Throwable $th) {
+            Log::error("Schedule cancelled failed {$th->getMessage()}");
+            return response()->json([
+                "success" => false,
+                "message" => "An error occurred while cancelling the schedule. Please try again.",
+            ])->setStatusCode(500);
+        }
     }
 }
