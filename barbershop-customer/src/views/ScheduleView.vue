@@ -63,7 +63,7 @@
 
 import { onMounted, ref } from 'vue';
 
-import { axiosInstance, validate } from '@/helpers/helper';
+import { axiosInstance, validate, format } from '@/helpers/helper';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -94,13 +94,6 @@ const selectedDate = ref<Date>();
 const selectedTime = ref<string>("");
 const selectedPayment = ref<number>(0);
 
-const format = (date: Date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-}
-
 const currentFormatter = (price: number) => {
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -128,8 +121,6 @@ async function getAllServices() {
 }
 
 async function searchTimesAvailable(date: Date | null) {
-
-    console.log(date)
 
     selectedDate.value = date
 

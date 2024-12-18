@@ -100,8 +100,6 @@ function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLD
 
 async function getAllServices() {
 
-    // stopped here, i need create a new field in avaibaliweies, field like "ava_exc", you know?
-
     try {
         const { data } = await axiosInstance.get("/api/v1/services");
         return data.data;
@@ -113,6 +111,38 @@ async function getAllServices() {
 
 }
 
+async function searchTimesAvailable(date: Date | null) {
+
+    selectedDate.value = date
+
+    if (date) {
+
+        try {
+            const formattedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
+            const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
+            timeInput.value?.removeAttribute("disabled");
+            return times.value = data.data;
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    else {
+        timeInput.value?.setAttribute("disabled", "true");
+        selectedTime.value = "";
+    }
+}
+
+const format = (date: Date) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
 export {
-    axiosInstance, validate, getAllServices
+    axiosInstance, validate, getAllServices, format, searchTimesAvailable
 }

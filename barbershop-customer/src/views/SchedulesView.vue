@@ -17,6 +17,21 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Date*</label>
+                            <VueDatePicker :model-value="selectedDate" :min-date="new Date()" :format="format" ref="dateInput"
+                                :enableTimePicker="false" locale="pt-BR"
+                                @update:model-value="searchTimesAvailable" 
+                                placeholder="Select a date" id="date" />
+                            <div ref="dateMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Time*</label>
+                            <select class="form-control" ref="timeInput" disabled>
+                                <option disabled selected value=""> Select a time </option>
+                            </select>
+                            <div ref="timeMessageContainer"></div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -70,29 +85,37 @@
                 </header>
             </div>
             <div class="gap-3 mt-4 mx-auto">
-                <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
-                    :key="`schedule${schedule.id}`">
-                    <div class="col-auto">
-                        <i class="bi bi-calendar-check fs-1"></i>
+                <template v-if="schedules && schedules.length">
+                    <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
+                        :key="`schedule${schedule.id}`">
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-check fs-1"></i>
+                        </div>
+                        <div class="col-10 border-end">
+                            <h6>
+                                {{ schedule.date }} - {{ schedule.time }}
+                                <span class="badge text-bg-success">
+                                    {{ schedule.status }}
+                                </span>
+                            </h6>
+                            <small>
+                                {{ schedule.service.name }} - {{ schedule.service.price }}
+                            </small>
+                        </div>
+                        <div class="d-flex col-auto gap-4 ps-5">
+                            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
+                                @click="openEditModal(schedule.service)"></i>
+                            <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
+                                @click="deleteSchedule(schedule.id)"></i>
+                        </div>
                     </div>
-                    <div class="col-10 border-end">
-                        <h6>
-                            {{ schedule.date }} - {{ schedule.time }}
-                            <span class="badge text-bg-success">
-                                {{ schedule.status }}
-                            </span>
-                        </h6>
-                        <small>
-                            {{ schedule.service.name }} - {{ schedule.service.price }}
-                        </small>
-                    </div>
-                    <div class="d-flex col-auto gap-4 ps-5">
-                        <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                            @click="openEditModal(schedule.service)"></i>
-                        <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
-                            @click="deleteSchedule(schedule.id)"></i>
-                    </div>
-                </div>
+                </template>
+                <template v-else-if="schedules && !schedules.length">
+                    <h2> Data not found </h2>
+                </template>
+                <template v-else>
+                    <h2> Loading... </h2>
+                </template>
             </div>
         </div>
     </main>
@@ -102,11 +125,18 @@
 
 import { onMounted, ref } from "vue";
 
-import { axiosInstance } from "@/helpers/helper";
+import { axiosInstance, getAllServices, format, searchTimesAvailable } from "@/helpers/helper";
 
 import { Modal } from "bootstrap";
-
 import Swal from 'sweetalert2';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
+interface ServiceInterface {
+    id: number,
+    name: string,
+    price: string,
+}
 
 interface ScheduleInterface {
     id: number,
@@ -120,13 +150,11 @@ interface ScheduleInterface {
     time: string,
 };
 
-const schedules = ref<ScheduleInterface[]>([]);
-const services = ref([])
-const selectedService = ref();
+const schedules = ref<ScheduleInterface[] | null>(null);
+const services = ref<ServiceInterface[]>([]);
 
-onMounted(async () => {
-    schedules.value = await getMyAllSchedules();
-});
+const selectedService = ref();
+const selectedDate = ref();
 
 async function getMyAllSchedules() {
 
@@ -147,23 +175,14 @@ async function openEditModal(service) {
     modal.show();
 
     selectedService.value = service.name
-
-    try {
-        const { data } = await axiosInstance.get("/api/v1/services");
-        services.value = data.data;
-    }
-
-    catch (error) {
-        console.log(error);
-    }
-
+    services.value = await getAllServices();
 }
 
 async function deleteSchedule(id: number) {
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
-            confirmButton: "btn btn-success",
+            confirmButton: "btn btn-success mx-3",
             cancelButton: "btn btn-danger"
         },
         buttonsStyling: false
@@ -175,7 +194,7 @@ async function deleteSchedule(id: number) {
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, cancel it!",
-        cancelButtonText: "No, i don't cancel it!",
+        cancelButtonText: "Don't cancel it!",
         reverseButtons: true
     });
 
@@ -186,10 +205,13 @@ async function deleteSchedule(id: number) {
             const { data } = await axiosInstance.delete(`/api/v1/schedules/${id}`);
 
             if (data.success) {
+
                 Swal.fire({
                     icon: "success",
                     title: "Schedule was cancelled successfully!",
                 });
+
+                schedules.value = await getMyAllSchedules();
             }
         }
 
@@ -198,6 +220,10 @@ async function deleteSchedule(id: number) {
         }
     }
 }
+
+onMounted(async () => {
+    schedules.value = await getMyAllSchedules();
+});
 
 </script>
 
