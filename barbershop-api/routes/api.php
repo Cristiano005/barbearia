@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AvailabilityController;
-use App\Http\Controllers\Api\V1\AdminAuthController;
-use App\Http\Controllers\Api\V1\PaymentController;
-use App\Http\Controllers\Api\V1\ScheduleController;
-use App\Http\Controllers\Api\V1\ServiceController;
-use App\Http\Controllers\Api\V1\UserAuthController;
+use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Api\V1\Admin\ScheduleController as AdminScheduleController;
+use App\Http\Controllers\Api\V1\User\AvailabilityController;
+use App\Http\Controllers\Api\V1\User\PaymentController;
+use App\Http\Controllers\Api\V1\User\ScheduleController;
+use App\Http\Controllers\Api\V1\User\ServiceController;
+use App\Http\Controllers\Api\V1\User\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware("auth:sanctum")->apiResource(
@@ -25,7 +26,7 @@ Route::middleware("auth:sanctum")->apiResource(
 
 Route::middleware("auth:sanctum")->apiResource("availabilities", AvailabilityController::class);
 
-Route::prefix("/auth")->controller(UserAuthController::class)->group(function () {
+Route::prefix("/auth")->controller(AuthController::class)->group(function () {
     Route::get("/check", "check");
     Route::get("/logout", "logout");
     Route::post("/authenticate", "authenticate");
@@ -35,5 +36,9 @@ Route::prefix("/auth")->controller(UserAuthController::class)->group(function ()
 Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(function () {
     Route::get("/check", "check");
     Route::get("/logout", "logout");
-    Route::post("/authenticate", "authenticateAdmin");
+    Route::post("/authenticate", "authenticate");
+});
+
+Route::middleware(["auth:sanctum", "admin"])->prefix("admin")->group(function () {
+    Route::apiResource("schedules", AdminScheduleController::class);
 });

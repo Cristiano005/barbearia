@@ -31,7 +31,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
 
     try {
-        const { data } = await axiosInstance.get("/api/v1/auth/check");
+        const { data } = await axiosInstance.get("/api/v1/auth/admin/check");
         if(to.name !== "signin" && !data) next({name: "signin"});
         else next();
     } 

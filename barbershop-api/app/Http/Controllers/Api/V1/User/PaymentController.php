@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ServiceResource;
-use App\Models\Service;
+use App\Http\Resources\PaymentResource;
+use App\Models\PaymentTypes;
 use Illuminate\Http\Request;
 
-class ServiceController extends Controller
+class PaymentController extends Controller
 {
-    public function __construct()
-    {
-        
-    }
-
     public function index()
     {
-        return ServiceResource::collection(Service::all());
+        return PaymentResource::collection(PaymentTypes::all([
+            "id", "payment_type",
+        ]));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -31,6 +36,14 @@ class ServiceController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
         //
     }

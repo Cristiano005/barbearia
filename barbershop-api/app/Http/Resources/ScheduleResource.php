@@ -7,14 +7,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ScheduleResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             "id" => $this->id,
             "service" => [
                 "name" => $this->service->name,
@@ -25,5 +20,14 @@ class ScheduleResource extends JsonResource
             "time" => $this->time,
             "status" => $this->status,
         ];
+
+        if ($request->user()->is_admin) {
+            $data["user"] = [
+                "name" => $this->user->name,
+                "email" => $this->user->email,
+            ];
+        }
+
+        return $data;
     }
 }
