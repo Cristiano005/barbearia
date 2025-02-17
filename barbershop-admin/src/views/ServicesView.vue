@@ -69,8 +69,9 @@
         <div class="container mx-auto">
             <header class="d-flex justify-content-between align-itesm-center flex-wrap mw-30">
                 <h3>Services</h3>
-                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#serviceAddModal">
-                    Add new service 
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#serviceAddModal">
+                    Add new service
                     <i class="bi bi-plus-circle"></i>
                 </button>
             </header>
@@ -109,9 +110,9 @@
                             <a class="page-link">Previous</a>
                         </li>
 
-                        <li class="page-item" v-for="page of totalOfPages">
+                        <li class="page-item">
                             <a class="page-link" href="#">
-                                {{ page }}
+                                1
                             </a>
                         </li>
 
