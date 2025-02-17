@@ -45,7 +45,7 @@
         <div class="container mx-auto">
             <div class="row">
                 <header class="col-12 mw-30">
-                    <h3>My Schedules</h3>
+                    <h3>Schedules</h3>
                 </header>
             </div>
             <div class="gap-3 mt-4 mx-auto">

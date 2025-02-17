@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\ScheduleController as AdminScheduleController;
+use App\Http\Controllers\Api\V1\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Api\V1\User\AvailabilityController;
 use App\Http\Controllers\Api\V1\User\PaymentController;
 use App\Http\Controllers\Api\V1\User\ScheduleController;
@@ -41,4 +42,5 @@ Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(func
 
 Route::middleware(["auth:sanctum", "admin"])->prefix("admin")->group(function () {
     Route::apiResource("schedules", AdminScheduleController::class);
+    Route::apiResource("services", AdminServiceController::class);
 });

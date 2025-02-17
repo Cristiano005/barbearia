@@ -1,200 +1,259 @@
 <template>
+    <div class="modal fade" id="serviceAddModal" tabindex="-1" aria-labelledby="serviceAddModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="serviceAddModalLabel">Add Service</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" name="serviceId" id="serviceId">
+                        <div class="mb-3">
+                            <label for="serviceName" class="form-label">Name*</label>
+                            <input type="text" class="form-control" name="serviceName" id="serviceName"
+                                placeholder="Service name" v-model="serviceName">
+                            <div ref="timeMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="servicePrice" class="form-label">Price*</label>
+                            <input type="text" class="form-control" name="servicePrice" id="servicePrice"
+                                placeholder="Service price" v-model="servicePrice">
+                            <div ref="timeMessageContainer"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success">Add Service</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="serviceEditModal" tabindex="-1" aria-labelledby="serviceEditModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="serviceEditModalLabel">Edit Service</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" name="serviceId" id="serviceId">
+                        <div class="mb-3">
+                            <label for="serviceName" class="form-label">Name*</label>
+                            <input type="text" class="form-control" name="serviceName" id="serviceName"
+                                placeholder="Service name" v-model="serviceName">
+                            <div ref="timeMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="servicePrice" class="form-label">Price*</label>
+                            <input type="text" class="form-control" name="servicePrice" id="servicePrice"
+                                placeholder="Service price" v-model="servicePrice">
+                            <div ref="timeMessageContainer"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning"
+                        @click="updateService(serviceId, serviceName, servicePrice)">Update Service</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <TheHeader />
     <main class="p-5">
-        <div class="modal fade" id="service-modal" tabindex="-1" aria-labelledby="service-modal-label" aria-hidden="true" ref="service-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="service-modal-label">New service</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="customer" class="col-form-label">Service:</label>
-                                <input type="text" class="form-control border border-dark" placeholder="Enter your service" id="customer" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="customer" class="col-form-label">Price:</label>
-                                <input
-                                    v-model="servicePrice"
-                                    ref="service-price"
-                                    type="text"
-                                    class="form-control border border-dark"
-                                    placeholder="R$ 0,00"
-                                    id="service-price" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="customer" class="col-form-label">Duration Time:</label>
-                                <VueDatePicker class="border border-dark rounded" v-model="durationTime" time-picker placeholder="duration">
-                                    <template #input-icon>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="16"
-                                            height="16"
-                                            fill="currentColor"
-                                            class="bi bi-hourglass input-slot-image color-dark"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5m2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702c0 .7-.478 1.235-1.011 1.491A3.5 3.5 0 0 0 4.5 13v1h7v-1a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351v-.702c0-.7.478-1.235 1.011-1.491A3.5 3.5 0 0 0 11.5 3V2z" />
-                                        </svg>
-                                    </template>
-                                </VueDatePicker>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success">Schedule</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="table-header row flex-wrap align-items-center justify-content-between gap-2">
-            <h2 class="col-12 col-lg-3 col-xxl-6 mb-0">Services</h2>
-            <div class="d-flex col-12 col-lg-8 col-xxl-5 filters flex-wrap justify-content-end gap-3">
-                <div class="col-12 col-lg-4">
-                    <input class="form-control me-2 h-100 p-2" type="search" placeholder="Search by services" aria-label="Search" />
-                </div>
-                <div class="col-12 col-lg-4">
-                    <select class="form-select h-100 p-2" aria-label="Default select example">
-                        <option selected>All</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-                <button type="button" class="btn btn-success col-12 col-lg-3" data-bs-toggle="modal" data-bs-target="#service-modal">
-                    + Add service
+        <div class="container mx-auto">
+            <header class="d-flex justify-content-between align-itesm-center flex-wrap mw-30">
+                <h3>Services</h3>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#serviceAddModal">
+                    Add new service 
+                    <i class="bi bi-plus-circle"></i>
                 </button>
+            </header>
+            <div class="d-flex flex-column gap-3 mt-4 mx-auto">
+                <template v-if="services && services.length">
+                    <div class="row align-items-center text-bg-dark p-3 rounded m-0" v-for="service of services"
+                        :key="`service${service.id}`">
+                        <div class="col-auto">
+                            <i class="bi bi-scissors fs-1"></i>
+                        </div>
+                        <div class="col-10 border-end">
+                            <h6>
+                                {{ service.name }}
+                            </h6>
+                            <small>
+                                {{ service.price }}
+                            </small>
+                        </div>
+                        <div class="d-flex col-auto gap-4 ps-5">
+                            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
+                                @click="openEditModal(service.id, service.name, service.price)"></i>
+                            <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
+                                @click="deleteService(service.id)"></i>
+                        </div>
+                    </div>
+                </template>
+                <template v-else-if="services && !services.length">
+                    <h2> Data not found </h2>
+                </template>
+                <template v-else>
+                    <h2> Loading... </h2>
+                </template>
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link">Previous</a>
+                        </li>
+
+                        <li class="page-item" v-for="page of totalOfPages">
+                            <a class="page-link" href="#">
+                                {{ page }}
+                            </a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </div>
-        <div class="table-responsive">
-            <table class="mt-5 table table-secondary table-striped table-hover rounded">
-                <thead>
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">Service Name</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>
-                            <span class="badge text-bg-success">Success</span>
-                        </td>
-                        <td class="d-flex flex-wrap gap-3">
-                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-delete">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>
-                            <span class="badge text-bg-success">Success</span>
-                        </td>
-                        <td class="d-flex flex-wrap gap-3">
-                            <button class="btn btn-warning">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>
-                            <span class="badge text-bg-success">Success</span>
-                        </td>
-                        <td class="d-flex flex-wrap gap-3">
-                            <button class="btn btn-warning">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                        <td>
-                            <span class="badge text-bg-success">Success</span>
-                        </td>
-                        <td class="d-flex flex-wrap gap-3">
-                            <button class="btn btn-warning">Edit</button>
-                            <button class="btn btn-danger">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </main>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, useTemplateRef, onBeforeUnmount } from 'vue';
 
 import TheHeader from '@/components/TheHeader.vue';
+import { axiosInstance } from '@/helpers/helper';
 
-import VueDatePicker from '@vuepic/vue-datepicker';
-import { setMask, removeMask, formatToCurrency } from 'simple-mask-money'; // import mask
+import { ref, onMounted } from 'vue';
+
+import { Modal } from "bootstrap";
+import Swal from 'sweetalert2';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-const serviceModal = useTemplateRef<HTMLDivElement | null>('service-modal');
-const servicePriceInput = useTemplateRef<HTMLInputElement | null>('service-price');
-
-const servicePrice = ref<string>('');
-
-onMounted(() => {
-    setMask(servicePriceInput.value, {
-        cursor: 'move',
-        decimalSeparator: ',',
-        fixed: false,
-        fractionDigits: 2,
-        negativeSignAfter: false,
-        prefix: 'R$',
-        suffix: '',
-        thousandsSeparator: '.'
-    });
-
-    serviceModal.value?.addEventListener('show.bs.modal', () => {
-        durationTime.value = {
-            hours: 0,
-            minutes: 0
-        };
-        servicePrice.value = formatToCurrency('', {
-            cursor: 'move',
-            decimalSeparator: ',',
-            fixed: false,
-            fractionDigits: 2,
-            negativeSignAfter: false,
-            prefix: 'R$',
-            suffix: '',
-            thousandsSeparator: '.'
-        });
-    });
-});
-
-onBeforeUnmount(() => {
-    removeMask(servicePriceInput.value); // destroy the mask effect.
-});
-
-interface Duration {
-    hours: number;
-    minutes: number;
+interface ServiceInterface {
+    id: number,
+    name: string,
+    price: string,
 }
 
-const durationTime = ref<Duration>({
-    hours: 0,
-    minutes: 0
+const serviceId = ref<number>(0);
+const serviceName = ref<string>("");
+const servicePrice = ref<string>("");
+
+const services = ref<ServiceInterface[]>([]);
+
+let modalInstance: Modal | null = null;
+
+function formatPrice(price: number | string) {
+    price = typeof price === "string" ? parseFloat(price) / 100 : price;
+    return `R$ ${price}`;
+}
+
+async function getAllServices() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/admin/services");
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
+async function openEditModal(id: number, name: string, price: string) {
+
+    modalInstance.show();
+
+    serviceId.value = id;
+    serviceName.value = name;
+    servicePrice.value = formatPrice(parseFloat(price));
+}
+
+async function updateService(id: number, name: string, price: string) {
+
+    try {
+
+        const { data } = await axiosInstance.put(`/api/v1/admin/services/${id}`, {
+            name: name,
+            price: price,
+        });
+
+        if (data.success) {
+
+            modalInstance.hide();
+
+            Swal.fire({
+                icon: "success",
+                title: "Service was updated successfully!",
+            });
+
+            services.value = await getAllServices();
+        }
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
+async function deleteService(id: number) {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success mx-3",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+
+    const result = await swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "The service will be deleted.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Don't delete it!",
+        reverseButtons: true
+    });
+
+    if (result.isConfirmed) {
+
+        try {
+
+            const { data } = await axiosInstance.delete(`/api/v1/service/${id}`);
+
+            if (data.success) {
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Service was deleted successfully!",
+                });
+
+                services.value = await getAllServices();
+            }
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+}
+
+onMounted(async () => {
+    modalInstance = new Modal(document.querySelector("#serviceEditModal"))
+    services.value = await getAllServices();
 });
+
 </script>
 
 <style>
