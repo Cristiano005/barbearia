@@ -10,33 +10,34 @@
                     :type="false"
                     format="dd/MM/yyyy"
                     range
-                    multi-calendars />
+                    multi-calendars 
+                    @update:model-value="updateDashboard"/>
             </div>
         </div>
         <div class="row analysys bg-light mt-5 gap-5">
             <div class="card col-lg-3 mb-3">
                 <div class="row align-items-center card-body text-center">
                     <h4 class="card-title">Total Revenue</h4>
-                    <span class="card-text fs-1"> R$ 10.000,56 </span>
+                    <span class="card-text fs-1" id="totalRevenue"> {{ valueOfTotalRevenue }} </span>
                 </div>
             </div>
             <div class="card col-lg-3 mb-3">
                 <div class="row align-items-center card-body text-center">
                     <h4 class="card-title">Total Scheduled</h4>
-                    <span class="card-text fs-1"> 158 </span>
+                    <span class="card-text fs-1"> {{ valueOfTotalNewRegisteredCustomers }} </span>
                 </div>
             </div>
             <div class="card col-lg-3 mb-3">
                 <div class="card-body row align-items-center text-center">
                     <h4 class="card-title">Hours Worked</h4>
-                    <span class="card-text fs-1"> 152h </span>
+                    <span class="card-text fs-1"> {{ valueOfTotalWorkedHours }} </span>
                 </div>
             </div>
 
             <div class="card col-lg-2 mb-3">
                 <div class="card-body row align-items-center text-center">
                     <h4 class="card-title">New Customers</h4>
-                    <span class="card-text fs-1"> 12 </span>
+                    <span class="card-text fs-1"> {{ valueOfTotalNewRegisteredCustomers }} </span>
                 </div>
             </div>
 
@@ -57,9 +58,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
 
 import TheHeader from '@/components/TheHeader.vue';
+import { axiosInstance } from '@/helpers/helper';
+
+import { ref, reactive, onMounted } from 'vue';
 
 import { Bar, Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, Title, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
@@ -68,7 +71,12 @@ import type { ChartData, ChartOptions } from 'chart.js';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-const dateInterval = ref(null);
+const dateInterval = ref<Date[]>([]);
+
+const valueOfTotalRevenue = ref(0);
+const valueOfScheduled = ref(0);
+const valueOfTotalWorkedHours = ref("00h:00m");
+const valueOfTotalNewRegisteredCustomers = ref(0);
 
 const totalRevenue = reactive<{
     data: ChartData<'bar'>;
@@ -205,4 +213,42 @@ const schedulesStatus = reactive<{
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
+
+function formatterDate(date: Date) {
+
+    const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+    const month = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${year}-${month}-${day}`;
+}
+
+async function getDataForDashboard(startDate: Date, endDate: Date) {
+
+    try {
+        const { data } = await axiosInstance.get(`/api/v1/admin/dashboard?startDate=${formatterDate(startDate)}&endDate=${formatterDate(endDate)}`);
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
+async function updateDashboard(dates: Date[]) {
+    const { total_of_revenue, total_of_schedules_in_period, total_of_worked_hours, total_of_registered_customers } = await getDataForDashboard(dates[0], dates[1]);
+    valueOfTotalRevenue.value = total_of_revenue;
+    valueOfScheduled.value = total_of_schedules_in_period;
+    valueOfTotalWorkedHours.value = total_of_worked_hours;
+    valueOfTotalNewRegisteredCustomers.value = total_of_registered_customers;
+}
+
+onMounted(async () => {
+    const startDate: Date = new Date();
+    const endDate: Date = new Date(new Date().setDate(startDate.getDate() + 30));
+    dateInterval.value = [startDate, endDate];
+    await getDataForDashboard(startDate, endDate);
+});
+
 </script>

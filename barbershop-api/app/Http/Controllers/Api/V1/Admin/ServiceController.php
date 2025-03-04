@@ -16,28 +16,36 @@ class ServiceController extends Controller
 
     public function index()
     {
-        return ServiceResource::collection(Service::paginate(6));
+        return ServiceResource::collection(Service::orderByDesc("id")->get());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            "name" => "required",
+            "price" => "required"
+        ]);
+
+        $insert = Service::create($validatedData);
+
+        if($insert) {
+            return response()->json([
+                "success" => true,
+                "message" => "Service created successfully!",
+            ])->setStatusCode(200);
+        }
+
+        return response()->json([
+            "success" => false,
+            "message" => "It was occured an error to the create service!",
+        ])->setStatusCode(500);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([

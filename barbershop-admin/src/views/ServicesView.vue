@@ -9,24 +9,23 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <input type="hidden" name="serviceId" id="serviceId">
                         <div class="mb-3">
                             <label for="serviceName" class="form-label">Name*</label>
                             <input type="text" class="form-control" name="serviceName" id="serviceName"
-                                placeholder="Service name" v-model="serviceName">
+                                placeholder="Service name" v-model="serviceNameToCreate">
                             <div ref="timeMessageContainer"></div>
                         </div>
                         <div class="mb-3">
                             <label for="servicePrice" class="form-label">Price*</label>
                             <input type="text" class="form-control" name="servicePrice" id="servicePrice"
-                                placeholder="Service price" v-model="servicePrice">
+                                placeholder="Service price" v-model="servicePriceToCreate">
                             <div ref="timeMessageContainer"></div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Add Service</button>
+                    <button type="button" class="btn btn-success" @click="addService()">Add Service</button>
                 </div>
             </div>
         </div>
@@ -45,13 +44,13 @@
                         <div class="mb-3">
                             <label for="serviceName" class="form-label">Name*</label>
                             <input type="text" class="form-control" name="serviceName" id="serviceName"
-                                placeholder="Service name" v-model="serviceName">
+                                placeholder="Service name" v-model="serviceNameToUpdate">
                             <div ref="timeMessageContainer"></div>
                         </div>
                         <div class="mb-3">
                             <label for="servicePrice" class="form-label">Price*</label>
                             <input type="text" class="form-control" name="servicePrice" id="servicePrice"
-                                placeholder="Service price" v-model="servicePrice">
+                                placeholder="Service price" v-model="servicePriceToUpdate">
                             <div ref="timeMessageContainer"></div>
                         </div>
                     </form>
@@ -59,7 +58,8 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-warning"
-                        @click="updateService(serviceId, serviceName, servicePrice)">Update Service</button>
+                        @click="updateService(serviceIdToUpdate, serviceNameToUpdate, servicePriceToUpdate)">Update
+                        Service</button>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
                 <h3>Services</h3>
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                     data-bs-target="#serviceAddModal">
-                    Add new service
+                    Add Service
                     <i class="bi bi-plus-circle"></i>
                 </button>
             </header>
@@ -143,13 +143,17 @@ interface ServiceInterface {
     price: string,
 }
 
-const serviceId = ref<number>(0);
-const serviceName = ref<string>("");
-const servicePrice = ref<string>("");
+const serviceNameToCreate = ref<string>("");
+const servicePriceToCreate = ref<string>("");
+
+const serviceIdToUpdate = ref<number>(0);
+const serviceNameToUpdate = ref<string>("");
+const servicePriceToUpdate = ref<string>("");
 
 const services = ref<ServiceInterface[]>([]);
 
-let modalInstance: Modal | null = null;
+let addModalInstance: Modal | null = null;
+let editModalInstance: Modal | null = null;
 
 function formatPrice(price: number | string) {
     price = typeof price === "string" ? parseFloat(price) / 100 : price;
@@ -171,11 +175,46 @@ async function getAllServices() {
 
 async function openEditModal(id: number, name: string, price: string) {
 
-    modalInstance.show();
+    editModalInstance.show();
 
-    serviceId.value = id;
-    serviceName.value = name;
-    servicePrice.value = formatPrice(parseFloat(price));
+    serviceIdToUpdate.value = id;
+    serviceNameToUpdate.value = name;
+    servicePriceToUpdate.value = formatPrice(parseFloat(price));
+}
+
+async function addService() {
+
+    if (!serviceNameToCreate.value || !servicePriceToCreate.value) {
+        Swal.fire({
+            icon: "error",
+            title: "Please, fill all fields!",
+        });
+        return;
+    }
+
+    try {
+
+        const { data } = await axiosInstance.post(`/api/v1/admin/services`, {
+            name: serviceNameToCreate.value,
+            price: servicePriceToCreate.value,
+        });
+
+        if (data.success) {
+
+            addModalInstance.hide();
+
+            Swal.fire({
+                icon: "success",
+                title: data.message,
+            });
+
+            services.value = await getAllServices();
+        }
+    }
+
+    catch (error) {
+        console.log(error);
+    }
 }
 
 async function updateService(id: number, name: string, price: string) {
@@ -189,7 +228,7 @@ async function updateService(id: number, name: string, price: string) {
 
         if (data.success) {
 
-            modalInstance.hide();
+            editModalInstance.hide();
 
             Swal.fire({
                 icon: "success",
@@ -251,7 +290,8 @@ async function deleteService(id: number) {
 }
 
 onMounted(async () => {
-    modalInstance = new Modal(document.querySelector("#serviceEditModal"))
+    addModalInstance = new Modal(document.querySelector("#serviceAddModal"));
+    editModalInstance = new Modal(document.querySelector("#serviceEditModal"))
     services.value = await getAllServices();
 });
 
