@@ -4,14 +4,9 @@
         <div class="table-header row flex-wrap justify-content-between">
             <h2 class="col-12 col-lg-9">Dashboard</h2>
             <div class="d-flex col-12 col-lg-3 filters flex-wrap justify-content-end align-items-center gap-3">
-                <VueDatePicker
-                    v-model="dateInterval"
-                    placeholder="Select a date interval"
-                    :type="false"
-                    format="dd/MM/yyyy"
-                    range
-                    multi-calendars 
-                    @update:model-value="updateDashboard"/>
+                <VueDatePicker v-model="dateInterval" placeholder="Select a date interval" :type="false"
+                    :clearable="false" format="dd/MM/yyyy" range multi-calendars
+                    @update:model-value="updateDashboard" />
             </div>
         </div>
         <div class="row analysys bg-light mt-5 gap-5">
@@ -62,7 +57,7 @@
 import TheHeader from '@/components/TheHeader.vue';
 import { axiosInstance } from '@/helpers/helper';
 
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
 
 import { Bar, Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, Title, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
@@ -77,6 +72,8 @@ const valueOfTotalRevenue = ref(0);
 const valueOfScheduled = ref(0);
 const valueOfTotalWorkedHours = ref("00h:00m");
 const valueOfTotalNewRegisteredCustomers = ref(0);
+
+const data = ref([1, 2, 3, 4]);
 
 const totalRevenue = reactive<{
     data: ChartData<'bar'>;
@@ -123,43 +120,42 @@ const totalRevenue = reactive<{
     }
 });
 
-const paymentsTypes = reactive<{
-    data: ChartData<'bar'>;
-    options: ChartOptions<'bar'>;
-}>({
-    data: {
-        labels: ['Credit Card', 'Debit Card', 'Pix', 'Money'],
-        datasets: [
-            {
-                label: 'My First Dataset',
-                data: [12, 78, 18, 44],
-                backgroundColor: ['#dc3545', '#0d6efd', '#ffc107', '#198754'],
-                hoverOffset: 4
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                grid: {
-                    display: false // Isso remove as linhas de grade do eixo X
+const paymentsTypes = computed(() => {
+    return {
+        data: {
+            labels: ['Credit Card', 'Debit Card', 'Pix', 'Money'],
+            datasets: [
+                {
+                    label: 'My First Dataset',
+                    data: data.value,
+                    backgroundColor: ['#dc3545', '#0d6efd', '#ffc107', '#198754'],
+                    hoverOffset: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: {
+                        display: false // Isso remove as linhas de grade do eixo X
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false // Isso remove as linhas de grade do eixo X
+                    }
                 }
             },
-            y: {
-                grid: {
-                    display: false // Isso remove as linhas de grade do eixo X
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'bottom' as 'bottom',
-                labels: {
-                    font: {
-                        size: 18,
-                        weight: 'bold'
+            plugins: {
+                legend: {
+                    position: 'bottom' as 'bottom',
+                    labels: {
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        }
                     }
                 }
             }
@@ -237,11 +233,21 @@ async function getDataForDashboard(startDate: Date, endDate: Date) {
 }
 
 async function updateDashboard(dates: Date[]) {
-    const { total_of_revenue, total_of_schedules_in_period, total_of_worked_hours, total_of_registered_customers } = await getDataForDashboard(dates[0], dates[1]);
+
+    const {
+        total_of_revenue,
+        total_of_schedules_in_period,
+        total_of_worked_hours,
+        total_of_registered_customers,
+        total_of_payment_types,
+    } = await getDataForDashboard(dates[0], dates[1]);
+
     valueOfTotalRevenue.value = total_of_revenue;
     valueOfScheduled.value = total_of_schedules_in_period;
     valueOfTotalWorkedHours.value = total_of_worked_hours;
     valueOfTotalNewRegisteredCustomers.value = total_of_registered_customers;
+
+    data.value = Object.values(total_of_payment_types);
 }
 
 onMounted(async () => {
