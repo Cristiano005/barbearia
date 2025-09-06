@@ -106,19 +106,35 @@
                 </template>
                 <nav aria-label="...">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
+
+                        <template v-if="pagination.currentPage > 1">
+                            <li class="page-item">
+                                <button class="page-link" @click="goToPage(pagination.currentPage - 1)">Previous</button>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="page-item disabled">
+                                <button class="page-link">Previous</button>
+                            </li>
+                        </template>
+
+                        <li :class="pagination.currentPage === page ? 'active' : ''"
+                            v-for="page of pagination.quantityOfPages">
+                            <button class="page-link" @click="goToPage(page)">
+                                {{ page }}
+                            </button>
                         </li>
 
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                1
-                            </a>
-                        </li>
-
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
+                        <template v-if="pagination.currentPage < pagination.quantityOfPages">
+                            <li class="page-item">
+                                <button class="page-link" @click="goToPage(pagination.currentPage + 1)">Next</button>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="page-item disabled">
+                                <button class="page-link">Next</button>
+                            </li>
+                        </template>
                     </ul>
                 </nav>
             </div>
@@ -143,6 +159,11 @@ interface ServiceInterface {
     price: string,
 }
 
+interface PaginationInterface {
+    quantityOfPages: number,
+    currentPage: number,
+}
+
 const serviceNameToCreate = ref<string>("");
 const servicePriceToCreate = ref<string>("");
 
@@ -152,25 +173,17 @@ const servicePriceToUpdate = ref<string>("");
 
 const services = ref<ServiceInterface[]>([]);
 
+const pagination = ref<PaginationInterface>({
+    quantityOfPages: 1,
+    currentPage: 1,
+});
+
 let addModalInstance: Modal | null = null;
 let editModalInstance: Modal | null = null;
 
 function formatPrice(price: number | string) {
     price = typeof price === "string" ? parseFloat(price) / 100 : price;
     return `R$ ${price}`;
-}
-
-async function getAllServices() {
-
-    try {
-        const { data } = await axiosInstance.get("/api/v1/admin/services");
-        return data.data;
-    }
-
-    catch (error) {
-        console.log(error);
-    }
-
 }
 
 async function openEditModal(id: number, name: string, price: string) {
@@ -180,6 +193,25 @@ async function openEditModal(id: number, name: string, price: string) {
     serviceIdToUpdate.value = id;
     serviceNameToUpdate.value = name;
     servicePriceToUpdate.value = formatPrice(parseFloat(price));
+}
+
+async function goToPage(page: number) {
+    pagination.value.currentPage = page;
+    services.value = await getAllServices();
+}
+
+async function getAllServices() {
+
+    try {
+        const { data } = await axiosInstance.get(`/api/v1/admin/services?page=${pagination.value.currentPage}`);
+        pagination.value.quantityOfPages = data.meta.last_page;
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
 }
 
 async function addService() {
@@ -298,9 +330,11 @@ onMounted(async () => {
 </script>
 
 <style>
+
 .input-slot-image {
     height: 1.25rem;
     width: auto;
     margin: 0 0 0.17rem 0.5rem;
 }
+
 </style>

@@ -16,7 +16,7 @@ class ServiceController extends Controller
 
     public function index()
     {
-        return ServiceResource::collection(Service::orderByDesc("id")->get());
+        return ServiceResource::collection(Service::orderByDesc("id")->paginate(6));
     }
 
     public function store(Request $request)
