@@ -13,15 +13,42 @@ class Schedule extends Model
 
     protected $fillable = ["user_id", "service_id", "payment_id", "date", "time", "status"];
 
-    public function user() {
+    const STATUS_SUCCESS = "success";
+    const STATUS_ABSENT = "absent";
+    const STATUS_CANCELLED = "cancelled";
+
+    public static function allStatuses(): array
+    {
+        return [
+            self::STATUS_SUCCESS,
+            self::STATUS_ABSENT,
+            self::STATUS_CANCELLED,
+        ];
+    }
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function service() {
+    public function service()
+    {
         return $this->belongsTo(Service::class);
     }
 
-    public function payment() {
+    public function payment()
+    {
         return $this->belongsTo(PaymentTypes::class);
+    }
+
+    public function getAllRevenueOfYear()
+    {
+        return self::selectRaw('YEAR(date) as year, MONTH(date) as month, SUM(services.price) as total')
+            ->join('services', 'schedules.service_id', '=', 'services.id')
+            ->where('status', 'success')
+            ->groupBy('year', 'month')
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
     }
 }

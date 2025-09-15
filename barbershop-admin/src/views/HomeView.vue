@@ -13,36 +13,38 @@
             <div class="card col-lg-3 mb-3">
                 <div class="row align-items-center card-body text-center">
                     <h4 class="card-title">Total Revenue</h4>
-                    <span class="card-text fs-1" id="totalRevenue"> {{ valueOfTotalRevenue }} </span>
+                    <span class="card-text fs-1" id="revenuePerMonth">
+                        {{ dashboardMetrics.revenueByPeriod.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}
+                    </span>
                 </div>
             </div>
             <div class="card col-lg-3 mb-3">
                 <div class="row align-items-center card-body text-center">
                     <h4 class="card-title">Total Scheduled</h4>
-                    <span class="card-text fs-1"> {{ valueOfTotalNewRegisteredCustomers }} </span>
+                    <span class="card-text fs-1"> {{ dashboardMetrics.scheduleCount }} </span>
                 </div>
             </div>
             <div class="card col-lg-3 mb-3">
                 <div class="card-body row align-items-center text-center">
                     <h4 class="card-title">Hours Worked</h4>
-                    <span class="card-text fs-1"> {{ valueOfTotalWorkedHours }} </span>
+                    <span class="card-text fs-1"> {{ dashboardMetrics.totalWorkedTime }} </span>
                 </div>
             </div>
 
             <div class="card col-lg-2 mb-3">
                 <div class="card-body row align-items-center text-center">
                     <h4 class="card-title">New Customers</h4>
-                    <span class="card-text fs-1"> {{ valueOfTotalNewRegisteredCustomers }} </span>
+                    <span class="card-text fs-1"> {{ dashboardMetrics.newCustomers }} </span>
                 </div>
             </div>
 
             <div class="col-12 col-lg-5" style="height: 28rem">
                 <h2 class="text-center text-dark">Revenue</h2>
-                <Bar :data="totalRevenue.data" :options="totalRevenue.options" />
+                <Bar :data="revenuePerMonth.data" :options="revenuePerMonth.options" />
             </div>
             <div class="col-lg-3 text-light rounded" style="height: 28rem">
                 <h2 class="text-center text-dark">Payments</h2>
-                <Doughnut :data="paymentsTypes.data" :options="paymentsTypes.options" />
+                <Doughnut :data="paymentsByTypes.data" :options="paymentsByTypes.options" />
             </div>
             <div class="col-lg-3 text-light rounded" style="height: 28rem">
                 <h2 class="text-center text-dark">Schedules Status</h2>
@@ -61,73 +63,75 @@ import { ref, reactive, onMounted, computed } from 'vue';
 
 import { Bar, Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, Title, ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import type { ChartData, ChartOptions } from 'chart.js';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
 const dateInterval = ref<Date[]>([]);
 
-const valueOfTotalRevenue = ref(0);
-const valueOfScheduled = ref(0);
-const valueOfTotalWorkedHours = ref("00h:00m");
-const valueOfTotalNewRegisteredCustomers = ref(0);
+const dashboardMetrics = reactive({
+    monthlyRevenue: [] as number[],
+    revenueByPeriod: 0,
+    scheduleCount: 0,
+    totalWorkedTime: '00h:00m',
+    newCustomers: 0,
+    paymentTypeCounts: [] as number[],
+    scheduleStatusCounts: [] as number[],
+});
 
-const data = ref([1, 2, 3, 4]);
+const revenuePerMonth = computed(() => {
 
-const totalRevenue = reactive<{
-    data: ChartData<'bar'>;
-    options: ChartOptions<'bar'>;
-}>({
-    data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'Setempber', 'October', 'November', 'December'],
-        datasets: [
-            {
-                label: 'Total Revenue',
-                // backgroundColor: '#198754',
-                data: [5000, 6000, 10000, 3500, 1035, 5545, 5060, 8050, 9000, 7856, 9100, 9865],
-                backgroundColor: '#198754',
-                borderRadius: 8
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                grid: {
-                    display: false // Isso remove as linhas de grade do eixo X
+    return {
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'Setempber', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: 'Revenue per Month',
+                    data: dashboardMetrics.monthlyRevenue,
+                    backgroundColor: '#198754',
+                    borderRadius: 8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: {
+                        display: false // Isso remove as linhas de grade do eixo X
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false // Isso remove as linhas de grade do eixo X
+                    }
                 }
             },
-            y: {
-                grid: {
-                    display: false // Isso remove as linhas de grade do eixo X
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'bottom' as 'bottom',
-                labels: {
-                    font: {
-                        size: 18,
-                        weight: 'bold'
+            plugins: {
+                legend: {
+                    position: 'bottom' as 'bottom',
+                    labels: {
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        }
                     }
                 }
             }
         }
+
     }
 });
 
-const paymentsTypes = computed(() => {
+const paymentsByTypes = computed(() => {
     return {
         data: {
             labels: ['Credit Card', 'Debit Card', 'Pix', 'Money'],
             datasets: [
                 {
-                    label: 'My First Dataset',
-                    data: data.value,
+                    label: 'Payments by Type',
+                    data: dashboardMetrics.paymentTypeCounts,
                     backgroundColor: ['#dc3545', '#0d6efd', '#ffc107', '#198754'],
                     hoverOffset: 4
                 }
@@ -163,43 +167,42 @@ const paymentsTypes = computed(() => {
     }
 });
 
-const schedulesStatus = reactive<{
-    data: ChartData<'bar'>;
-    options: ChartOptions<'bar'>;
-}>({
-    data: {
-        labels: ['Finished', 'Absent', 'Cancelled'],
-        datasets: [
-            {
-                label: 'My First Dataset',
-                data: [140, 5, 13],
-                backgroundColor: ['#198754', '#ffc107', '#dc3545'],
-                hoverOffset: 4
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: {
-                grid: {
-                    display: false // Isso remove as linhas de grade do eixo X
+const schedulesStatus = computed(() => {
+    return {
+        data: {
+            labels: ['Finished', 'Absent', 'Cancelled'],
+            datasets: [
+                {
+                    label: 'Schedule Status',
+                    data: dashboardMetrics.scheduleStatusCounts,
+                    backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                    hoverOffset: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grid: {
+                        display: false // Isso remove as linhas de grade do eixo X
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false // Isso remove as linhas de grade do eixo X
+                    }
                 }
             },
-            y: {
-                grid: {
-                    display: false // Isso remove as linhas de grade do eixo X
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                position: 'bottom' as 'bottom',
-                labels: {
-                    font: {
-                        size: 18,
-                        weight: 'bold'
+            plugins: {
+                legend: {
+                    position: 'bottom' as 'bottom',
+                    labels: {
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        }
                     }
                 }
             }
@@ -213,7 +216,7 @@ ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 function formatterDate(date: Date) {
 
     const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-    const month = date.getMonth() < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
+    const month = date.getMonth() < 9 ? `0${date.getMonth() + 1}` : date.getMonth() + 1
     const year = date.getFullYear();
 
     return `${year}-${month}-${day}`;
@@ -234,27 +237,26 @@ async function getDataForDashboard(startDate: Date, endDate: Date) {
 
 async function updateDashboard(dates: Date[]) {
 
-    const {
-        total_of_revenue,
-        total_of_schedules_in_period,
-        total_of_worked_hours,
-        total_of_registered_customers,
-        total_of_payment_types,
-    } = await getDataForDashboard(dates[0], dates[1]);
+    const [startDate, endDate] = dates;
 
-    valueOfTotalRevenue.value = total_of_revenue;
-    valueOfScheduled.value = total_of_schedules_in_period;
-    valueOfTotalWorkedHours.value = total_of_worked_hours;
-    valueOfTotalNewRegisteredCustomers.value = total_of_registered_customers;
+    const response = await getDataForDashboard(startDate, endDate);
 
-    data.value = Object.values(total_of_payment_types);
+    if (!response) return;
+
+    dashboardMetrics.monthlyRevenue = response.monthly_revenue;
+    dashboardMetrics.revenueByPeriod = response.period_revenue;
+    dashboardMetrics.scheduleCount = response.schedule_count;
+    dashboardMetrics.totalWorkedTime = response.worked_time;
+    dashboardMetrics.newCustomers = response.new_customers;
+    dashboardMetrics.paymentTypeCounts = Object.values(response.payment_type_counts);
+    dashboardMetrics.scheduleStatusCounts = response.status_counts;
 }
 
 onMounted(async () => {
     const startDate: Date = new Date();
     const endDate: Date = new Date(new Date().setDate(startDate.getDate() + 30));
     dateInterval.value = [startDate, endDate];
-    await getDataForDashboard(startDate, endDate);
+    await updateDashboard([startDate, endDate]);
 });
 
 </script>

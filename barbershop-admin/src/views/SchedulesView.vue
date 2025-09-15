@@ -1,4 +1,35 @@
 <template>
+    <div class="modal fade" id="scheduleAddModal" tabindex="-1" aria-labelledby="serviceAddModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="serviceAddModalLabel">Add Schedule</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="serviceName" class="form-label">Name*</label>
+                            <input type="text" class="form-control" name="serviceName" id="serviceName"
+                                placeholder="Service name">
+                            <div ref="timeMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="servicePrice" class="form-label">Price*</label>
+                            <input type="text" class="form-control" name="servicePrice" id="servicePrice"
+                                placeholder="Service price">
+                            <div ref="timeMessageContainer"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success">Add Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -44,8 +75,13 @@
     <main class="p-5">
         <div class="container mx-auto">
             <div class="row">
-                <header class="col-12 mw-30">
+                <header class="d-flex justify-content-between align-itesm-center flex-wrap mw-30">
                     <h3>Schedules</h3>
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                        data-bs-target="#scheduleAddModal">
+                        Add Schedules
+                        <i class="bi bi-plus-circle"></i>
+                    </button>
                 </header>
             </div>
             <div class="gap-3 mt-4 mx-auto">
