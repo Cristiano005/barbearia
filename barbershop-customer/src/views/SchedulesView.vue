@@ -8,27 +8,28 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <input type="hidden" id="scheduleId" v-model="scheduleId">
                         <div class="mb-3">
                             <label for="service-to-schedule" class="col-form-label">Service:</label>
                             <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
                                 id="service-to-schedule" v-model="selectedService">
-                                <option v-for="service of services">
+                                <option v-for="service of services" :key="service.id" :value="service.id">
                                     {{ service.name }}
                                 </option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Date*</label>
-                            <VueDatePicker :model-value="selectedDate" :min-date="new Date()" :format="format" ref="dateInput"
-                                :enableTimePicker="false" locale="pt-BR"
-                                @update:model-value="searchTimesAvailable" 
+                            <VueDatePicker v-model="selectedDate" @update:model-value="handleDate" :format="format"
+                                ref="dateInput" :enableTimePicker="false" locale="pt-BR" :allowed-dates="onlyFreeDays"
                                 placeholder="Select a date" id="date" />
                             <div ref="dateMessageContainer"></div>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Time*</label>
-                            <select class="form-control" ref="timeInput" disabled>
-                                <option disabled selected value=""> Select a time </option>
+                            <select class="form-control" ref="timeInput" :disabled="isDisabled" v-model="selectedTime">
+                                <option value=""> Selecione um horário </option>
+                                <option v-for="time in times"> {{ time }} </option>
                             </select>
                             <div ref="timeMessageContainer"></div>
                         </div>
@@ -36,7 +37,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-warning">Edit Schedule</button>
+                    <button type="button" class="btn btn-warning" @click="saveChanges">Edit Schedule</button>
                 </div>
             </div>
         </div>
@@ -104,7 +105,7 @@
                         </div>
                         <div class="d-flex col-auto gap-4 ps-5">
                             <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                                @click="openEditModal(schedule.service)"></i>
+                                @click="openEditModal(schedule.service.id, schedule.id)"></i>
                             <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
                                 @click="deleteSchedule(schedule.id)"></i>
                         </div>
@@ -123,9 +124,9 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 
-import { axiosInstance, getAllServices, format, searchTimesAvailable } from "@/helpers/helper";
+import { axiosInstance, getAllServices, format, searchTimesAvailable, getAvailableDateTimes } from "@/helpers/helper";
 
 import { Modal } from "bootstrap";
 import Swal from 'sweetalert2';
@@ -141,6 +142,7 @@ interface ServiceInterface {
 interface ScheduleInterface {
     id: number,
     service: {
+        id: number,
         name: string,
         price: string,
     },
@@ -150,11 +152,52 @@ interface ScheduleInterface {
     time: string,
 };
 
+interface AvailableDateTimesInterface {
+    id: number,
+    date: String,
+    time: String,
+}
+
 const schedules = ref<ScheduleInterface[] | null>(null);
 const services = ref<ServiceInterface[]>([]);
 
-const selectedService = ref();
-const selectedDate = ref();
+const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
+
+const scheduleId = ref<number>();
+
+const selectedService = ref<number|null>(null);
+const selectedDate = ref<Date | null>(null);
+
+const isDisabled = ref<boolean>(true);
+const times = ref<String[]>([]);
+const selectedTime = ref<String>("");
+
+const onlyFreeDays = computed<String[]>(() => {
+    return availableDateTimes.value.map(dateTime => dateTime.date);
+})
+
+const getFormattedDate = (date: Date) => {
+    const newDate = new Date(date);
+    const day = String(newDate.getDate()).padStart(2, '0');
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    const year = newDate.getFullYear();
+
+    return `${year}-${month}-${day}`;
+}
+
+const handleDate = (chosenDate: Date) => {
+
+    const fullDate = getFormattedDate(chosenDate);
+
+    times.value = availableDateTimes.value.filter(dateTime => dateTime.date === fullDate).map(dateTime => dateTime.time);
+
+    if (times.value.length > 0) {
+        isDisabled.value = false;
+    } else {
+        isDisabled.value = true;
+        selectedTime.value = "";
+    }
+}
 
 async function getMyAllSchedules() {
 
@@ -169,13 +212,49 @@ async function getMyAllSchedules() {
 
 }
 
-async function openEditModal(service) {
+async function openEditModal(serviceId: number, idOfSchedule: number) {
 
     const modal = new Modal(document.getElementById('exampleModal'), {});
     modal.show();
 
-    selectedService.value = service.name
+    selectedService.value = serviceId;
+    scheduleId.value = idOfSchedule;
     services.value = await getAllServices();
+}
+
+async function saveChanges() {
+
+    try {
+
+        if (!selectedService.value || selectedDate.value === null || !selectedTime.value) {
+            Swal.fire({
+                icon: "error",
+                title: "Please, fill all fields!",
+            });
+            return;
+        }
+
+        const { data } = await axiosInstance.put(`/api/v1/schedules/${scheduleId.value}`, {
+            service_id: selectedService.value,
+            date: getFormattedDate(selectedDate.value),
+            time: selectedTime.value,
+        });
+
+        if (data.success) {
+
+            Swal.fire({
+                icon: "success",
+                title: data.message,
+            });
+
+            schedules.value = await getMyAllSchedules();
+        }
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
 }
 
 async function deleteSchedule(id: number) {
@@ -223,6 +302,7 @@ async function deleteSchedule(id: number) {
 
 onMounted(async () => {
     schedules.value = await getMyAllSchedules();
+    availableDateTimes.value = await getAvailableDateTimes();
 });
 
 </script>

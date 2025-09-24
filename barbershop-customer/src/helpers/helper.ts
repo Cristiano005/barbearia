@@ -13,6 +13,7 @@ interface FieldAndRule {
 }
 
 function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLDivElement | null, fieldsAndRules: FieldAndRule): boolean {
+    
     let issuesNotFound = true;
 
     fieldsAndRules.rules.forEach((rule) => {
@@ -113,26 +114,31 @@ async function getAllServices() {
 
 async function searchTimesAvailable(date: Date | null) {
 
-    selectedDate.value = date
-
     if (date) {
 
         try {
+
             const formattedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-            const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
-            timeInput.value?.removeAttribute("disabled");
-            return times.value = data.data;
+            //const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
+            // timeInput.value?.removeAttribute("disabled");
+            //console.log(data)
+            //return data;
         }
 
         catch (error) {
             console.log(error);
         }
+    }
+}
 
+async function getAvailableDateTimes() {
+    try {
+        const { data } = await axiosInstance.get(`/api/v1/availabilities`);
+        return data.data;
     }
 
-    else {
-        timeInput.value?.setAttribute("disabled", "true");
-        selectedTime.value = "";
+    catch (error) {
+        console.log(error);
     }
 }
 
@@ -144,5 +150,5 @@ const format = (date: Date) => {
 }
 
 export {
-    axiosInstance, validate, getAllServices, format, searchTimesAvailable
+    axiosInstance, validate, getAllServices, format, getAvailableDateTimes, searchTimesAvailable
 }

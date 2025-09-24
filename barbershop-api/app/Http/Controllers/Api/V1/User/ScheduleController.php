@@ -8,7 +8,6 @@ use App\Models\Availability;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -67,14 +66,22 @@ class ScheduleController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function update(Request $request, Schedule $schedule)
     {
-        //
-    }
+        $validatedData = $request->validate([
+            "service_id" => ["required", "integer", "exists:App\Models\Service,id"],
+            "date" => ["required", "date_format:Y-m-d"],
+            "time" => ["required", "date_format:H:i:s"],
+        ]);
 
-    public function update(Request $request, string $id)
-    {
-        //
+        $validatedData['updated_at'] = now();
+        $schedule->update($validatedData);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Schedule updated successfully!",
+            "data" => [],
+        ])->setStatusCode(200);
     }
 
     public function destroy(int $id)
@@ -89,7 +96,6 @@ class ScheduleController extends Controller
                     "message" => "Schedule cancelled successfully",
                 ])->setStatusCode(200);
             }
-
         } catch (Throwable $th) {
             Log::error("Schedule cancelled failed {$th->getMessage()}");
             return response()->json([

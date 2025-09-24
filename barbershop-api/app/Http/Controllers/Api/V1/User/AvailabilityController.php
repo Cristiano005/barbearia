@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 class AvailabilityController extends Controller
 {
     public function index(Request $request) {
-
-        $validated = $request->validate([
-            "date" => ["required", "date"],
-        ]);
-
-        return AvailabilityResource::collection(Availability::where("schedule_date", $validated["date"])->paginate());
+        return AvailabilityResource::collection(Availability::where("status", "available")->get());
     }
 }

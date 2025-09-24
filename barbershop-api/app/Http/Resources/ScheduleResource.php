@@ -12,6 +12,7 @@ class ScheduleResource extends JsonResource
         $data = [
             "id" => $this->id,
             "service" => [
+                "id" => $this->service->id,
                 "name" => $this->service->name,
                 "price" => $this->service->price,
             ],

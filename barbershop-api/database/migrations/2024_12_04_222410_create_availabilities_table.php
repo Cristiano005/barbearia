@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date("schedule_date")->nullable(false);
             $table->time("schedule_time")->unique()->nullable(false);
+            $table->enum("status", ["available", "unavailable"])->default("available")->after("schedule_time");
             $table->timestamps();
         });
     }
