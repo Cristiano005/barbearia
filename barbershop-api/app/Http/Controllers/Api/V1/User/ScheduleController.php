@@ -74,14 +74,49 @@ class ScheduleController extends Controller
             "time" => ["required", "date_format:H:i:s"],
         ]);
 
-        $validatedData['updated_at'] = now();
-        $schedule->update($validatedData);
+        $cancelLimitTime = env("CANCEL_MINUTES_BEFORE", 30);
+        $scheduleDateTime = Carbon::createFromFormat("Y-m-d H:i:s", "{$schedule->date} {$schedule->time}", config("app.timezone"));
+        $now = Carbon::now(config("app.timezone"));
+
+        if ($now->diffInMinutes($scheduleDateTime, false) >= $cancelLimitTime) {
+
+            try {
+
+                $result = DB::transaction(function () use ($schedule, $validatedData): bool {
+
+                    Availability::where("schedule_date", $schedule->date)->where("schedule_time", $schedule->time)->update([
+                        "status" => "available"
+                    ]);
+                 
+                    $validatedData['updated_at'] = Carbon::now(config('app.timezone'));
+                    $schedule->update($validatedData);
+
+                    return true;
+                });
+            } catch (\Throwable $th) {
+
+                Log::error("Schedule updated failed: {$th->getMessage()}");
+
+                return response()->json([
+                    "success" => false,
+                    "message" => "An error occurred while updating the schedule. Please try again."
+                ])->setStatusCode(500);
+            }
+
+            if ($result) {
+                return response()->json([
+                    "success" => true,
+                    "message" => "Schedule updated successfully!",
+                    "data" => [],
+                ])->setStatusCode(200);
+            }
+        }
 
         return response()->json([
-            "success" => true,
-            "message" => "Schedule updated successfully!",
+            "success" => false,
+            "message" => "Cannot update schedule. Cancellation time limit exceeded!",
             "data" => [],
-        ])->setStatusCode(200);
+        ])->setStatusCode(422);
     }
 
     public function destroy(int $id)

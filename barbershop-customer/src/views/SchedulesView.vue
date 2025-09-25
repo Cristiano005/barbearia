@@ -165,7 +165,7 @@ const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
 
 const scheduleId = ref<number>();
 
-const selectedService = ref<number|null>(null);
+const selectedService = ref<number | null>(null);
 const selectedDate = ref<Date | null>(null);
 
 const isDisabled = ref<boolean>(true);
@@ -240,19 +240,19 @@ async function saveChanges() {
             time: selectedTime.value,
         });
 
-        if (data.success) {
+        Swal.fire({
+            icon: "success",
+            title: data.message,
+        });
 
-            Swal.fire({
-                icon: "success",
-                title: data.message,
-            });
-
-            schedules.value = await getMyAllSchedules();
-        }
+        schedules.value = await getMyAllSchedules();
     }
 
-    catch (error) {
-        console.log(error);
+    catch (error: any) {
+        Swal.fire({
+            icon: "error",
+            title: error.response.data.message || "An error occurred!",
+        });
     }
 
 }
