@@ -9,4 +9,6 @@ class Availability extends Model
 {
     /** @use HasFactory<\Database\Factories\AvailabilityFactory> */
     use HasFactory;
+
+    protected $fillable = ["schedule_date", "schedule_time", "status", "created_at", "updated_at"];
 }
