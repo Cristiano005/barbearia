@@ -112,25 +112,6 @@ async function getAllServices() {
 
 }
 
-async function searchTimesAvailable(date: Date | null) {
-
-    if (date) {
-
-        try {
-
-            const formattedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-            //const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
-            // timeInput.value?.removeAttribute("disabled");
-            //console.log(data)
-            //return data;
-        }
-
-        catch (error) {
-            console.log(error);
-        }
-    }
-}
-
 async function getAvailableDateTimes() {
     try {
         const { data } = await axiosInstance.get(`/api/v1/availabilities`);
@@ -150,5 +131,5 @@ const format = (date: Date) => {
 }
 
 export {
-    axiosInstance, validate, getAllServices, format, getAvailableDateTimes, searchTimesAvailable
+    axiosInstance, validate, getAllServices, format, getAvailableDateTimes
 }

@@ -75,7 +75,7 @@ class ScheduleController extends Controller
         ]);
 
         $cancelLimitTime = env("CANCEL_MINUTES_BEFORE", 30);
-        $scheduleDateTime = Carbon::createFromFormat("Y-m-d H:i:s", "{$schedule->date} {$schedule->time}", config("app.timezone"));
+        $scheduleDateTime = Carbon::createFromFormat("Y-m-d H:i:s", "{$validatedData['date']} {$validatedData['time']}", config("app.timezone"));
         $now = Carbon::now(config("app.timezone"));
 
         if ($now->diffInMinutes($scheduleDateTime, false) >= $cancelLimitTime) {
@@ -84,9 +84,25 @@ class ScheduleController extends Controller
 
                 $result = DB::transaction(function () use ($schedule, $validatedData): bool {
 
-                    Availability::where("schedule_date", $schedule->date)->where("schedule_time", $schedule->time)->update([
-                        "status" => "available"
-                    ]);
+                    $oldAvailability = Availability::where("schedule_date", $schedule->date)->where("schedule_time", $schedule->time)->first();
+
+                    if($oldAvailability->status === "available") {
+                        $oldAvailability->status = "unavailable";
+                    } else {
+                        $oldAvailability->status = "available";
+                    }
+
+                    $oldAvailability->save();
+
+                    $newAvailability = Availability::where("schedule_date", $validatedData['date'])->where("schedule_time", $validatedData['time'])->first();
+
+                    if($newAvailability->status === "available") {
+                        $newAvailability->status = "unavailable";
+                    } else {
+                        $newAvailability->status = "available";
+                    }
+
+                    $newAvailability->save();
                  
                     $validatedData['updated_at'] = Carbon::now(config('app.timezone'));
                     $schedule->update($validatedData);

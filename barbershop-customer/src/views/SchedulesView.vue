@@ -21,7 +21,7 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Date*</label>
                             <VueDatePicker v-model="selectedDate" @update:model-value="handleDate" :format="format"
-                                ref="dateInput" :enableTimePicker="false" locale="pt-BR" :allowed-dates="onlyFreeDays"
+                                ref="dateInput" :enableTimePicker="false" :allowed-dates="onlyFreeDays"
                                 placeholder="Select a date" id="date" />
                             <div ref="dateMessageContainer"></div>
                         </div>
@@ -126,7 +126,7 @@
 
 import { onMounted, ref, computed } from "vue";
 
-import { axiosInstance, getAllServices, format, searchTimesAvailable, getAvailableDateTimes } from "@/helpers/helper";
+import { axiosInstance, getAllServices, format, getAvailableDateTimes } from "@/helpers/helper";
 
 import { Modal } from "bootstrap";
 import Swal from 'sweetalert2';
@@ -172,8 +172,18 @@ const isDisabled = ref<boolean>(true);
 const times = ref<String[]>([]);
 const selectedTime = ref<String>("");
 
-const onlyFreeDays = computed<String[]>(() => {
-    return availableDateTimes.value.map(dateTime => dateTime.date);
+const onlyFreeDays = computed<Date[]>(() => {
+    return availableDateTimes.value.map(dateTime => {
+        const [year, month, day] = dateTime.date.split('-').map(Number);
+        return new Date(year, month - 1, day);
+        // ⚠️ ATENÇÃO: problema de fuso horário
+        // Quando se cria uma Date a partir de string "YYYY-MM-DD",
+        // o JavaScript interpreta como UTC. No Brasil (UTC-3), isso desloca a data
+        // para o dia anterior, fazendo o DatePicker mostrar o dia errado.
+        //
+        // Solução: criar a Date passando ano, mês e dia diretamente (ano, mês-1, dia)
+        // assim o JavaScript cria a data já no fuso local, evitando o erro.
+    });
 })
 
 const getFormattedDate = (date: Date) => {
@@ -244,6 +254,13 @@ async function saveChanges() {
             icon: "success",
             title: data.message,
         });
+
+        selectedDate.value = null;
+        selectedTime.value = "";
+
+        const modalElement = document.getElementById('exampleModal');
+        const modal = Modal.getInstance(modalElement);
+        modal?.hide();
 
         schedules.value = await getMyAllSchedules();
     }
