@@ -16,9 +16,8 @@
                 <form class="row mt-5">
                     <div class="col-12 has-validation mb-3">
                         <label for="service" class="form-label">Service*</label>
-                        <select class="form-control p-3" id="service" v-model="selectedService">
-                            <option disabled selected :value="0"> SELECT SERVICE </option>
-                            <option v-for="service of services" :value="service.id">
+                        <select class="form-control p-3" id="service" v-model="form.serviceId">
+                            <option v-for="service of services" :key="`service${service.id}`" :value="service.id">
                                 {{ service.name.toUpperCase() }} -
                                 {{ currentFormatter(Number(service.price)) }}
                             </option>
@@ -27,24 +26,25 @@
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Date*</label>
-                        <VueDatePicker :model-value="selectedDate" :min-date="new Date()" ref="dateInput"
-                            :enableTimePicker="false" :format="format" locale="pt-BR"
-                            @update:model-value="searchTimesAvailable" placeholder="Select a date" id="date" />
+                        <VueDatePicker v-model="form.date" @update:model-value="handleDate" ref="dateInput" :enableTimePicker="false"
+                            :format="format" :allowed-dates="onlyFreeDays" placeholder="Select a date" id="date" />
                         <div ref="dateMessageContainer"></div>
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Time*</label>
-                        <select v-model="selectedTime" class="form-control p-3" ref="timeInput" disabled>
-                            <option disabled selected value=""> Select a time </option>
-                            <option v-for="time of times" :value="time.time"> {{ time.time }} </option>
+                        <select v-model="form.time" class="form-control p-3" ref="timeInput" :disabled="isDisabled">
+                            <option value=""> Selecione um horário </option>
+                            <option v-for="time of times" :key="`time${time}`" :value="time"> {{ time }}
+                            </option>
                         </select>
                         <div ref="timeMessageContainer"></div>
                     </div>
                     <div class="col-12 has-validation mb-3">
                         <label for="password" class="form-label">Payment Type*</label>
-                        <select class="form-control p-3" id="service" v-model="selectedPayment">
-                            <option disabled selected :value="0"> SELECT A TYPE OF PAYMENT </option>
-                            <option v-for="payment of payments" :value="payment.id"> {{ payment.payment_type }} </option>
+                        <select class="form-control p-3" id="service" v-model="form.paymentId">
+                            <option v-for="payment of payments" :key="`payment${payment.id}`" :value="payment.id"> {{
+                                payment.payment_type }}
+                            </option>
                         </select>
                         <div ref="passwordMessageContainer"></div>
                     </div>
@@ -61,10 +61,11 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive, computed } from 'vue';
 
-import { axiosInstance, validate, format } from '@/helpers/helper';
+import { axiosInstance, validate, format, getAvailableDateTimes } from '@/helpers/helper';
 
+import Swal from 'sweetalert2';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
@@ -74,25 +75,36 @@ interface ServiceInterface {
     price: string,
 }
 
-interface AvailabilityInterface {
-    id: number,
-    date: string,
-    time: string,
-}
-
 interface PaymentTypeInterface {
     id: number,
     payment_type: string,
 }
 
-const services = ref<ServiceInterface[]>([]);
-const times = ref<AvailabilityInterface[]>([]);
-const payments = ref<PaymentTypeInterface[]>([]);
+interface AvailableDateTimesInterface {
+    id: number,
+    date: String,
+    time: String,
+}
 
-const selectedService = ref<number>(0);
-const selectedDate = ref<Date>();
-const selectedTime = ref<string>("");
-const selectedPayment = ref<number>(0);
+const services = ref<ServiceInterface[]>([]);
+const times = ref<String[]>([]);
+const payments = ref<PaymentTypeInterface[]>([]);
+const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
+
+const form = reactive({
+    serviceId: 1 as number,
+    date: null as Date | null,
+    time: "" as string,
+    paymentId: 2 as number,
+});
+
+const isDisabled = ref<boolean>(true);
+
+const dateInput = ref<HTMLInputElement | null>(null);
+const timeInput = ref<HTMLInputElement | null>(null);
+
+const dateMessageContainer = ref<HTMLDivElement | null>(null);
+const timeMessageContainer = ref<HTMLDivElement | null>(null);
 
 const currentFormatter = (price: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -101,11 +113,35 @@ const currentFormatter = (price: number) => {
     }).format(price);
 }
 
-const dateInput = ref<HTMLInputElement | null>(null);
-const timeInput = ref<HTMLInputElement | null>(null);
+const getFormattedDate = (date: Date) => {
+    const newDate = new Date(date);
+    const day = String(newDate.getDate()).padStart(2, '0');
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    const year = newDate.getFullYear();
 
-const dateMessageContainer = ref<HTMLDivElement | null>(null);
-const timeMessageContainer = ref<HTMLDivElement | null>(null);
+    return `${year}-${month}-${day}`;
+}
+
+const onlyFreeDays = computed<Date[]>(() => {
+    return availableDateTimes.value.map(dateTime => {
+        const [year, month, day] = dateTime.date.split('-').map(Number);
+        return new Date(year, month - 1, day);
+    });
+})
+
+const handleDate = (chosenDate: Date) => {
+
+    const fullDate = getFormattedDate(chosenDate);
+
+    times.value = availableDateTimes.value.filter(dateTime => dateTime.date === fullDate).map(dateTime => dateTime.time);
+
+    if (times.value.length > 0) {
+        isDisabled.value = false;
+    } else {
+        isDisabled.value = true;
+        form.time = "";
+    }
+}
 
 async function getAllServices() {
 
@@ -120,65 +156,101 @@ async function getAllServices() {
 
 }
 
-async function searchTimesAvailable(date: Date | null) {
-
-    selectedDate.value = date
-
-    if (date) {
-
-        try {
-            const formattedDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-            const { data } = await axiosInstance.get(`/api/v1/availabilities?date=${formattedDate}`);
-            timeInput.value?.removeAttribute("disabled");
-            return times.value = data.data;
-        }
-
-        catch (error) {
-            console.log(error);
-        }
-
-    }
-
-    else {
-        timeInput.value?.setAttribute("disabled", "true");
-        selectedTime.value = "";
-    }
-}
-
-async function schedule() {
+function schedule() {
 
     try {
 
         const validatedDate: boolean = validate(dateInput.value.$el, dateMessageContainer.value, {
             name: "date",
             rules: ["empty"],
-            value: selectedDate.value
+            value: form.date
         });
 
         const validatedTime: boolean = validate(timeInput.value, timeMessageContainer.value, {
             name: "time",
             rules: ["empty"],
-            value: selectedTime.value
+            value: form.time
         });
 
-        console.log(selectedService.value === 0, !validatedDate, !validatedTime, selectedPayment.value === 0)
-
-        if (selectedService.value === 0 || !validatedDate || !validatedTime || selectedPayment.value === 0) {
-            return; 
+        if ([validatedDate, validatedTime].includes(false)) {
+            return;
         }
 
-        console.log(selectedService.value);
-
-        const { data } = await axiosInstance.post("/api/v1/schedules", {
-            service_id: selectedService.value,
-            payment_id: selectedPayment.value,
-            date: format(selectedDate.value),
-            time: selectedTime.value,
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success mx-3",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
         });
 
-        if(data.success === true) {
-            alert("nice!")
-        }
+        const foundService: ServiceInterface | undefined = services.value.find(service => service.id === form.serviceId);
+        const serviceName: string | undefined = foundService?.name;
+        const servicePrice: number = foundService?.price === undefined ? 0 : Number(foundService.price);
+
+        const paymentName = payments.value.find(payment => payment.id === form.paymentId)?.payment_type;
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            html: `
+                <div class="text-start">
+                    <p>
+                        <strong>Date:</strong> ${form.date}
+                    </p>
+                    <p>
+                        <strong>Time:</strong> ${form.time}
+                    </p>
+                    <p>
+                        <strong>Service:</strong> ${serviceName}
+                    </p>
+                    <p>
+                        <strong>Price:</strong> ${currentFormatter(servicePrice)}
+                    </p>
+                    <p>
+                        <strong>Payment:</strong> ${paymentName}
+                    </p>
+                </div>
+                <div class="alert alert-warning mt-3" role="alert">
+                    Please confirm that the information above is correct.
+                </div> 
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, schedule it!'
+        }).then(async (result) => {
+
+            if (result.isConfirmed) {
+
+                const { data } = await axiosInstance.post("/api/v1/schedules", {
+                    service_id: form.serviceId,
+                    payment_id: form.paymentId,
+                    date: format(form.date),
+                    time: form.time,
+                });
+
+                if (data.success === true) {
+                    alert("nice!")
+                }
+
+                // User clicked "Yes, delete it!"
+                // Perform the action (e.g., submit a form, make an AJAX request)
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                );
+
+            } else {
+                // User clicked "Cancel" or closed the dialog
+                Swal.fire(
+                    'Cancelled!',
+                    'Your action was cancelled.',
+                    'error'
+                );
+            }
+        });
 
     } catch (error) {
         console.log(error)
@@ -202,6 +274,7 @@ async function getAllTypeOfPayments() {
 onMounted(async () => {
     services.value = await getAllServices();
     payments.value = await getAllTypeOfPayments();
+    availableDateTimes.value = await getAvailableDateTimes();
 });
 
 </script>

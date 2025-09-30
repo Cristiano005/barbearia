@@ -2,7 +2,7 @@
     <header>
         <nav class="navbar navbar-dark bg-dark p-3">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Barber Shop</a>
+                <a class="navbar-brand" href="/">Barber Shop</a>
                 <button
                     class="navbar-toggler"
                     type="button"
