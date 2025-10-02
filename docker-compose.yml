@@ -59,3 +59,15 @@ services:
             - barbershop-network
         environment:
             MYSQL_ROOT_PASSWORD: cristiano
+    barbershop-scheduler:
+        build:
+            context: ./barbershop-api
+            dockerfile: Dockerfile
+        container_name: barbershop-scheduler
+        command: >
+            sh -c "while true; do php /var/www/barbershop-api/artisan schedule:run --verbose --no-interaction; sleep 60; done"
+        volumes:
+            - ./barbershop-api:/var/www/barbershop-api
+        restart: unless-stopped
+        networks:
+            - barbershop-network

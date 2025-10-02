@@ -23,5 +23,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->withSchedule(function (Schedule $schedule) {
-        $schedule->command('schedules:generate-weekly')->weeklyOn(0, '08:00');
+        $schedule->command("schedules:clean")->dailyAt("00:00");
+        $schedule->command("schedules:generate-weekly")->weeklyOn(0, "00:00");
     })->create();
