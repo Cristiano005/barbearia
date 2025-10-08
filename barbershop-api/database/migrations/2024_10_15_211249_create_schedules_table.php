@@ -16,9 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger("payment_id");
             $table->date("date")->nullable(false);
             $table->time("time")->nullable(false);
-            $table->enum("status", [
-                "success", "absent", "cancelled"
-            ])->nullable(false);
+            $table->string("status", 20)->nullable(false);
             $table->timestamps();
             $table->softDeletes();
 

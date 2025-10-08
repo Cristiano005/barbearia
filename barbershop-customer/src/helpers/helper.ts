@@ -124,10 +124,7 @@ async function getAvailableDateTimes() {
 }
 
 const format = (date: Date) => {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return new Intl.DateTimeFormat('pt-BR').format(date);
 }
 
 export {

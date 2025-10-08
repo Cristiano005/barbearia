@@ -26,8 +26,9 @@
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
                         <label for="password" class="form-label">Date*</label>
-                        <VueDatePicker v-model="form.date" @update:model-value="handleDate" ref="dateInput" :enableTimePicker="false"
-                            :format="format" :allowed-dates="onlyFreeDays" placeholder="Select a date" id="date" />
+                        <VueDatePicker v-model="form.date" @update:model-value="handleDate" ref="dateInput"
+                            :enableTimePicker="false" :format="format" :allowed-dates="onlyFreeDays"
+                            placeholder="Select a date" id="date" />
                         <div ref="dateMessageContainer"></div>
                     </div>
                     <div class="col-sm-6 has-validation mb-3">
@@ -62,6 +63,8 @@
 <script setup lang="ts">
 
 import { onMounted, ref, reactive, computed } from 'vue';
+
+import { useRouter } from 'vue-router'
 
 import { axiosInstance, validate, format, getAvailableDateTimes } from '@/helpers/helper';
 
@@ -98,6 +101,7 @@ const form = reactive({
     paymentId: 2 as number,
 });
 
+const router = useRouter();
 const isDisabled = ref<boolean>(true);
 
 const dateInput = ref<HTMLInputElement | null>(null);
@@ -158,31 +162,31 @@ async function getAllServices() {
 
 function schedule() {
 
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success mx-3",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+
+    const validatedDate: boolean = validate(dateInput.value.$el, dateMessageContainer.value, {
+        name: "date",
+        rules: ["empty"],
+        value: form.date
+    });
+
+    const validatedTime: boolean = validate(timeInput.value, timeMessageContainer.value, {
+        name: "time",
+        rules: ["empty"],
+        value: form.time
+    });
+
+    if ([validatedDate, validatedTime].includes(false)) {
+        return;
+    }
+
     try {
-
-        const validatedDate: boolean = validate(dateInput.value.$el, dateMessageContainer.value, {
-            name: "date",
-            rules: ["empty"],
-            value: form.date
-        });
-
-        const validatedTime: boolean = validate(timeInput.value, timeMessageContainer.value, {
-            name: "time",
-            rules: ["empty"],
-            value: form.time
-        });
-
-        if ([validatedDate, validatedTime].includes(false)) {
-            return;
-        }
-
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: "btn btn-success mx-3",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-        });
 
         const foundService: ServiceInterface | undefined = services.value.find(service => service.id === form.serviceId);
         const serviceName: string | undefined = foundService?.name;
@@ -195,7 +199,7 @@ function schedule() {
             html: `
                 <div class="text-start">
                     <p>
-                        <strong>Date:</strong> ${form.date}
+                        <strong>Date:</strong> ${format(form.date)}
                     </p>
                     <p>
                         <strong>Time:</strong> ${form.time}
@@ -214,46 +218,57 @@ function schedule() {
                     Please confirm that the information above is correct.
                 </div> 
             `,
-            icon: 'warning',
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, schedule it!'
+            confirmButtonText: "Yes, schedule it!"
         }).then(async (result) => {
 
             if (result.isConfirmed) {
 
-                const { data } = await axiosInstance.post("/api/v1/schedules", {
-                    service_id: form.serviceId,
-                    payment_id: form.paymentId,
-                    date: format(form.date),
-                    time: form.time,
-                });
+                try {
 
-                if (data.success === true) {
-                    alert("nice!")
+                    const { data } = await axiosInstance.post("/api/v1/schedules", {
+                        service_id: form.serviceId,
+                        payment_id: form.paymentId,
+                        date: format(form.date),
+                        time: form.time,
+                    });
+
+                    if (data.success === true) {
+
+                        swalWithBootstrapButtons.fire("Success", data.message, "success");
+
+                        form.serviceId = 1;
+                        form.date = null;
+                        form.time = "";
+                        form.paymentId = 2;
+
+                        router.push("/profile");
+                    }
+
+                } 
+                
+                catch (error) {
+                    swalWithBootstrapButtons.fire(
+                        "Error!",
+                        "Sorry, an error occurred while trying to book your appointment. Please try again.",
+                        "error"
+                    );
                 }
 
-                // User clicked "Yes, delete it!"
-                // Perform the action (e.g., submit a form, make an AJAX request)
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                );
-
-            } else {
-                // User clicked "Cancel" or closed the dialog
-                Swal.fire(
-                    'Cancelled!',
-                    'Your action was cancelled.',
-                    'error'
+            } 
+            
+            else {
+                swalWithBootstrapButtons.fire(
+                    "Cancelled!",
+                    "Schedule cancelled.",
+                    "error"
                 );
             }
         });
 
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 
 }

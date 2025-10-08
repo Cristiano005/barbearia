@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Resources\ScheduleResource;
 use App\Models\Availability;
 use App\Models\Schedule;
@@ -17,18 +18,14 @@ class ScheduleController extends Controller
 {
     public function index(Request $request)
     {
-        return ScheduleResource::collection(Schedule::all());
+        $userId = Auth::id();
+        $schedule = Schedule::where("user_id", $userId)->get();
+        return ScheduleResource::collection($schedule);
     }
 
-    public function store(Request $request)
+    public function store(StoreScheduleRequest $request)
     {
-        $validatedData = $request->validate([
-            "service_id" => ["required", "integer", "exists:App\Models\Service,id"],
-            "payment_id" => ["required", "integer", "exists:App\Models\PaymentTypes,id"],
-            "date" => ["required", "date_format:d/m/Y"],
-            "time" => ["required", "date_format:H:i:s"],
-        ]);
-
+        $validatedData = $request->validated();
         $validatedData["date"] = Carbon::createFromFormat("d/m/Y", $validatedData["date"])->format("Y-m-d");
 
         try {
@@ -41,10 +38,13 @@ class ScheduleController extends Controller
                     "payment_id" => $validatedData["payment_id"],
                     "date" => $validatedData["date"],
                     "time" => $validatedData["time"],
-                    "status" => "success",
+                    "status" => "pending",
+                    "updated_at" => null,
                 ]);
 
-                Availability::where("schedule_date", $validatedData["date"])->where("schedule_time", $validatedData["time"])->delete();
+                Availability::where("schedule_date", $validatedData["date"])->where("schedule_time", $validatedData["time"])->update([
+                    "status" => "unavailable",
+                ]);
 
                 return true;
             });
@@ -109,6 +109,7 @@ class ScheduleController extends Controller
 
                     return true;
                 });
+
             } catch (\Throwable $th) {
 
                 Log::error("Schedule updated failed: {$th->getMessage()}");

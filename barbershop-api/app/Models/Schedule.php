@@ -13,6 +13,8 @@ class Schedule extends Model
 
     protected $fillable = ["user_id", "service_id", "payment_id", "date", "time", "status"];
 
+    const UPDATED_AT = null;
+
     const STATUS_SUCCESS = "success";
     const STATUS_ABSENT = "absent";
     const STATUS_CANCELLED = "cancelled";

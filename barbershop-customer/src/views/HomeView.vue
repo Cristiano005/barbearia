@@ -40,8 +40,8 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-dark">
                                     <li>
-                                        <RouterLink class="dropdown-item" to="/my-schedules">
-                                            My Schedules
+                                        <RouterLink class="dropdown-item" to="/profile">
+                                            Profile
                                         </RouterLink>
                                     </li>
                                     <li>

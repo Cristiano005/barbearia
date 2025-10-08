@@ -64,8 +64,8 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-dark">
                                 <li>
-                                    <RouterLink class="dropdown-item" to="/my-schedules">
-                                        My Schedules
+                                    <RouterLink class="dropdown-item" to="/profile">
+                                        Profile
                                     </RouterLink>
                                 </li>
                                 <li>
@@ -78,47 +78,71 @@
             </nav>
         </div>
     </header>
-    <main class="p-5">
-        <div class="container mx-auto">
+    <main class="d-flex flex-column gap-5 p-5">
+        <section class="container mx-auto">
             <div class="row">
                 <header class="col-12 mw-30">
                     <h3>My Schedules</h3>
                 </header>
             </div>
             <div class="gap-3 mt-4 mx-auto">
-                <template v-if="schedules && schedules.length">
-                    <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
-                        :key="`schedule${schedule.id}`">
-                        <div class="col-auto">
-                            <i class="bi bi-calendar-check fs-1"></i>
+                <div class="d-flex justify-content-center align-items-center gap-5">
+                    <img class="w-25" src="../assets/404_image.svg" alt=""></img>
+                    <div class="d-flex flex-column gap-1">
+                        <div class="d-flex align-items-center justify-content-center gap-2" role="alert">
+                            <i class="bi bi-info-circle fs-2"></i>
+                            <h5 class="mb-0"> No schedule found! </h5>
                         </div>
-                        <div class="col-10 border-end">
-                            <h6>
-                                {{ schedule.date }} - {{ schedule.time }}
-                                <span class="badge text-bg-success">
-                                    {{ schedule.status }}
-                                </span>
-                            </h6>
-                            <small>
-                                {{ schedule.service.name }} - {{ schedule.service.price }}
-                            </small>
-                        </div>
-                        <div class="d-flex col-auto gap-4 ps-5">
-                            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                                @click="openEditModal(schedule.service.id, schedule.id)"></i>
-                            <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
-                                @click="deleteSchedule(schedule.id)"></i>
-                        </div>
+                        <RouterLink class="d-flex align-items-center justify-content-center btn btn-dark px-5 mt-4"
+                            to="/schedule">
+                            Schedule an hour
+                            <i class="bi bi-alarm-fill p-2"></i>
+                        </RouterLink>
                     </div>
-                </template>
-                <template v-else-if="schedules && !schedules.length">
-                    <h2> Data not found </h2>
-                </template>
-                <template v-else>
-                    <h2> Loading... </h2>
-                </template>
+                </div>
             </div>
-        </div>
+        </section>
+        <section class="container mx-auto">
+
+            <div class="row">
+                <header class="col-12 mw-30">
+                    <h3>My Data</h3>
+                </header>
+            </div>
+
+            <form class="row align-items-center mt-4">
+
+                <div class="col-4 mb-3">
+                    <label class="mb-1" for=""> Name: </label>
+                    <input type="text" class="form-control" placeholder="Input Name" aria-label="Name"
+                        aria-describedby="basic-addon1">
+                </div>
+
+                <div class="col-4 mb-3">
+                    <label class="mb-1" for=""> Email: </label>
+                    <input type="text" class="form-control" placeholder="Input E-mail" aria-label="Email"
+                        aria-describedby="basic-addon1">
+                </div>
+
+                <div class="col-4 mb-3">
+                    <label class="mb-1" for=""> Telefone: </label>
+                    <input type="text" class="form-control" placeholder="Input Telefone" aria-label="Telefone"
+                        aria-describedby="basic-addon1">
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center gap-3 col-12">
+                    <button type="button" class="btn btn-warning col-auto">
+                        Recuperar senha
+                        <i class="bi bi-key-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-success col-auto">
+                        Atualizar Dados
+                        <i class="bi bi-check-lg"></i>
+                    </button>
+                </div>
+
+            </form>
+        </section>
     </main>
 </template>
 
@@ -320,6 +344,7 @@ async function deleteSchedule(id: number) {
 onMounted(async () => {
     schedules.value = await getMyAllSchedules();
     availableDateTimes.value = await getAvailableDateTimes();
+    console.log(schedules.value);
 });
 
 </script>
@@ -327,5 +352,9 @@ onMounted(async () => {
 <style scoped lang="scss">
 .cursor-pointer {
     cursor: pointer;
+}
+
+section {
+    padding: 0;
 }
 </style>
