@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\User\PaymentController;
 use App\Http\Controllers\Api\V1\User\ScheduleController;
 use App\Http\Controllers\Api\V1\User\ServiceController;
 use App\Http\Controllers\Api\V1\User\AuthController;
+use App\Http\Controllers\Api\V1\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware("auth:sanctum")->apiResource(
@@ -26,6 +27,11 @@ Route::middleware("auth:sanctum")->apiResource(
     ScheduleController::class,
 );
 
+Route::middleware("auth:sanctum")->prefix("user")->controller(UserController::class)->group(function () {
+    Route::get("/me", "me");
+    Route::put("/update", "update");
+});
+
 Route::middleware("auth:sanctum")->apiResource("availabilities", AvailabilityController::class);
 
 Route::prefix("/auth")->controller(AuthController::class)->group(function () {
@@ -34,6 +40,7 @@ Route::prefix("/auth")->controller(AuthController::class)->group(function () {
     Route::post("/authenticate", "authenticate");
     Route::post("/register", "register");
 });
+
 
 Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(function () {
     Route::get("/check", "check");

@@ -85,21 +85,58 @@
                     <h3>My Schedules</h3>
                 </header>
             </div>
+
             <div class="gap-3 mt-4 mx-auto">
-                <div class="d-flex justify-content-center align-items-center gap-5">
-                    <img class="w-25" src="../assets/404_image.svg" alt=""></img>
-                    <div class="d-flex flex-column gap-1">
-                        <div class="d-flex align-items-center justify-content-center gap-2" role="alert">
-                            <i class="bi bi-info-circle fs-2"></i>
-                            <h5 class="mb-0"> No schedule found! </h5>
+                <template v-if="isLoadingSchedules">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                        <div class="fs-4 spinner-border text-dark text-center" style="width: 3rem; height: 3rem;"
+                            role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                        <RouterLink class="d-flex align-items-center justify-content-center btn btn-dark px-5 mt-4"
-                            to="/schedule">
-                            Schedule an hour
-                            <i class="bi bi-alarm-fill p-2"></i>
-                        </RouterLink>
+                        <strong role="status">Loading...</strong>
                     </div>
-                </div>
+                </template>
+                <template v-else-if="schedules && schedules.length">
+                    <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
+                        :key="`schedule${schedule.id}`">
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-check fs-1"></i>
+                        </div>
+                        <div class="col-10 border-end">
+                            <h6>
+                                {{ schedule.date }} - {{ schedule.time }}
+                                <span :class="['badge', statusColors[schedule.status]]">
+                                    {{ schedule.status }}
+                                </span>
+                            </h6>
+                            <small>
+                                {{ schedule.service.name }} - {{ schedule.service.price }}
+                            </small>
+                        </div>
+                        <div class="d-flex col-auto gap-4 ps-5">
+                            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
+                                @click="openEditModal(schedule.service.id, schedule.id)"></i>
+                            <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
+                                @click="deleteSchedule(schedule.id)"></i>
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="d-flex justify-content-center align-items-center gap-5">
+                        <img class="w-25" src="../assets/404_image.svg" alt=""></img>
+                        <div class="d-flex flex-column gap-1">
+                            <div class="d-flex align-items-center justify-content-center gap-2" role="alert">
+                                <i class="bi bi-info-circle fs-2"></i>
+                                <h5 class="mb-0"> No schedule found! </h5>
+                            </div>
+                            <RouterLink class="d-flex align-items-center justify-content-center btn btn-dark px-5 mt-4"
+                                to="/schedule">
+                                Schedule an hour
+                                <i class="bi bi-alarm-fill p-2"></i>
+                            </RouterLink>
+                        </div>
+                    </div>
+                </template>
             </div>
         </section>
         <section class="container mx-auto">
@@ -110,45 +147,63 @@
                 </header>
             </div>
 
-            <form class="row align-items-center mt-4">
+            <template v-if="isLoadingProfileData">
 
-                <div class="col-4 mb-3">
-                    <label class="mb-1" for=""> Name: </label>
-                    <input type="text" class="form-control" placeholder="Input Name" aria-label="Name"
-                        aria-describedby="basic-addon1">
+                <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                    <div class="fs-4 spinner-border text-dark text-center" style="width: 3rem; height: 3rem;"
+                        role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <strong role="status">Loading...</strong>
                 </div>
 
-                <div class="col-4 mb-3">
-                    <label class="mb-1" for=""> Email: </label>
-                    <input type="text" class="form-control" placeholder="Input E-mail" aria-label="Email"
-                        aria-describedby="basic-addon1">
-                </div>
+            </template>
 
-                <div class="col-4 mb-3">
-                    <label class="mb-1" for=""> Telefone: </label>
-                    <input type="text" class="form-control" placeholder="Input Telefone" aria-label="Telefone"
-                        aria-describedby="basic-addon1">
-                </div>
+            <template v-else>
 
-                <div class="d-flex justify-content-end align-items-center gap-3 col-12">
-                    <button type="button" class="btn btn-warning col-auto">
-                        Recuperar senha
-                        <i class="bi bi-key-fill"></i>
-                    </button>
-                    <button type="button" class="btn btn-success col-auto">
-                        Atualizar Dados
-                        <i class="bi bi-check-lg"></i>
-                    </button>
-                </div>
+                <form class="row align-items-center mt-4">
 
-            </form>
+                    <div class="col-4 mb-3">
+                        <label class="mb-1" for=""> Name: </label>
+                        <input type="text" class="form-control" placeholder="Input Name" aria-label="Name"
+                            aria-describedby="basic-addon1" v-model="profileData.name">
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label class="mb-1" for=""> Email: </label>
+                        <input type="email" class="form-control" placeholder="Input E-mail" aria-label="Email"
+                            aria-describedby="basic-addon1" disabled readonly v-model="profileData.email">
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label class="mb-1" for=""> Phone Number: </label>
+                        <input type="text" class="form-control" placeholder="Input Phone Number"
+                            aria-label="Phone Number" aria-describedby="basic-addon1"
+                            v-model="profileData.phone_number">
+                    </div>
+
+                    <div class="d-flex justify-content-end align-items-center gap-3 col-12">
+                        <button type="button" class="btn btn-warning col-auto">
+                            Recuperar senha
+                            <i class="bi bi-key-fill"></i>
+                        </button>
+                        <button type="button" class="btn btn-success col-auto" @click="updateProfileData">
+                            Atualizar Dados
+                            <i class="bi bi-check-lg"></i>
+                        </button>
+                    </div>
+
+                </form>
+
+            </template>
+
         </section>
     </main>
 </template>
 
 <script setup lang="ts">
 
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, reactive } from "vue";
 
 import { axiosInstance, getAllServices, format, getAvailableDateTimes } from "@/helpers/helper";
 
@@ -171,7 +226,7 @@ interface ScheduleInterface {
         price: string,
     },
     payment: string,
-    status: string,
+    status: "success" | "pending" | "absent" | "cancelled",
     date: string,
     time: string,
 };
@@ -180,12 +235,34 @@ interface AvailableDateTimesInterface {
     id: number,
     date: String,
     time: String,
+};
+
+interface ProfileDataInterface {
+    name: string,
+    email: string,
+    phone_number: string,
+};
+
+interface StatusColorsInterface {
+    success: string,
+    pending: string,
+    absent: string,
+    cancelled: string,
 }
+
+const isLoadingSchedules = ref<boolean>(true);
+const isLoadingProfileData = ref<boolean>(true);
 
 const schedules = ref<ScheduleInterface[] | null>(null);
 const services = ref<ServiceInterface[]>([]);
 
 const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
+
+const profileData = reactive<ProfileDataInterface>({
+    name: "",
+    email: "",
+    phone_number: "",
+});
 
 const scheduleId = ref<number>();
 
@@ -195,6 +272,13 @@ const selectedDate = ref<Date | null>(null);
 const isDisabled = ref<boolean>(true);
 const times = ref<String[]>([]);
 const selectedTime = ref<String>("");
+
+const statusColors = reactive<StatusColorsInterface>({
+    success: "text-bg-success",
+    pending: "text-bg-warning",
+    absent: "text-bg-secondary",
+    cancelled: "text-bg-danger",
+});
 
 const onlyFreeDays = computed<Date[]>(() => {
     return availableDateTimes.value.map(dateTime => {
@@ -208,7 +292,15 @@ const onlyFreeDays = computed<Date[]>(() => {
         // Solução: criar a Date passando ano, mês e dia diretamente (ano, mês-1, dia)
         // assim o JavaScript cria a data já no fuso local, evitando o erro.
     });
-})
+});
+
+const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+        confirmButton: "btn btn-success mx-3",
+        cancelButton: "btn btn-danger"
+    },
+    buttonsStyling: false
+});
 
 const getFormattedDate = (date: Date) => {
     const newDate = new Date(date);
@@ -233,6 +325,63 @@ const handleDate = (chosenDate: Date) => {
     }
 }
 
+async function getProfileData() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/user/me");
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+    finally {
+        isLoadingProfileData.value = false;
+    }
+}
+
+function updateProfileData() {
+
+    if (!profileData.name || !profileData.phone_number) {
+        Swal.fire({
+            icon: "error",
+            title: "Please, fill all fields!",
+        });
+        return;
+    }
+
+    swalWithBootstrapButtons.fire({
+        title: "Are you sure you want to update your data?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, update it!"
+    }).then(async (result) => {
+
+        if (result.isConfirmed) {
+
+            try {
+
+                const { data } = await axiosInstance.put(`/api/v1/user/update`, {
+                    name: profileData.name,
+                    phone_number: profileData.phone_number
+                });
+
+                if (data.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Data updated successfully!",
+                    });
+                }
+            }
+
+            catch (error) {
+                console.log(error);
+            }
+        }
+    });
+}
+
 async function getMyAllSchedules() {
 
     try {
@@ -244,6 +393,9 @@ async function getMyAllSchedules() {
         console.log(error);
     }
 
+    finally {
+        isLoadingSchedules.value = false;
+    }
 }
 
 async function openEditModal(serviceId: number, idOfSchedule: number) {
@@ -300,14 +452,6 @@ async function saveChanges() {
 
 async function deleteSchedule(id: number) {
 
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: "btn btn-success mx-3",
-            cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
-    });
-
     const result = await swalWithBootstrapButtons.fire({
         title: "Are you sure?",
         text: "You'll need to schedule again.",
@@ -342,9 +486,12 @@ async function deleteSchedule(id: number) {
 }
 
 onMounted(async () => {
+
+    const response = await getProfileData();
+
     schedules.value = await getMyAllSchedules();
     availableDateTimes.value = await getAvailableDateTimes();
-    console.log(schedules.value);
+    Object.assign(profileData, response);
 });
 
 </script>
