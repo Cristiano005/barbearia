@@ -30,6 +30,34 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="scheduleFilterModal" tabindex="-1" aria-labelledby="serviceAddModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="serviceAddModalLabel">Filter Schedules</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="serviceName" class="form-label">Status</label>
+                            <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
+                                id="service-to-schedule" v-model="selectedStatusFilter">
+                                <option v-for="filter of statusFilters">
+                                    {{ filter }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" @click="filterSchedule">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -75,29 +103,33 @@
     <main class="p-5">
         <div class="container mx-auto">
             <div class="row">
-                <header class="d-flex justify-content-between align-itesm-center flex-wrap mw-30">
+                <header class="d-flex justify-content-between align-items-center flex-wrap mw-30">
                     <h3>Schedules</h3>
-                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                        data-bs-target="#scheduleAddModal">
-                        Add Schedules
-                        <i class="bi bi-plus-circle"></i>
-                    </button>
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="fs-4 bi bi-funnel cursor-pointer" title="Filter schedules" data-bs-toggle="modal"
+                            data-bs-target="#scheduleFilterModal"></i>
+                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                            data-bs-target="#scheduleAddModal">
+                            Add Schedules
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                    </div>
                 </header>
             </div>
-            <div class="gap-3 mt-4 mx-auto">
+            <div class="row gap-3 mt-4 mx-auto">
                 <template v-if="schedules && schedules.length">
                     <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
                         :key="`schedule${schedule.id}`">
-                        <div class="col-auto">
-                            <i class="bi bi-calendar-check fs-1"></i>
+                        <div class="col-1">
+                            <i class="bi bi-calendar-event" style="font-size: 3.5rem;"></i>
                         </div>
-                        <div class="col-10 border-end">
+                        <div class="col-9 border-end">
                             <h5>
                                 {{ schedule.user.name }}
                             </h5>
                             <h6>
                                 {{ schedule.date }} - {{ schedule.time }}
-                                <span class="badge text-bg-success">
+                                <span :class="['badge', statusColors[schedule.status]]">
                                     {{ schedule.status }}
                                 </span>
                             </h6>
@@ -105,8 +137,26 @@
                                 {{ schedule.service.name }} - {{ schedule.service.price }}
                             </small>
                         </div>
-                        <div class="d-flex col-auto gap-4 ps-5">
-                            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
+                        <div class="d-flex col-2 gap-4 ps-5">
+                            <div class="btn-group">
+                                <i class="d-flex align-items-center fs-4 bi bi-pencil-square cursor-pointer"
+                                    title="Define schedule's status" data-bs-toggle="dropdown"
+                                    aria-expanded="false"></i>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item text-success" href="#">
+                                            <i class="bi bi-check"></i>
+                                            Success
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-secondary" href="#">
+                                            <i class="bi bi-person-fill-x"></i>
+                                            Absent
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div> <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
                                 @click="openEditModal(schedule.service)"></i>
                             <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
                                 @click="deleteSchedule(schedule.id)"></i>
@@ -119,6 +169,40 @@
                 <template v-else>
                     <h2> Loading... </h2>
                 </template>
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center">
+
+                        <template v-if="pagination.currentPage > 1">
+                            <li class="page-item">
+                                <button class="page-link"
+                                    @click="goToPage(pagination.currentPage - 1)">Previous</button>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="page-item disabled">
+                                <button class="page-link">Previous</button>
+                            </li>
+                        </template>
+
+                        <li :class="pagination.currentPage === page ? 'active' : ''"
+                            v-for="page of pagination.quantityOfPages">
+                            <button class="page-link" @click="goToPage(page)">
+                                {{ page }}
+                            </button>
+                        </li>
+
+                        <template v-if="pagination.currentPage < pagination.quantityOfPages">
+                            <li class="page-item">
+                                <button class="page-link" @click="goToPage(pagination.currentPage + 1)">Next</button>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="page-item disabled">
+                                <button class="page-link">Next</button>
+                            </li>
+                        </template>
+                    </ul>
+                </nav>
             </div>
         </div>
     </main>
@@ -147,10 +231,22 @@ interface ScheduleInterface {
         price: string,
     },
     payment: string,
-    status: string,
+    status: "pending",
     date: string,
     time: string,
 };
+
+interface StatusColorsInterface {
+    success: string,
+    pending: string,
+    absent: string,
+    cancelled: string,
+}
+
+interface PaginationInterface {
+    quantityOfPages: number,
+    currentPage: number,
+}
 
 const schedules = ref<ScheduleInterface[]>();
 const payments = reactive<string[]>(['money', 'pix', 'credit-card', 'debit-card']);
@@ -159,6 +255,21 @@ const selectedDateInterval = ref<string>("");
 const selectedPayment = ref<string>(payments[0]);
 const selectedService = ref();
 const selectedDate = ref();
+
+const statusColors = reactive<StatusColorsInterface>({
+    success: "text-bg-success",
+    pending: "text-bg-warning",
+    absent: "text-bg-secondary",
+    cancelled: "text-bg-danger",
+});
+
+const statusFilters = ref<String[]>(["Success", "Pending", "Absent", "Cancelled"]);
+const selectedStatusFilter = ref<String>("Pending");
+
+const pagination = ref<PaginationInterface>({
+    quantityOfPages: 1,
+    currentPage: 1,
+});
 
 const autosize = (event: Event): void => {
     const textarea = event.target as HTMLTextAreaElement;
@@ -177,10 +288,22 @@ const formatterDate = (date, time) => {
     return `${day}/${month}/${year} às ${hours}:${minutes}h`;
 }
 
+const filterSchedule = async () => {
+    pagination.value.currentPage = 1;
+    schedules.value = await getAllSchedules();
+};
+
+async function goToPage(page: number) {
+    pagination.value.currentPage = page;
+    schedules.value = await getAllSchedules();
+}
+
 async function getAllSchedules() {
 
     try {
-        const { data } = await axiosInstance.get("api/v1/admin/schedules");
+        const statusFilter = selectedStatusFilter.value.toLowerCase();
+        const { data } = await axiosInstance.get(`api/v1/admin/schedules?status=${statusFilter}&page=${pagination.value.currentPage}`);
+        pagination.value.quantityOfPages = data.meta.last_page;
         return data.data;
     }
 

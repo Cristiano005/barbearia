@@ -16,6 +16,7 @@ class Schedule extends Model
     const UPDATED_AT = null;
 
     const STATUS_SUCCESS = "success";
+    const STATUS_PENDING = "pending";
     const STATUS_ABSENT = "absent";
     const STATUS_CANCELLED = "cancelled";
 
@@ -23,6 +24,7 @@ class Schedule extends Model
     {
         return [
             self::STATUS_SUCCESS,
+            self::STATUS_PENDING,
             self::STATUS_ABSENT,
             self::STATUS_CANCELLED,
         ];

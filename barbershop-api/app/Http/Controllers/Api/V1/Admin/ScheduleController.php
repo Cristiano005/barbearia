@@ -11,13 +11,26 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class ScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return ScheduleResource::collection(Schedule::all());
+        $validator = Validator::make($request->query(), [
+            "status" => ["required", Rule::in(Schedule::allStatuses())]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422); // ensure a JSON response came back and not loop.
+        }
+
+        $validatedData = $validator->validate();
+        $schedules = Schedule::where("status", $validatedData["status"])->orderByDesc("date")->orderBy("time", "asc")->paginate(5);
+
+        return ScheduleResource::collection($schedules);
     }
 
     public function store(Request $request)
@@ -88,7 +101,6 @@ class ScheduleController extends Controller
                     "message" => "Schedule cancelled successfully",
                 ])->setStatusCode(200);
             }
-
         } catch (Throwable $th) {
             Log::error("Schedule cancelled failed {$th->getMessage()}");
             return response()->json([
