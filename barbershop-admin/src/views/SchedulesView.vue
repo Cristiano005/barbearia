@@ -1,4 +1,32 @@
 <template>
+    <div class="modal fade" id="scheduleFilterModal" tabindex="-1" aria-labelledby="serviceAddModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="serviceAddModalLabel">Filter Schedules</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="serviceName" class="form-label">Status</label>
+                            <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
+                                id="service-to-schedule" v-model="selectedStatusFilter">
+                                <option v-for="filter of statusFilters">
+                                    {{ filter }}
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" @click="filterSchedule">Filter</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="scheduleAddModal" tabindex="-1" aria-labelledby="serviceAddModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -30,66 +58,27 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="scheduleFilterModal" tabindex="-1" aria-labelledby="serviceAddModalLabel"
+    <div class="modal fade" id="scheduleEditModal" tabindex="-1" aria-labelledby="scheduleEditModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="serviceAddModalLabel">Filter Schedules</h1>
+                    <h1 class="modal-title fs-5" id="scheduleEditModal">Edit your schedule</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form>
+                        <!-- <input type="hidden" id="scheduleId" v-model="scheduleId"> -->
                         <div class="mb-3">
-                            <label for="serviceName" class="form-label">Status</label>
-                            <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
-                                id="service-to-schedule" v-model="selectedStatusFilter">
-                                <option v-for="filter of statusFilters">
-                                    {{ filter }}
-                                </option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" @click="filterSchedule">Filter</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit your schedule</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <!-- <div class="mb-3">
                             <label for="service-to-schedule" class="col-form-label">Service:</label>
                             <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
                                 id="service-to-schedule" v-model="selectedService">
-                                <option v-for="service of services">
+                                <option v-for="service of services" :key="service.id" :value="service.id">
                                     {{ service.name }}
                                 </option>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Date*</label>
-                            <VueDatePicker :model-value="selectedDate" :min-date="new Date()" :format="format"
-                                ref="dateInput" :enableTimePicker="false" locale="pt-BR"
-                                @update:model-value="searchTimesAvailable" placeholder="Select a date" id="date" />
-                            <div ref="dateMessageContainer"></div>
-                        </div> -->
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Time*</label>
-                            <select class="form-control" ref="timeInput" disabled>
-                                <option disabled selected value=""> Select a time </option>
-                            </select>
-                            <div ref="timeMessageContainer"></div>
-                        </div>
+                        
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -117,93 +106,56 @@
                 </header>
             </div>
             <div class="row gap-3 mt-4 mx-auto">
-                <template v-if="schedules && schedules.length">
-                    <div class="row align-items-center text-bg-dark p-3 rounded" v-for="schedule of schedules"
-                        :key="`schedule${schedule.id}`">
-                        <div class="col-1">
-                            <i class="bi bi-calendar-event" style="font-size: 3.5rem;"></i>
+                <template v-if="isLoadingSchedules">
+                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                        <div class="fs-4 spinner-border text-dark text-center" style="width: 3rem; height: 3rem;"
+                            role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                        <div class="col-9 border-end">
-                            <h5>
-                                {{ schedule.user.name }}
-                            </h5>
-                            <h6>
-                                {{ schedule.date }} - {{ schedule.time }}
-                                <span :class="['badge', statusColors[schedule.status]]">
-                                    {{ schedule.status }}
-                                </span>
-                            </h6>
-                            <small>
-                                {{ schedule.service.name }} - {{ schedule.service.price }}
-                            </small>
-                        </div>
-                        <div class="d-flex col-2 gap-4 ps-5">
-                            <div class="btn-group">
-                                <i class="d-flex align-items-center fs-4 bi bi-pencil-square cursor-pointer"
-                                    title="Define schedule's status" data-bs-toggle="dropdown"
-                                    aria-expanded="false"></i>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item text-success" href="#">
-                                            <i class="bi bi-check"></i>
-                                            Success
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-secondary" href="#">
-                                            <i class="bi bi-person-fill-x"></i>
-                                            Absent
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div> <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                                @click="openEditModal(schedule.service)"></i>
-                            <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
-                                @click="deleteSchedule(schedule.id)"></i>
-                        </div>
+                        <strong role="status">Loading...</strong>
                     </div>
                 </template>
-                <template v-else-if="schedules && !schedules.length">
+                <ScheduleCard v-else-if="schedules && schedules.length" v-for="schedule of schedules"
+                    :key="`schedule${schedule.id}`" :schedule="schedule" @edit="openEditScheduleModal(schedule.service.id)"
+                    @cancel="openCancelScheduleModal" />
+                <template v-else="schedules && !schedules.length">
                     <h2> Data not found </h2>
                 </template>
-                <template v-else>
-                    <h2> Loading... </h2>
-                </template>
-                <nav aria-label="...">
-                    <ul class="pagination justify-content-center">
-
-                        <template v-if="pagination.currentPage > 1">
-                            <li class="page-item">
-                                <button class="page-link"
-                                    @click="goToPage(pagination.currentPage - 1)">Previous</button>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="page-item disabled">
-                                <button class="page-link">Previous</button>
-                            </li>
-                        </template>
-
-                        <li :class="pagination.currentPage === page ? 'active' : ''"
-                            v-for="page of pagination.quantityOfPages">
-                            <button class="page-link" @click="goToPage(page)">
-                                {{ page }}
-                            </button>
-                        </li>
-
-                        <template v-if="pagination.currentPage < pagination.quantityOfPages">
-                            <li class="page-item">
-                                <button class="page-link" @click="goToPage(pagination.currentPage + 1)">Next</button>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="page-item disabled">
-                                <button class="page-link">Next</button>
-                            </li>
-                        </template>
-                    </ul>
-                </nav>
             </div>
+
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+
+                    <template v-if="pagination.currentPage > 1">
+                        <li class="page-item">
+                            <button class="page-link" @click="goToPage(pagination.currentPage - 1)">Previous</button>
+                        </li>
+                    </template>
+                    <template v-else>
+                        <li class="page-item disabled">
+                            <button class="page-link">Previous</button>
+                        </li>
+                    </template>
+
+                    <li :class="pagination.currentPage === page ? 'active' : ''"
+                        v-for="page of pagination.quantityOfPages">
+                        <button class="page-link" @click="goToPage(page)">
+                            {{ page }}
+                        </button>
+                    </li>
+
+                    <template v-if="pagination.currentPage < pagination.quantityOfPages">
+                        <li class="page-item">
+                            <button class="page-link" @click="goToPage(pagination.currentPage + 1)">Next</button>
+                        </li>
+                    </template>
+                    <template v-else>
+                        <li class="page-item disabled">
+                            <button class="page-link">Next</button>
+                        </li>
+                    </template>
+                </ul>
+            </nav>
         </div>
     </main>
 </template>
@@ -212,56 +164,30 @@
 
 import { onMounted, reactive, ref } from 'vue';
 
-import TheHeader from '@/components/TheHeader.vue';
-import { axiosInstance } from '@/helpers/helper';
-
-import { Modal } from "bootstrap";
 import Swal from 'sweetalert2';
+import { Modal } from "bootstrap";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-interface ScheduleInterface {
-    id: number,
-    user: {
-        name: string,
-        email: string,
-    },
-    service: {
-        name: string,
-        price: string,
-    },
-    payment: string,
-    status: "pending",
-    date: string,
-    time: string,
-};
+import TheHeader from '@/components/TheHeader.vue';
+import ScheduleCard from '@/components/ScheduleCard.vue';
 
-interface StatusColorsInterface {
-    success: string,
-    pending: string,
-    absent: string,
-    cancelled: string,
-}
+import { fetchServices } from '@/services/serviceService';
+import { axiosInstance } from '@/helpers/helper';
+import type { ScheduleInterface, ServiceInterface, FetchServicesParams, PaginationInterface } from "@/helpers/types";
 
-interface PaginationInterface {
-    quantityOfPages: number,
-    currentPage: number,
-}
+let addModalInstance: Modal | null = null;
 
-const schedules = ref<ScheduleInterface[]>();
+const isLoadingSchedules = ref<boolean>(true);
+
+const schedules = ref<ScheduleInterface[]>([]);
+const services = ref<ServiceInterface[]>([]);
 const payments = reactive<string[]>(['money', 'pix', 'credit-card', 'debit-card']);
 
 const selectedDateInterval = ref<string>("");
 const selectedPayment = ref<string>(payments[0]);
-const selectedService = ref();
+const selectedService = ref<number|null>(null);
 const selectedDate = ref();
-
-const statusColors = reactive<StatusColorsInterface>({
-    success: "text-bg-success",
-    pending: "text-bg-warning",
-    absent: "text-bg-secondary",
-    cancelled: "text-bg-danger",
-});
 
 const statusFilters = ref<String[]>(["Success", "Pending", "Absent", "Cancelled"]);
 const selectedStatusFilter = ref<String>("Pending");
@@ -289,8 +215,44 @@ const formatterDate = (date, time) => {
 }
 
 const filterSchedule = async () => {
-    pagination.value.currentPage = 1;
-    schedules.value = await getAllSchedules();
+
+    try {
+
+        isLoadingSchedules.value = true;
+
+        pagination.value.currentPage = 1;
+        schedules.value = await getAllSchedules();
+
+        addModalInstance.hide();
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            },
+        });
+
+        Toast.fire({
+            icon: "success",
+            title: "Schedules filtered successfully!"
+        });
+
+    } catch (error) {
+        console.error(error);
+        Swal.fire({
+            icon: "error",
+            title: "Failed to filter schedules",
+        });
+    }
+
+    finally {
+        isLoadingSchedules.value = false;
+    }
 };
 
 async function goToPage(page: number) {
@@ -310,19 +272,36 @@ async function getAllSchedules() {
     catch (error) {
         console.log(error);
     }
-
 }
 
-async function openEditModal(service) {
+async function getAllServices({currentPage = 1, all = false }: FetchServicesParams) {
 
-    const modal = new Modal(document.getElementById('exampleModal'), {});
+    try {
+
+        const data = await fetchServices({currentPage, all});
+        
+        if (!all && data.meta) {
+            pagination.value.quantityOfPages = data.meta.last_page;
+            pagination.value.currentPage = data.meta.current_page;
+        }
+
+        return data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function openEditScheduleModal(serviceId: number) {
+    const modal = new Modal(document.getElementById("scheduleEditModal"), {});
     modal.show();
 
-    //selectedService.value = service.name
-    //services.value = await getAllServices();
+    services.value = await getAllServices({all: true});
+    selectedService.value = serviceId;
 }
 
-async function deleteSchedule(id: number) {
+async function openCancelScheduleModal(id: number) {
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -367,7 +346,9 @@ async function deleteSchedule(id: number) {
 }
 
 onMounted(async () => {
+    addModalInstance = new Modal(document.querySelector("#scheduleFilterModal"));
     schedules.value = await getAllSchedules();
+    isLoadingSchedules.value = false;
 })
 
 </script>

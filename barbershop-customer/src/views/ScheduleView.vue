@@ -43,8 +43,8 @@
                     <div class="col-12 has-validation mb-3">
                         <label for="password" class="form-label">Payment Type*</label>
                         <select class="form-control p-3" id="service" v-model="form.paymentId">
-                            <option v-for="payment of payments" :key="`payment${payment.id}`" :value="payment.id"> {{
-                                payment.payment_type }}
+                            <option v-for="payment of payments" :key="`payment${payment.id}`" :value="payment.id">
+                                {{ payment.payment_type }}
                             </option>
                         </select>
                         <div ref="passwordMessageContainer"></div>
@@ -246,8 +246,8 @@ function schedule() {
                         router.push("/profile");
                     }
 
-                } 
-                
+                }
+
                 catch (error) {
                     swalWithBootstrapButtons.fire(
                         "Error!",
@@ -256,8 +256,8 @@ function schedule() {
                     );
                 }
 
-            } 
-            
+            }
+
             else {
                 swalWithBootstrapButtons.fire(
                     "Cancelled!",
