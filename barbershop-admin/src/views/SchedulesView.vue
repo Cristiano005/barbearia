@@ -104,9 +104,9 @@
     </div>
     <TheHeader />
     <main class="p-5">
-        <div class="container mx-auto">
-            <div class="row">
-                <header class="d-flex justify-content-between align-items-center flex-wrap mw-30">
+        <div class="d-flex flex-column gap-5 container mx-auto">
+            <div class="row gap-5">
+                <header class="d-flex justify-content-between align-items-center flex-wrap col-12">
                     <h3>Schedules</h3>
                     <div class="d-flex align-items-center gap-3">
                         <i class="fs-4 bi bi-funnel cursor-pointer" title="Filter schedules" data-bs-toggle="modal"
@@ -118,25 +118,30 @@
                         </button>
                     </div>
                 </header>
-            </div>
-            <div class="row gap-3 mt-4 mx-auto">
-                <template v-if="isLoadingSchedules">
-                    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-                        <div class="fs-4 spinner-border text-dark text-center" style="width: 3rem; height: 3rem;"
-                            role="status">
-                            <span class="visually-hidden">Loading...</span>
+                <div class="d-flex flex-column align-items-center col-12 gap-3">
+                    <template v-if="isLoadingSchedules">
+                        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                            <div class="fs-4 spinner-border text-dark text-center" style="width: 3rem; height: 3rem;"
+                                role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <strong role="status">Loading...</strong>
                         </div>
-                        <strong role="status">Loading...</strong>
-                    </div>
-                </template>
-                <ScheduleCard v-else-if="schedules && schedules.length" v-for="schedule of schedules"
-                    :key="`schedule${schedule.id}`" :schedule="schedule" @edit="openEditScheduleModal(schedule)"
-                    @cancel="openCancelScheduleModal" />
-                <template v-else="schedules && !schedules.length">
-                    <h2> Data not found </h2>
-                </template>
+                    </template>
+                    <template v-else-if="schedules && schedules.length">
+                        <ScheduleCard v-for="schedule of schedules"
+                            :key="`schedule${schedule.id}`" :schedule="schedule" @edit="openEditScheduleModal(schedule)"
+                            @cancel="openCancelScheduleModal" />
+                    </template>
+                    <template v-else="schedules && !schedules.length">
+                        <div class="d-flex flex-column justify-content-center text-center gap-4" style="width: 200px;">
+                            <img class="w-100" src="../assets/empty_data.svg">
+                            <h4> No Schedules </h4>
+                        </div>
+                    </template>
+                </div>
+                <Pagination class="col-12" :pagination="pagination" @goToPage="goToPage" />
             </div>
-            <Pagination :pagination="pagination" @goToPage="goToPage" />
         </div>
     </main>
 </template>

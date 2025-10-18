@@ -1,9 +1,9 @@
 <template>
-    <div class="row align-items-center text-bg-dark p-3 rounded">
-        <div class="col-1">
+    <div class="d-flex align-items-center flex-wrap w-100 gap-4 gap-sm-0 text-bg-dark px-4 py-3 rounded">
+        <div class="d-flex d-none d-sm-block col-sm-2 col-lg-1">
             <i :class="statusColors[schedule.status].icon" style="font-size: 3.5rem;"></i>
         </div>
-        <div class="col-9 border-end">
+        <div class="col-12 col-sm-6 col-md-7 col-lg-9">
             <h5>
                 {{ schedule.user.name }}
             </h5>
@@ -17,7 +17,7 @@
                 {{ schedule.service.name }} - {{ schedule.service.price }}
             </small>
         </div>
-        <div class="d-flex col-2 gap-4 ps-5">
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center gap-4">
             <div class="btn-group">
                 <i class="d-flex align-items-center fs-4 bi bi-pencil-square cursor-pointer"
                     title="Define schedule's status" data-bs-toggle="dropdown" aria-expanded="false"></i>
