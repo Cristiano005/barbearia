@@ -78,12 +78,26 @@
                                 </option>
                             </select>
                         </div>
-                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Date*</label>
+                            <VueDatePicker v-model="selectedDate" @update:model-value="handleDate" :format="format"
+                                ref="dateInput" :enableTimePicker="false" :allowed-dates="onlyFreeDays"
+                                placeholder="Select a date" id="date" />
+                            <div ref="dateMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Time*</label>
+                            <select class="form-control" ref="timeInput" :disabled="isDisabled" v-model="selectedTime">
+                                <option value=""> Selecione um horário </option>
+                                <option v-for="time in times"> {{ time }} </option>
+                            </select>
+                            <div ref="timeMessageContainer"></div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-warning">Edit Schedule</button>
+                    <button type="button" class="btn btn-warning" @click="saveChanges">Edit Schedule</button>
                 </div>
             </div>
         </div>
@@ -116,53 +130,20 @@
                     </div>
                 </template>
                 <ScheduleCard v-else-if="schedules && schedules.length" v-for="schedule of schedules"
-                    :key="`schedule${schedule.id}`" :schedule="schedule" @edit="openEditScheduleModal(schedule.service.id)"
+                    :key="`schedule${schedule.id}`" :schedule="schedule" @edit="openEditScheduleModal(schedule)"
                     @cancel="openCancelScheduleModal" />
                 <template v-else="schedules && !schedules.length">
                     <h2> Data not found </h2>
                 </template>
             </div>
-
-            <nav aria-label="...">
-                <ul class="pagination justify-content-center">
-
-                    <template v-if="pagination.currentPage > 1">
-                        <li class="page-item">
-                            <button class="page-link" @click="goToPage(pagination.currentPage - 1)">Previous</button>
-                        </li>
-                    </template>
-                    <template v-else>
-                        <li class="page-item disabled">
-                            <button class="page-link">Previous</button>
-                        </li>
-                    </template>
-
-                    <li :class="pagination.currentPage === page ? 'active' : ''"
-                        v-for="page of pagination.quantityOfPages">
-                        <button class="page-link" @click="goToPage(page)">
-                            {{ page }}
-                        </button>
-                    </li>
-
-                    <template v-if="pagination.currentPage < pagination.quantityOfPages">
-                        <li class="page-item">
-                            <button class="page-link" @click="goToPage(pagination.currentPage + 1)">Next</button>
-                        </li>
-                    </template>
-                    <template v-else>
-                        <li class="page-item disabled">
-                            <button class="page-link">Next</button>
-                        </li>
-                    </template>
-                </ul>
-            </nav>
+            <Pagination :pagination="pagination" @goToPage="goToPage" />
         </div>
     </main>
 </template>
 
 <script setup lang="ts">
 
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 
 import Swal from 'sweetalert2';
 import { Modal } from "bootstrap";
@@ -174,7 +155,8 @@ import ScheduleCard from '@/components/ScheduleCard.vue';
 
 import { fetchServices } from '@/services/serviceService';
 import { axiosInstance } from '@/helpers/helper';
-import type { ScheduleInterface, ServiceInterface, FetchServicesParams, PaginationInterface } from "@/helpers/types";
+import type { ScheduleInterface, ServiceInterface, AvailableDateTimesInterface, FetchServicesParams, PaginationInterface, StatusColorsInterface } from "@/helpers/types";
+import Pagination from '@/components/Pagination.vue';
 
 let addModalInstance: Modal | null = null;
 
@@ -186,8 +168,10 @@ const payments = reactive<string[]>(['money', 'pix', 'credit-card', 'debit-card'
 
 const selectedDateInterval = ref<string>("");
 const selectedPayment = ref<string>(payments[0]);
-const selectedService = ref<number|null>(null);
+const selectedService = ref<number | null>(null);
 const selectedDate = ref();
+
+const scheduleId = ref<number>();
 
 const statusFilters = ref<String[]>(["Success", "Pending", "Absent", "Cancelled"]);
 const selectedStatusFilter = ref<String>("Pending");
@@ -197,21 +181,43 @@ const pagination = ref<PaginationInterface>({
     currentPage: 1,
 });
 
-const autosize = (event: Event): void => {
-    const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-};
+const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
+const isDisabled = ref<boolean>(true);
+const times = ref<String[]>([]);
+const selectedTime = ref<String>("");
 
-const formatterDate = (date, time) => {
-    const dateInstance = new Date(`${date}T${time}`);
-    const day = String(dateInstance.getDate()).padStart(2, "0");
-    const month = String(dateInstance.getMonth() + 1).padStart(2, "0"); // Os meses começam em 0
-    const year = dateInstance.getFullYear();
-    const hours = String(dateInstance.getHours()).padStart(2, "0");
-    const minutes = String(dateInstance.getMinutes()).padStart(2, "0");
+const onlyFreeDays = computed<Date[]>(() => {
+    return availableDateTimes.value.map(dateTime => {
+        const [year, month, day] = dateTime.date.split('-').map(Number);
+        return new Date(year, month - 1, day);
+    });
+});
 
-    return `${day}/${month}/${year} às ${hours}:${minutes}h`;
+const getFormattedDate = (date: Date) => {
+    const newDate = new Date(date);
+    const day = String(newDate.getDate()).padStart(2, '0');
+    const month = String(newDate.getMonth() + 1).padStart(2, '0');
+    const year = newDate.getFullYear();
+
+    return `${year}-${month}-${day}`;
+}
+
+const handleDate = (chosenDate: Date) => {
+
+    const fullDate = getFormattedDate(chosenDate);
+
+    times.value = availableDateTimes.value.filter(dateTime => dateTime.date === fullDate).map(dateTime => dateTime.time);
+
+    if (times.value.length > 0) {
+        isDisabled.value = false;
+    } else {
+        isDisabled.value = true;
+        selectedTime.value = "";
+    }
+}
+
+const format = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR').format(date);
 }
 
 const filterSchedule = async () => {
@@ -255,6 +261,17 @@ const filterSchedule = async () => {
     }
 };
 
+async function getAvailableDateTimes() {
+    try {
+        const { data } = await axiosInstance.get(`/api/v1/availabilities`);
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+}
+
 async function goToPage(page: number) {
     pagination.value.currentPage = page;
     schedules.value = await getAllSchedules();
@@ -274,12 +291,12 @@ async function getAllSchedules() {
     }
 }
 
-async function getAllServices({currentPage = 1, all = false }: FetchServicesParams) {
+async function getAllServices({ currentPage = 1, all = false }: FetchServicesParams) {
 
     try {
 
-        const data = await fetchServices({currentPage, all});
-        
+        const data = await fetchServices({ currentPage, all });
+
         if (!all && data.meta) {
             pagination.value.quantityOfPages = data.meta.last_page;
             pagination.value.currentPage = data.meta.current_page;
@@ -293,12 +310,13 @@ async function getAllServices({currentPage = 1, all = false }: FetchServicesPara
     }
 }
 
-async function openEditScheduleModal(serviceId: number) {
+async function openEditScheduleModal(schedule: ScheduleInterface) {
     const modal = new Modal(document.getElementById("scheduleEditModal"), {});
     modal.show();
 
-    services.value = await getAllServices({all: true});
-    selectedService.value = serviceId;
+    services.value = await getAllServices({ all: true });
+    selectedService.value = schedule.service.id;
+    scheduleId.value = schedule.id;
 }
 
 async function openCancelScheduleModal(id: number) {
@@ -345,10 +363,44 @@ async function openCancelScheduleModal(id: number) {
 
 }
 
+async function saveChanges() {
+
+    try {
+
+        const { data } = await axiosInstance.put(`/api/v1/admin/schedules/${scheduleId.value}`, {
+            service_id: selectedService.value,
+            date: getFormattedDate(selectedDate.value),
+            time: selectedTime.value,
+        });
+
+        Swal.fire({
+            icon: "success",
+            title: data.message,
+        });
+
+        selectedDate.value = null;
+        selectedTime.value = "";
+
+        const modalElement = document.getElementById("scheduleEditModal");
+        const modal = Modal.getInstance(modalElement);
+        modal?.hide();
+
+        schedules.value = await getAllSchedules();
+    }
+
+    catch (error: any) {
+        Swal.fire({
+            icon: "error",
+            title: error.response.data.message || "An error occurred!",
+        });
+    }
+}
+
 onMounted(async () => {
     addModalInstance = new Modal(document.querySelector("#scheduleFilterModal"));
     schedules.value = await getAllSchedules();
+    availableDateTimes.value = await getAvailableDateTimes();
     isLoadingSchedules.value = false;
-})
+});
 
 </script>

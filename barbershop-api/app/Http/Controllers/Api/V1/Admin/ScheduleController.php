@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ScheduleResource;
 use App\Models\Availability;
 use App\Models\Schedule;
+use App\Service\ScheduleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -79,14 +80,10 @@ class ScheduleController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function update(Request $request, Schedule $schedule, ScheduleService $scheduleService)
     {
-        //
-    }
-
-    public function update(Request $request, string $id)
-    {
-        //
+        $response = $scheduleService->updateSchedule($request, $schedule);
+        return response()->json($response)->setStatusCode($response["status"]);
     }
 
     public function destroy(int $id)

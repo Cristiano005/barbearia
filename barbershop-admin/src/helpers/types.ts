@@ -21,6 +21,12 @@ interface ServiceInterface {
     price: string,
 }
 
+interface AvailableDateTimesInterface {
+    id: number,
+    date: String,
+    time: String,
+};
+
 interface FetchServicesParams {
     currentPage?: number;
     all?: boolean;
@@ -44,5 +50,5 @@ interface PaginationInterface {
 };
 
 export type {
-    ScheduleInterface, ServiceInterface, FetchServicesParams, StatusColorsInterface, PaginationInterface
+    ScheduleInterface, ServiceInterface, AvailableDateTimesInterface, FetchServicesParams, StatusColorsInterface, PaginationInterface
 }

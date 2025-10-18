@@ -76,67 +76,14 @@
                 </button>
             </header>
             <div class="d-flex flex-column gap-3 mt-4 mx-auto">
-                <template v-if="services && services.length">
-                    <div class="row align-items-center text-bg-dark p-3 rounded m-0" v-for="service of services"
-                        :key="`service${service.id}`">
-                        <div class="col-auto">
-                            <i class="bi bi-scissors fs-1"></i>
-                        </div>
-                        <div class="col-10 border-end">
-                            <h6>
-                                {{ service.name }}
-                            </h6>
-                            <small>
-                                {{ service.price }}
-                            </small>
-                        </div>
-                        <div class="d-flex col-auto gap-4 ps-5">
-                            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                                @click="openEditModal(service.id, service.name, service.price)"></i>
-                            <i class="fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
-                                @click="deleteService(service.id)"></i>
-                        </div>
-                    </div>
-                </template>
+                <ServiceCard v-if="services && services.length" :service="service" v-for="service of services" :key="`service${service.id}`" />
                 <template v-else-if="services && !services.length">
                     <h2> Data not found </h2>
                 </template>
                 <template v-else>
                     <h2> Loading... </h2>
                 </template>
-                <nav aria-label="...">
-                    <ul class="pagination justify-content-center">
-
-                        <template v-if="pagination.currentPage > 1">
-                            <li class="page-item">
-                                <button class="page-link" @click="goToPage(pagination.currentPage - 1)">Previous</button>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="page-item disabled">
-                                <button class="page-link">Previous</button>
-                            </li>
-                        </template>
-
-                        <li :class="pagination.currentPage === page ? 'active' : ''"
-                            v-for="page of pagination.quantityOfPages">
-                            <button class="page-link" @click="goToPage(page)">
-                                {{ page }}
-                            </button>
-                        </li>
-
-                        <template v-if="pagination.currentPage < pagination.quantityOfPages">
-                            <li class="page-item">
-                                <button class="page-link" @click="goToPage(pagination.currentPage + 1)">Next</button>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="page-item disabled">
-                                <button class="page-link">Next</button>
-                            </li>
-                        </template>
-                    </ul>
-                </nav>
+                <Pagination :pagination="pagination" @goToPage="goToPage"/>
             </div>
         </div>
     </main>
@@ -144,25 +91,18 @@
 
 <script setup lang="ts">
 
-import TheHeader from '@/components/TheHeader.vue';
-import { axiosInstance } from '@/helpers/helper';
-
 import { ref, onMounted } from 'vue';
 
 import { Modal } from "bootstrap";
 import Swal from 'sweetalert2';
 import '@vuepic/vue-datepicker/dist/main.css';
 
-interface ServiceInterface {
-    id: number,
-    name: string,
-    price: string,
-}
+import { axiosInstance } from '@/helpers/helper';
+import type { PaginationInterface, ServiceInterface } from '@/helpers/types';
 
-interface PaginationInterface {
-    quantityOfPages: number,
-    currentPage: number,
-}
+import TheHeader from "@/components/TheHeader.vue";
+import Pagination from "@/components/Pagination.vue";
+import ServiceCard from "@/components/ServiceCard.vue";
 
 const serviceNameToCreate = ref<string>("");
 const servicePriceToCreate = ref<string>("");

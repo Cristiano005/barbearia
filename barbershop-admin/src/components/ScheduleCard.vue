@@ -36,7 +36,7 @@
                     </li>
                 </ul>
             </div> <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                @click="$emit('edit', schedule.service.id)"></i>
+                @click="$emit('edit', schedule)"></i>
             <i class=" fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
                 @click="$emit('cancel', schedule.id)"></i>
         </div>
@@ -57,7 +57,7 @@ const props = defineProps({
 });
 
 const emits = defineEmits<{
-    (e: "edit", serviceId: number): void
+    (e: "edit", schedule: ScheduleInterface): void
     (e: "cancel", id: number): void
 }>();
 

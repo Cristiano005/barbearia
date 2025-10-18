@@ -7,6 +7,7 @@ use App\Http\Requests\StoreScheduleRequest;
 use App\Http\Resources\ScheduleResource;
 use App\Models\Availability;
 use App\Models\Schedule;
+use App\Service\ScheduleService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,74 +67,10 @@ class ScheduleController extends Controller
         }
     }
 
-    public function update(Request $request, Schedule $schedule)
+    public function update(Request $request, Schedule $schedule, ScheduleService $scheduleService)
     {
-        $validatedData = $request->validate([
-            "service_id" => ["required", "integer", "exists:App\Models\Service,id"],
-            "date" => ["required", "date_format:Y-m-d"],
-            "time" => ["required", "date_format:H:i:s"],
-        ]);
-
-        $cancelLimitTime = env("CANCEL_MINUTES_BEFORE", 30);
-        $scheduleDateTime = Carbon::createFromFormat("Y-m-d H:i:s", "{$validatedData['date']} {$validatedData['time']}", config("app.timezone"));
-        $now = Carbon::now(config("app.timezone"));
-
-        if ($now->diffInMinutes($scheduleDateTime, false) >= $cancelLimitTime) {
-
-            try {
-
-                $result = DB::transaction(function () use ($schedule, $validatedData): bool {
-
-                    $oldAvailability = Availability::where("schedule_date", $schedule->date)->where("schedule_time", $schedule->time)->first();
-
-                    if($oldAvailability->status === "available") {
-                        $oldAvailability->status = "unavailable";
-                    } else {
-                        $oldAvailability->status = "available";
-                    }
-
-                    $oldAvailability->save();
-
-                    $newAvailability = Availability::where("schedule_date", $validatedData['date'])->where("schedule_time", $validatedData['time'])->first();
-
-                    if($newAvailability->status === "available") {
-                        $newAvailability->status = "unavailable";
-                    } else {
-                        $newAvailability->status = "available";
-                    }
-
-                    $newAvailability->save();
-                 
-                    $validatedData['updated_at'] = Carbon::now(config('app.timezone'));
-                    $schedule->update($validatedData);
-
-                    return true;
-                });
-
-            } catch (\Throwable $th) {
-
-                Log::error("Schedule updated failed: {$th->getMessage()}");
-
-                return response()->json([
-                    "success" => false,
-                    "message" => "An error occurred while updating the schedule. Please try again."
-                ])->setStatusCode(500);
-            }
-
-            if ($result) {
-                return response()->json([
-                    "success" => true,
-                    "message" => "Schedule updated successfully!",
-                    "data" => [],
-                ])->setStatusCode(200);
-            }
-        }
-
-        return response()->json([
-            "success" => false,
-            "message" => "Cannot update schedule. Cancellation time limit exceeded!",
-            "data" => [],
-        ])->setStatusCode(422);
+        $response = $scheduleService->updateSchedule($request, $schedule);
+        return response()->json($response)->status($response["status"]);
     }
 
     public function destroy(int $id)
