@@ -34,9 +34,10 @@ class ScheduleController extends Controller
         return ScheduleResource::collection($schedules);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, ScheduleService $scheduleService)
     {
         $validatedData = $request->validate([
+            "user_id" => ["required", "integer", "exists:App\Models\User,id"],
             "service_id" => ["required", "integer", "exists:App\Models\Service,id"],
             "payment_id" => ["required", "integer", "exists:App\Models\PaymentTypes,id"],
             "date" => ["required", "date_format:d/m/Y"],
@@ -44,40 +45,9 @@ class ScheduleController extends Controller
         ]);
 
         $validatedData["date"] = Carbon::createFromFormat("d/m/Y", $validatedData["date"])->format("Y-m-d");
+        $response = $scheduleService->createSchedule($validatedData);
 
-        try {
-
-            $result = DB::transaction(function () use ($validatedData): bool {
-
-                Schedule::create([
-                    "user_id" => Auth::id(),
-                    "service_id" => $validatedData["service_id"],
-                    "payment_id" => $validatedData["payment_id"],
-                    "date" => $validatedData["date"],
-                    "time" => $validatedData["time"],
-                    "status" => "success",
-                ]);
-
-                Availability::where("schedule_date", $validatedData["date"])->where("schedule_time", $validatedData["time"])->delete();
-
-                return true;
-            });
-        } catch (Throwable $th) {
-
-            Log::error("Schedule creation failed: {$th->getMessage()}");
-
-            return response()->json([
-                "success" => false,
-                "message" => "An error occurred while creating the schedule. Please try again."
-            ])->setStatusCode(500);
-        }
-
-        if ($result) {
-            return response()->json([
-                "success" => true,
-                "message" => "Schedule created successfully"
-            ])->setStatusCode(200);
-        }
+        return response()->json($response)->setStatusCode($response["status"]);
     }
 
     public function update(Request $request, Schedule $schedule, ScheduleService $scheduleService)

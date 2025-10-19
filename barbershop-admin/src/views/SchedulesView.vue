@@ -38,22 +38,56 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="serviceName" class="form-label">Name*</label>
-                            <input type="text" class="form-control" name="serviceName" id="serviceName"
-                                placeholder="Service name">
+                            <label for="customer" class="col-form-label">Customer*</label>
+                            <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
+                                id="customer" v-model="formDataToAddSchedule.customerId">
+                                <option v-for="customer of customers" :key="`customer${customer.id}`"
+                                    :value="customer.id">
+                                    {{ customer.name }} - {{ customer.email }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="service" class="form-label">Service*</label>
+                            <select class="form-control" id="service" v-model="formDataToAddSchedule.serviceId">
+                                <option v-for="service of services" :key="`service${service.id}`" :value="service.id">
+                                    {{ service.name }} -
+                                    {{ Number(service.price) }}
+                                </option>
+                            </select>
+                            <div ref="emailMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Date*</label>
+                            <VueDatePicker v-model="formDataToAddSchedule.date" @update:model-value="handleDate"
+                                ref="dateInput" :enableTimePicker="false" :format="format" :allowed-dates="onlyFreeDays"
+                                placeholder="Select a date" id="date" />
+                            <div ref="dateMessageContainer"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Time*</label>
+                            <select class="form-control" ref="timeInput" v-model="formDataToAddSchedule.time"
+                                :disabled="isDisabled">
+                                <option value=""> Selecione um horário </option>
+                                <option v-for="time of times" :key="`time${time}`" :value="time"> {{ time }}
+                                </option>
+                            </select>
                             <div ref="timeMessageContainer"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="servicePrice" class="form-label">Price*</label>
-                            <input type="text" class="form-control" name="servicePrice" id="servicePrice"
-                                placeholder="Service price">
-                            <div ref="timeMessageContainer"></div>
+                            <label for="password" class="form-label">Payment Type*</label>
+                            <select class="form-control" id="service" v-model="formDataToAddSchedule.paymentType">
+                                <option v-for="payment of payments" :key="`payment${payment.id}`" :value="payment.id">
+                                    {{ payment.payment_type }}
+                                </option>
+                            </select>
+                            <div ref="passwordMessageContainer"></div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Add Schedule</button>
+                    <button type="button" class="btn btn-success" @click="createSchedule">Add Schedule</button>
                 </div>
             </div>
         </div>
@@ -68,7 +102,6 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <!-- <input type="hidden" id="scheduleId" v-model="scheduleId"> -->
                         <div class="mb-3">
                             <label for="service-to-schedule" class="col-form-label">Service:</label>
                             <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
@@ -111,9 +144,8 @@
                     <div class="d-flex align-items-center gap-3">
                         <i class="fs-4 bi bi-funnel cursor-pointer" title="Filter schedules" data-bs-toggle="modal"
                             data-bs-target="#scheduleFilterModal"></i>
-                        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                            data-bs-target="#scheduleAddModal">
-                            Add Schedules
+                        <button type="button" class="btn btn-outline-success" @click="openAddScheduleModal">
+                            Add Schedule
                             <i class="bi bi-plus-circle"></i>
                         </button>
                     </div>
@@ -129,9 +161,8 @@
                         </div>
                     </template>
                     <template v-else-if="schedules && schedules.length">
-                        <ScheduleCard v-for="schedule of schedules"
-                            :key="`schedule${schedule.id}`" :schedule="schedule" @edit="openEditScheduleModal(schedule)"
-                            @cancel="openCancelScheduleModal" />
+                        <ScheduleCard v-for="schedule of schedules" :key="`schedule${schedule.id}`" :schedule="schedule"
+                            @edit="openEditScheduleModal(schedule)" @cancel="openCancelScheduleModal" />
                     </template>
                     <template v-else="schedules && !schedules.length">
                         <div class="d-flex flex-column justify-content-center text-center gap-4" style="width: 200px;">
@@ -160,19 +191,22 @@ import ScheduleCard from '@/components/ScheduleCard.vue';
 
 import { fetchServices } from '@/services/serviceService';
 import { axiosInstance } from '@/helpers/helper';
-import type { ScheduleInterface, ServiceInterface, AvailableDateTimesInterface, FetchServicesParams, PaginationInterface, StatusColorsInterface } from "@/helpers/types";
+import type {
+    CustomerInterface, ScheduleInterface, ServiceInterface, AvailableDateTimesInterface,
+    FetchServicesParams, PaginationInterface,
+    PaymentTypeInterface
+} from "@/helpers/types";
 import Pagination from '@/components/Pagination.vue';
 
 let addModalInstance: Modal | null = null;
 
 const isLoadingSchedules = ref<boolean>(true);
 
+const customers = ref<CustomerInterface[]>([]);
 const schedules = ref<ScheduleInterface[]>([]);
 const services = ref<ServiceInterface[]>([]);
-const payments = reactive<string[]>(['money', 'pix', 'credit-card', 'debit-card']);
+const payments = ref<PaymentTypeInterface[]>([]);
 
-const selectedDateInterval = ref<string>("");
-const selectedPayment = ref<string>(payments[0]);
 const selectedService = ref<number | null>(null);
 const selectedDate = ref();
 
@@ -184,6 +218,14 @@ const selectedStatusFilter = ref<String>("Pending");
 const pagination = ref<PaginationInterface>({
     quantityOfPages: 1,
     currentPage: 1,
+});
+
+const formDataToAddSchedule = ref({
+    customerId: 1,
+    serviceId: 1,
+    date: "",
+    time: "",
+    paymentType: 3,
 });
 
 const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
@@ -266,6 +308,24 @@ const filterSchedule = async () => {
     }
 };
 
+const currentFormatter = (price: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+    }).format(price);
+};
+
+async function getAllCustomers() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/admin/users");
+        return data.data;
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 async function getAvailableDateTimes() {
     try {
         const { data } = await axiosInstance.get(`/api/v1/availabilities`);
@@ -313,6 +373,29 @@ async function getAllServices({ currentPage = 1, all = false }: FetchServicesPar
     catch (error) {
         console.log(error);
     }
+}
+
+async function getAllTypeOfPayments() {
+
+    try {
+        const { data } = await axiosInstance.get("/api/v1/payments");
+        return data.data;
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
+async function openAddScheduleModal() {
+    const modal = new Modal(document.getElementById("scheduleAddModal"), {});
+    modal.show();
+
+    services.value = await getAllServices({ all: true });
+    customers.value = await getAllCustomers();
+    // selectedService.value = schedule.service.id;
+    // scheduleId.value = schedule.id;
 }
 
 async function openEditScheduleModal(schedule: ScheduleInterface) {
@@ -368,6 +451,81 @@ async function openCancelScheduleModal(id: number) {
 
 }
 
+async function createSchedule() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success mx-3",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+
+    const foundService: ServiceInterface | undefined = services.value.find(service => service.id === formDataToAddSchedule.value.serviceId);
+    const serviceName: string | undefined = foundService?.name;
+    const servicePrice: number = foundService?.price === undefined ? 0 : Number(foundService.price);
+
+    const paymentName = payments.value.find(payment => payment.id === formDataToAddSchedule.value.paymentType)?.payment_type;
+
+    swalWithBootstrapButtons.fire({
+        title: 'Are you sure?',
+        html: `
+                <div class="text-start">
+                    <p>
+                        <strong>Date:</strong> ${format(formDataToAddSchedule.value.date)}
+                    </p>
+                    <p>
+                        <strong>Time:</strong> ${formDataToAddSchedule.value.time}
+                    </p>
+                    <p>
+                        <strong>Service:</strong> ${serviceName}
+                    </p>
+                    <p>
+                        <strong>Price:</strong> ${currentFormatter(servicePrice)}
+                    </p>
+                    <p>
+                        <strong>Payment:</strong>  ${paymentName}
+                    </p>
+                </div>
+                <div class="alert alert-warning mt-3" role="alert">
+                    Please confirm that the information above is correct.
+                </div> 
+            `,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, schedule it!"
+    }).then(async (result) => {
+
+        if (result) {
+
+            try {
+
+                const { data } = await axiosInstance.post("/api/v1/admin/schedules", {
+                    user_id: formDataToAddSchedule.value.customerId,
+                    service_id: formDataToAddSchedule.value.serviceId,
+                    payment_id: formDataToAddSchedule.value.paymentType,
+                    date: format(formDataToAddSchedule.value.date),
+                    time: formDataToAddSchedule.value.time,
+                });
+
+                if (data.success) {
+
+                    swalWithBootstrapButtons.fire("Success", data.message, "success");
+
+                    formDataToAddSchedule.value.serviceId = 1;
+                    formDataToAddSchedule.value.date = "";
+                    formDataToAddSchedule.value.time = "";
+                    formDataToAddSchedule.value.paymentType = 2;
+
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    });
+}
+
 async function saveChanges() {
 
     try {
@@ -404,6 +562,7 @@ async function saveChanges() {
 onMounted(async () => {
     addModalInstance = new Modal(document.querySelector("#scheduleFilterModal"));
     schedules.value = await getAllSchedules();
+    payments.value = await getAllTypeOfPayments();
     availableDateTimes.value = await getAvailableDateTimes();
     isLoadingSchedules.value = false;
 });

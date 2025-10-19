@@ -12,6 +12,31 @@ use Throwable;
 
 class ScheduleService
 {
+    public function createSchedule(mixed $validatedData) {
+
+        try {
+            
+            $this->runCreateTransaction($validatedData);
+
+            return [
+                "success" => true,
+                "message" => "Schedule created successfully!",
+                "status" => 200,
+            ];
+        } 
+        catch (Throwable $th) {
+            
+            Log::error("Schedule create failed: {$th->getMessage()}");
+
+            return [
+                "success" => false,
+                "message" => "An error occurred while creating the schedule. Please try again.",
+                "status" => 500,
+            ];
+        }
+
+    }
+
     public function updateSchedule(Request $request, Schedule $schedule): array
     {
         $validatedData = $request->validate([
@@ -41,7 +66,6 @@ class ScheduleService
                 "message" => "Schedule updated successfully!",
                 "status" => 200,
             ];
-
         } catch (Throwable $th) {
             Log::error("Schedule update failed: {$th->getMessage()}");
 
@@ -82,6 +106,27 @@ class ScheduleService
             ]);
 
             $schedule->update($updateData);
+
+            return true;
+        });
+    }
+
+    private function runCreateTransaction(mixed $validatedData)
+    {
+        return DB::transaction(function() use ($validatedData): bool {
+
+            Schedule::create([
+                "user_id" => $validatedData["user_id"],
+                "service_id" => $validatedData["service_id"],
+                "payment_id" => $validatedData["payment_id"],
+                "date" => $validatedData["date"],
+                "time" => $validatedData["time"],
+                "status" => "pending",
+                "updated_at" => null,
+            ]);
+
+            $newAvailability = Availability::where("schedule_date", $validatedData["date"])->where("schedule_time", $validatedData["time"])->firstOrFail();
+            $this->toggleAvailabilityStatus($newAvailability);
 
             return true;
         });

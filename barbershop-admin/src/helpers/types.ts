@@ -1,3 +1,9 @@
+interface CustomerInterface {
+    id: number,
+    name: string,
+    email: string,
+};
+
 interface ScheduleInterface {
     id: number,
     user: {
@@ -19,6 +25,11 @@ interface ServiceInterface {
     id: number,
     name: string,
     price: string,
+}
+
+interface PaymentTypeInterface {
+    id: number,
+    payment_type: string,
 }
 
 interface AvailableDateTimesInterface {
@@ -50,5 +61,6 @@ interface PaginationInterface {
 };
 
 export type {
-    ScheduleInterface, ServiceInterface, AvailableDateTimesInterface, FetchServicesParams, StatusColorsInterface, PaginationInterface
+    CustomerInterface, ScheduleInterface, ServiceInterface, PaymentTypeInterface,
+    AvailableDateTimesInterface, FetchServicesParams, StatusColorsInterface, PaginationInterface
 }

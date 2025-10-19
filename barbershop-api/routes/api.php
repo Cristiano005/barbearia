@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\DashboardController;
 use App\Http\Controllers\Api\V1\Admin\ScheduleController as AdminScheduleController;
@@ -51,5 +52,6 @@ Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(func
 Route::middleware(["auth:sanctum", "admin"])->prefix("admin")->group(function () {
     Route::apiResource("schedules", AdminScheduleController::class);
     Route::apiResource("services", AdminServiceController::class);
+    Route::apiResource("users", AdminUserController::class);
     Route::get("dashboard", [DashboardController::class, "getDashboardMetrics"]);
 });
