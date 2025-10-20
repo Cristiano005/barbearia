@@ -38,8 +38,8 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            "name" => "required",
-            "price" => "required"
+            "name" => "required|string",
+            "price" => "required|numeric",
         ]);
 
         $insert = Service::create($validatedData);

@@ -138,7 +138,7 @@
     <TheHeader />
     <main class="p-5">
         <div class="d-flex flex-column gap-5 container mx-auto">
-            <div class="row gap-5">
+            <div class="row gap-4">
                 <header class="d-flex justify-content-between align-items-center flex-wrap col-12">
                     <h3>Schedules</h3>
                     <div class="d-flex align-items-center gap-3">

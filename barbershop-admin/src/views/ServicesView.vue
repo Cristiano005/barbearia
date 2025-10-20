@@ -17,9 +17,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="servicePrice" class="form-label">Price*</label>
-                            <input type="text" class="form-control" name="servicePrice" id="servicePrice"
-                                placeholder="Service price" v-model="servicePriceToCreate">
-                            <div ref="timeMessageContainer"></div>
+                            <BRLInput placeholder="R$ 0,00" v-model="servicePriceToCreate" :options="BRL_INPUT_OPTIONS" />
                         </div>
                     </form>
                 </div>
@@ -50,7 +48,7 @@
                         <div class="mb-3">
                             <label for="servicePrice" class="form-label">Price*</label>
                             <input type="text" class="form-control" name="servicePrice" id="servicePrice"
-                                placeholder="Service price" v-model="servicePriceToUpdate">
+                                placeholder="Service price" v-model="servicePriceToUpdate" @input="formatPrice">
                             <div ref="timeMessageContainer"></div>
                         </div>
                     </form>
@@ -67,24 +65,39 @@
     <TheHeader />
     <main class="p-5">
         <div class="container mx-auto">
-            <header class="d-flex justify-content-between align-itesm-center flex-wrap mw-30">
-                <h3>Services</h3>
-                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                    data-bs-target="#serviceAddModal">
-                    Add Service
-                    <i class="bi bi-plus-circle"></i>
-                </button>
-            </header>
-            <div class="d-flex flex-column gap-3 mt-4 mx-auto">
-                <ServiceCard v-if="services && services.length" :service="service" v-for="service of services" :key="`service${service.id}`" />
-                <template v-else-if="services && !services.length">
-                    <h2> Data not found </h2>
-                </template>
-                <template v-else>
-                    <h2> Loading... </h2>
-                </template>
-                <Pagination :pagination="pagination" @goToPage="goToPage"/>
+            <div class="row gap-4">
+                <header class="d-flex justify-content-between align-itesm-center flex-wrap mw-30">
+                    <h3>Services</h3>
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                        data-bs-target="#serviceAddModal">
+                        Add Service
+                        <i class="bi bi-plus-circle"></i>
+                    </button>
+                </header>
+                <div class="d-flex flex-column align-items-center col-12 gap-3">
+                    <template v-if="isLoadingServices">
+                        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                            <div class="fs-4 spinner-border text-dark text-center" style="width: 3rem; height: 3rem;"
+                                role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <strong role="status">Loading...</strong>
+                        </div>
+                    </template>
+                    <template v-else-if="services && services.length">
+                        <ServiceCard class="w-100" :service="service" v-for="service of services"
+                            :key="`service${service.id}`" />
+                        <Pagination :pagination="pagination" @goToPage="goToPage" />
+                    </template>
+                    <template v-else="services && !services.length">
+                        <div class="d-flex flex-column justify-content-center text-center gap-4" style="width: 200px;">
+                            <img class="w-100" src="../assets/empty_data.svg">
+                            <h4> No Schedules </h4>
+                        </div>
+                    </template>
+                </div>
             </div>
+
         </div>
     </main>
 </template>
@@ -96,16 +109,19 @@ import { ref, onMounted } from 'vue';
 import { Modal } from "bootstrap";
 import Swal from 'sweetalert2';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { useCurrencyInput } from 'vue-currency-input';
 
 import { axiosInstance } from '@/helpers/helper';
 import type { PaginationInterface, ServiceInterface } from '@/helpers/types';
+import { BRL_INPUT_OPTIONS } from '@/utils/currencySettings';
 
 import TheHeader from "@/components/TheHeader.vue";
 import Pagination from "@/components/Pagination.vue";
 import ServiceCard from "@/components/ServiceCard.vue";
+import BRLInput from "@/components/BRLInput.vue";
 
 const serviceNameToCreate = ref<string>("");
-const servicePriceToCreate = ref<string>("");
+const servicePriceToCreate = ref<number | null>(null);
 
 const serviceIdToUpdate = ref<number>(0);
 const serviceNameToUpdate = ref<string>("");
@@ -113,6 +129,7 @@ const servicePriceToUpdate = ref<string>("");
 
 const services = ref<ServiceInterface[]>([]);
 
+const isLoadingServices = ref<boolean>(true);
 const pagination = ref<PaginationInterface>({
     quantityOfPages: 1,
     currentPage: 1,
@@ -152,6 +169,9 @@ async function getAllServices() {
         console.log(error);
     }
 
+    finally {
+        isLoadingServices.value = false;
+    }
 }
 
 async function addService() {
@@ -270,11 +290,9 @@ onMounted(async () => {
 </script>
 
 <style>
-
 .input-slot-image {
     height: 1.25rem;
     width: auto;
     margin: 0 0 0.17rem 0.5rem;
 }
-
 </style>
