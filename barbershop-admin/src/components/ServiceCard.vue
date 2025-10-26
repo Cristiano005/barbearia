@@ -8,7 +8,7 @@
                 {{ service.name }}
             </h6>
             <small>
-                {{ service.price }}
+                {{ formatCurrency(parseFloat(service.price)) }}
             </small>
         </div>
         <div class="d-flex col-auto gap-4 ps-5">
@@ -25,6 +25,7 @@
 import { type PropType } from "vue";
 
 import type { ServiceInterface } from "@/helpers/types";
+import { formatCurrency } from "@/helpers/helper";
 
 const props = defineProps({
     service: {

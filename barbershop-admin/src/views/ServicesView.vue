@@ -47,8 +47,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="servicePrice" class="form-label">Price*</label>
-                            <input type="text" class="form-control" name="servicePrice" id="servicePrice"
-                                placeholder="Service price" v-model="servicePriceToUpdate" @input="formatPrice">
+                            <BRLInput placeholder="R$ 0,00" v-model="servicePriceToUpdate" :options="BRL_INPUT_OPTIONS" />
                             <div ref="timeMessageContainer"></div>
                         </div>
                     </form>
@@ -86,7 +85,7 @@
                     </template>
                     <template v-else-if="services && services.length">
                         <ServiceCard class="w-100" :service="service" v-for="service of services"
-                            :key="`service${service.id}`" />
+                            :key="`service${service.id}`" @edit="openEditModal(service)" @cancel="deleteService(service.id)"/>
                         <Pagination :pagination="pagination" @goToPage="goToPage" />
                     </template>
                     <template v-else="services && !services.length">
@@ -125,7 +124,7 @@ const servicePriceToCreate = ref<number | null>(null);
 
 const serviceIdToUpdate = ref<number>(0);
 const serviceNameToUpdate = ref<string>("");
-const servicePriceToUpdate = ref<string>("");
+const servicePriceToUpdate = ref<number | null>(null);
 
 const services = ref<ServiceInterface[]>([]);
 
@@ -143,13 +142,13 @@ function formatPrice(price: number | string) {
     return `R$ ${price}`;
 }
 
-async function openEditModal(id: number, name: string, price: string) {
+async function openEditModal(service: ServiceInterface) {
 
     editModalInstance.show();
 
-    serviceIdToUpdate.value = id;
-    serviceNameToUpdate.value = name;
-    servicePriceToUpdate.value = formatPrice(parseFloat(price));
+    serviceIdToUpdate.value = service.id;
+    serviceNameToUpdate.value = service.name;
+    servicePriceToUpdate.value = parseFloat(service.price);
 }
 
 async function goToPage(page: number) {
@@ -261,7 +260,7 @@ async function deleteService(id: number) {
 
         try {
 
-            const { data } = await axiosInstance.delete(`/api/v1/service/${id}`);
+            const { data } = await axiosInstance.delete(`/api/v1/admin/services/${id}`);
 
             if (data.success) {
 

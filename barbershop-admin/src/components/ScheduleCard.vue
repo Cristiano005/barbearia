@@ -14,7 +14,7 @@
                 </span>
             </h6>
             <small>
-                {{ schedule.service.name }} - {{ schedule.service.price }}
+                {{ schedule.service.name }} - {{ formatCurrency(parseFloat(schedule.service.price)) }}
             </small>
         </div>
         <div class="col-12 col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center gap-4">
@@ -48,6 +48,7 @@
 import { reactive, type PropType } from "vue";
 
 import type { ScheduleInterface, StatusColorsInterface } from "@/helpers/types";
+import { formatCurrency } from "@/helpers/helper";
 
 const props = defineProps({
     schedule: {

@@ -52,7 +52,7 @@
                             <select class="form-control" id="service" v-model="formDataToAddSchedule.serviceId">
                                 <option v-for="service of services" :key="`service${service.id}`" :value="service.id">
                                     {{ service.name }} -
-                                    {{ Number(service.price) }}
+                                    {{ formatCurrency(parseFloat(service.price)) }}
                                 </option>
                             </select>
                             <div ref="emailMessageContainer"></div>
@@ -107,7 +107,7 @@
                             <select class="form-select h-100 p-2 border border-dark" aria-label="Default select example"
                                 id="service-to-schedule" v-model="selectedService">
                                 <option v-for="service of services" :key="service.id" :value="service.id">
-                                    {{ service.name }}
+                                    {{ service.name }} - {{ formatCurrency(parseFloat(service.price)) }}
                                 </option>
                             </select>
                         </div>
@@ -190,7 +190,7 @@ import TheHeader from '@/components/TheHeader.vue';
 import ScheduleCard from '@/components/ScheduleCard.vue';
 
 import { fetchServices } from '@/services/serviceService';
-import { axiosInstance } from '@/helpers/helper';
+import { axiosInstance, formatCurrency } from '@/helpers/helper';
 import type {
     CustomerInterface, ScheduleInterface, ServiceInterface, AvailableDateTimesInterface,
     FetchServicesParams, PaginationInterface,
@@ -219,6 +219,9 @@ const pagination = ref<PaginationInterface>({
     quantityOfPages: 1,
     currentPage: 1,
 });
+
+// Parei aqui onde estava formatando os valores pra monetário e aqui precisa de uma refatoração maior... com outros componentes.
+// Já ajustei método do controller e adicionei o novo status 'pending'
 
 const formDataToAddSchedule = ref({
     customerId: 1,

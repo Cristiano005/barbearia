@@ -170,12 +170,12 @@ const paymentsByTypes = computed(() => {
 const schedulesStatus = computed(() => {
     return {
         data: {
-            labels: ['Finished', 'Absent', 'Cancelled'],
+            labels: ['Finished', 'Pending', 'Absent', 'Cancelled'],
             datasets: [
                 {
                     label: 'Schedule Status',
                     data: dashboardMetrics.scheduleStatusCounts,
-                    backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                    backgroundColor: ['#198754', '#ffc107', '#6c757d', '#dc3545'],
                     hoverOffset: 4
                 }
             ]

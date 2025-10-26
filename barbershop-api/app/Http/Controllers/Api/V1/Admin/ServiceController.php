@@ -39,7 +39,7 @@ class ServiceController extends Controller
     {
         $validatedData = $request->validate([
             "name" => "required|string",
-            "price" => "required|numeric",
+            "price" => "required|numeric|max:200",
         ]);
 
         $insert = Service::create($validatedData);
@@ -57,16 +57,11 @@ class ServiceController extends Controller
         ])->setStatusCode(500);
     }
 
-    public function show(string $id)
-    {
-        //
-    }
-
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
-            "name" => "required",
-            "price" => "required"
+            "name" => "required|string",
+            "price" => "required|numeric|max:200",
         ]);
 
         $update = Service::find($id)->update($validatedData);
@@ -84,11 +79,13 @@ class ServiceController extends Controller
         ])->setStatusCode(500);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Service $service)
     {
-        //
+        $service->delete();
+        
+        return response()->json([
+            "success" => true,
+            "message" => "Service deleted successfully!"
+        ])->setStatusCode(200);
     }
 }

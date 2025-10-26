@@ -71,8 +71,10 @@ class DashboardController extends Controller
         $workedCount = $schedules->where("status", "success")->count();
         $totalMinutes = $workedCount * 30;
 
-        $carbonTime = Carbon::createFromTime(0, $totalMinutes);
-        return $carbonTime->format("H\h:i\m");
+        $carbonTime = Carbon::createFromTime(0, 0, 0);
+        $carbonTime->addMinutes($totalMinutes);
+
+        return $carbonTime->format("H\h:i\m"); 
     }
 
     private function getRegisteredCustomersInPeriod($startDate, $endDate): int
