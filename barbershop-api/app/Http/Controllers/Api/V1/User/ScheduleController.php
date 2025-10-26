@@ -70,7 +70,7 @@ class ScheduleController extends Controller
     public function update(Request $request, Schedule $schedule, ScheduleService $scheduleService)
     {
         $response = $scheduleService->updateSchedule($request, $schedule);
-        return response()->json($response)->status($response["status"]);
+        return response()->json($response)->setStatusCode($response["status"]);
     }
 
     public function destroy(int $id)

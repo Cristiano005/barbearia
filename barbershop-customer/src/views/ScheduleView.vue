@@ -67,27 +67,11 @@ import { onMounted, ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router'
 
 import { axiosInstance, validate, format, getAvailableDateTimes } from '@/helpers/helper';
+import type { ServiceInterface, PaymentTypeInterface, AvailableDateTimesInterface } from '@/helpers/types';
 
 import Swal from 'sweetalert2';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-
-interface ServiceInterface {
-    id: number,
-    name: string,
-    price: string,
-}
-
-interface PaymentTypeInterface {
-    id: number,
-    payment_type: string,
-}
-
-interface AvailableDateTimesInterface {
-    id: number,
-    date: String,
-    time: String,
-}
 
 const services = ref<ServiceInterface[]>([]);
 const times = ref<String[]>([]);
