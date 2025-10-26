@@ -14,14 +14,14 @@ class AuthController extends Controller
     public function authenticate(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            "email" => ["required", "email"],
-            "password" => ["required"],
+            "email" => ["required", "email", "exists:users,email"], 
+            "password" => ["required", "min:8"],
         ]);
 
         if (!Auth::attempt($validatedData)) {
             return response()->json([
                 "success" => false,
-                "message" => "Email or Password are invalid",
+                "message" => "Email or Password are invalid!",
             ])->setStatusCode(401);
         }
 
@@ -36,7 +36,9 @@ class AuthController extends Controller
     public function check(): JsonResponse
     {
         $isAuthenticated = Auth::check();
-        return response()->json($isAuthenticated);
+        return response()->json([
+            "authenticated" => $isAuthenticated,
+        ])->setStatusCode(200);
     }
 
     public function logout(Request $request): JsonResponse

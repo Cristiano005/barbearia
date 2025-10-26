@@ -42,42 +42,7 @@
             </div>
         </div>
     </div>
-    <header class="p-2 bg-dark">
-        <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a class="navbar-brand fw-medium" href="/">Barber Shop</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
-                    <ul class="navbar-nav gap-2">
-                        <li class="nav-item">
-                            <RouterLink class="nav-link text-white" to="/">
-                                Home
-                            </RouterLink>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-outline-light dropdown-toggle border-0" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <i class="bi bi-person fs-5"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark">
-                                <li>
-                                    <RouterLink class="dropdown-item" to="/profile">
-                                        Profile
-                                    </RouterLink>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">Logout</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-    </header>
+    <TheHeader />
     <main class="d-flex flex-column gap-5 p-5">
         <section class="container mx-auto">
             <div class="row">
@@ -211,6 +176,8 @@ import { Modal } from "bootstrap";
 import Swal from 'sweetalert2';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+
+import TheHeader from "@/components/TheHeader.vue";
 
 interface ServiceInterface {
     id: number,
@@ -497,11 +464,17 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+
 .cursor-pointer {
     cursor: pointer;
+}
+
+main {
+    margin-top: 4.5rem;
 }
 
 section {
     padding: 0;
 }
+
 </style>

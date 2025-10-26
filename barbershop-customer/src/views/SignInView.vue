@@ -17,13 +17,13 @@
                     <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
                         <input type="email" class="form-control p-3" id="email" aria-describedby="emailHelp"
-                            placeholder="Enter your e-mail" ref="emailInput" v-model="email"/>
+                            placeholder="Enter your e-mail" ref="emailInput" v-model="email" />
                         <div ref="emailMessageContainer"></div>
                     </div>
                     <div class="col-12 has-validation">
                         <label for="password" class="form-label">Password*</label>
-                        <input type="password" class="form-control p-3" id="password"
-                            placeholder="Enter your password" ref="passwordInput" v-model="password"/>
+                        <input type="password" class="form-control p-3" id="password" placeholder="Enter your password"
+                            ref="passwordInput" v-model="password" />
                         <div ref="passwordMessageContainer"></div>
                     </div>
                     <div class="col-12">
@@ -44,14 +44,14 @@
 <script setup lang="ts">
 
 import { ref } from 'vue';
-import router from '@/router';
 
-import { axiosInstance, validate } from '@/helpers/helper';
+import { validate } from '@/helpers/helper';
+import { useUserStore } from '@/stores/user';
 
-import Swal from 'sweetalert2';
+const userStore = useUserStore();
 
-const email = ref<string>('');
-const password = ref<string>('');
+const email = ref<string>("");
+const password = ref<string>("");
 
 const emailInput = ref<HTMLInputElement | null>(null);
 const passwordInput = ref<HTMLInputElement | null>(null);
@@ -61,45 +61,23 @@ const passwordMessageContainer = ref<HTMLDivElement | null>(null);
 
 async function authenticate() {
 
-    try {
-        const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
-            name: 'email',
-            rules: ['empty', 'email'],
-            value: email.value
-        });
+    const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
+        name: "email",
+        rules: ["empty", "email"],
+        value: email.value
+    });
 
-        const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
-            name: 'password',
-            rules: ['empty', 'password'],
-            value: password.value
-        });
+    const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
+        name: "password",
+        rules: ["empty", "password"],
+        value: password.value
+    });
 
-        if (!validatedEmail || !validatedPassword) {
-            return;
-        }
-
-        await axiosInstance.get('/sanctum/csrf-cookie');
-
-        const { data } = await axiosInstance.post('/api/v1/auth/authenticate', {
-            email: email.value,
-            password: password.value
-        });
-
-        if (data.success === true) {
-            router.push({ path: '/' });
-        }
-
-    } catch (error) {
-        Swal.fire({
-            title: 'Error!',
-            text: error.response.data.message,
-            icon: 'error',
-            confirmButtonText: 'I got it',
-            customClass: {
-                confirmButton: "btn btn-dark"
-            }
-        });
+    if (!validatedEmail || !validatedPassword) {
+        return;
     }
+
+    await userStore.authenticate(email.value, password.value)
 }
 
 </script>

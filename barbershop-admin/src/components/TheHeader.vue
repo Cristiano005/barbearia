@@ -66,12 +66,8 @@ import { axiosInstance } from '@/helpers/helper';
 async function logout() {
 
     try {
-        const { data } = await axiosInstance.get("api/v1/auth/logout");
-        if(data.success) {
-            router.push({
-                path: "/signin",
-            });
-        }
+        const { data } = await axiosInstance.post("api/v1/auth/admin/logout", { withCredentials: true });
+        if(data.success) router.push({path: "/signin"});
     } 
     
     catch (error) {

@@ -37,15 +37,14 @@ Route::middleware("auth:sanctum")->apiResource("availabilities", AvailabilityCon
 
 Route::prefix("/auth")->controller(AuthController::class)->group(function () {
     Route::get("/check", "check");
-    Route::get("/logout", "logout");
+    Route::post("/logout", "logout");
     Route::post("/authenticate", "authenticate");
     Route::post("/register", "register");
 });
 
-
 Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(function () {
     Route::get("/check", "check");
-    Route::get("/logout", "logout");
+    Route::post("/logout", "logout");
     Route::post("/authenticate", "authenticate");
 });
 
