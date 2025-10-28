@@ -50,6 +50,7 @@ Route::prefix("/auth/admin")->controller(AdminAuthController::class)->group(func
 
 Route::middleware(["auth:sanctum", "admin"])->prefix("admin")->group(function () {
     Route::apiResource("schedules", AdminScheduleController::class);
+    Route::patch("/schedules/{schedule}/status", [AdminScheduleController::class, "updateOnlyStatus"]);
     Route::apiResource("services", AdminServiceController::class);
     Route::apiResource("users", AdminUserController::class);
     Route::get("dashboard", [DashboardController::class, "getDashboardMetrics"]);

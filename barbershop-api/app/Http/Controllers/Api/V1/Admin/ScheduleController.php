@@ -4,13 +4,10 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ScheduleResource;
-use App\Models\Availability;
 use App\Models\Schedule;
 use App\Service\ScheduleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -54,6 +51,45 @@ class ScheduleController extends Controller
     {
         $response = $scheduleService->updateSchedule($request, $schedule);
         return response()->json($response)->setStatusCode($response["status"]);
+    }
+
+    public function updateOnlyStatus(Request $request, Schedule $schedule)
+    {
+        $validator = Validator::make($request->all(), [
+            "status" => ["required", "string", Rule::in(["success", "absent"])]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(["errors" => $validator->errors()->get("status")])->setStatusCode(422);
+        }
+
+        $validatedData = $validator->validated();
+
+        try {
+
+            $schedule->update($validatedData);
+
+            return response()->json([
+                "status" => true,
+                "message" => "Schedule's status updated successfully!",
+            ])->setStatusCode(200);
+            
+        } catch (Throwable $th) {
+
+            Log::error("Failed to update schedule status due to a server error '{$th->getMessage()}'");
+
+            return response()->json([
+                "status" => false,
+                "message" => "Failed to update schedule status due to a server error!",
+            ])->setStatusCode(500);
+        }
+
+        if ($schedule->update(["status" => $validateData["status"]])) {
+            return response()->json([
+                "status" => true,
+                "message" => "Schedule's status updated successfully!",
+            ])->setStatusCode(200);
+        }
     }
 
     public function destroy(int $id)
