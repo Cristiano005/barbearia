@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ScheduleResource;
 use App\Models\Schedule;
 use App\Service\ScheduleService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,8 @@ use Throwable;
 
 class ScheduleController extends Controller
 {
+    public function __construct(private ScheduleService $scheduleService) {}
+
     public function index(Request $request)
     {
         $validator = Validator::make($request->query(), [
@@ -31,7 +34,7 @@ class ScheduleController extends Controller
         return ScheduleResource::collection($schedules);
     }
 
-    public function store(Request $request, ScheduleService $scheduleService)
+    public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
             "user_id" => ["required", "integer", "exists:App\Models\User,id"],
@@ -42,54 +45,21 @@ class ScheduleController extends Controller
         ]);
 
         $validatedData["date"] = Carbon::createFromFormat("d/m/Y", $validatedData["date"])->format("Y-m-d");
-        $response = $scheduleService->createSchedule($validatedData);
+        $response = $this->scheduleService->createSchedule($validatedData);
 
         return response()->json($response)->setStatusCode($response["status"]);
     }
 
-    public function update(Request $request, Schedule $schedule, ScheduleService $scheduleService)
+    public function update(Request $request, Schedule $schedule): JsonResponse
     {
-        $response = $scheduleService->updateSchedule($request, $schedule);
+        $response = $this->scheduleService->updateSchedule($request, $schedule);
         return response()->json($response)->setStatusCode($response["status"]);
     }
 
-    public function updateOnlyStatus(Request $request, Schedule $schedule)
+    public function updateOnlyStatus(Request $request, Schedule $schedule): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            "status" => ["required", "string", Rule::in(["success", "absent"])]
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(["errors" => $validator->errors()->get("status")])->setStatusCode(422);
-        }
-
-        $validatedData = $validator->validated();
-
-        try {
-
-            $schedule->update($validatedData);
-
-            return response()->json([
-                "status" => true,
-                "message" => "Schedule's status updated successfully!",
-            ])->setStatusCode(200);
-            
-        } catch (Throwable $th) {
-
-            Log::error("Failed to update schedule status due to a server error '{$th->getMessage()}'");
-
-            return response()->json([
-                "status" => false,
-                "message" => "Failed to update schedule status due to a server error!",
-            ])->setStatusCode(500);
-        }
-
-        if ($schedule->update(["status" => $validateData["status"]])) {
-            return response()->json([
-                "status" => true,
-                "message" => "Schedule's status updated successfully!",
-            ])->setStatusCode(200);
-        }
+        $response = $this->scheduleService->updateOnlyStatus($request, $schedule);
+        return response()->json($response)->setStatusCode($response["status"]);
     }
 
     public function destroy(int $id)

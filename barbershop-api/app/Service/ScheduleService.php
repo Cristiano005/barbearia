@@ -8,14 +8,16 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 class ScheduleService
 {
-    public function createSchedule(mixed $validatedData) {
-
+    public function createSchedule(mixed $validatedData)
+    {
         try {
-            
+
             $this->runCreateTransaction($validatedData);
 
             return [
@@ -23,9 +25,8 @@ class ScheduleService
                 "message" => "Schedule created successfully!",
                 "status" => 200,
             ];
-        } 
-        catch (Throwable $th) {
-            
+        } catch (Throwable $th) {
+
             Log::error("Schedule create failed: {$th->getMessage()}");
 
             return [
@@ -34,7 +35,6 @@ class ScheduleService
                 "status" => 500,
             ];
         }
-
     }
 
     public function updateSchedule(Request $request, Schedule $schedule): array
@@ -77,6 +77,62 @@ class ScheduleService
         }
     }
 
+    public function updateOnlyStatus(Request $request, Schedule $schedule): array
+    {
+        $validator = Validator::make($request->all(), [
+            "status" => ["required", "string", Rule::in(["success", "absent"])]
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                "success" => false,
+                "message" => $validator->errors()->first("status"),
+                "status" => 422,
+            ];
+        }
+
+        $validatedData = $validator->validated();
+
+        $scheduleDateTime = Carbon::createFromFormat("Y-m-d H:i:s", "{$schedule->date} {$schedule->time}", config("app.timezone"))->addMinutes(15);
+        $now = Carbon::now(config("app.timezone"));
+
+        $message = $this->formatterTime($scheduleDateTime);
+
+        if ($now->lessThanOrEqualTo($scheduleDateTime)) {
+            return [
+                "success" => false,
+                "message" => "Update not allowed. You can try again on {$message}, 15 minutes after the scheduled time!",
+                "status" => 403,
+            ];
+        }
+
+        try {
+
+            $schedule->update($validatedData);
+
+            return [
+                "success" => true,
+                "message" => "Schedule's status updated successfully!",
+                "status" => 200,
+            ];
+        } catch (Throwable $th) {
+
+            Log::error("Failed to update schedule status due to a server error '{$th->getMessage()}'");
+
+            return [
+                "success" => false,
+                "message" => "Failed to update schedule status due to a server error!",
+                "status" => 500,
+            ];
+        }
+    }
+
+    private function formatterTime(Carbon $scheduleDateTime): string
+    {
+        Carbon::setLocale("en");
+        return $scheduleDateTime->isoFormat("dddd [at] h:mm A");
+    }
+
     private function toggleAvailabilityStatus(Availability $availability): void
     {
         $availability->status = ($availability->status === "available") ? "unavailable" : "available";
@@ -113,7 +169,7 @@ class ScheduleService
 
     private function runCreateTransaction(mixed $validatedData)
     {
-        return DB::transaction(function() use ($validatedData): bool {
+        return DB::transaction(function () use ($validatedData): bool {
 
             Schedule::create([
                 "user_id" => $validatedData["user_id"],
