@@ -91,6 +91,14 @@ class ScheduleService
             ];
         }
 
+        if ($schedule->status !== "pending") {
+            return [
+                "success" => false,
+                "message" => "Only pending schedules can have their status updated!",
+                "status" => 403,
+            ];
+        }
+
         $validatedData = $validator->validated();
 
         $scheduleDateTime = Carbon::createFromFormat("Y-m-d H:i:s", "{$schedule->date} {$schedule->time}", config("app.timezone"))->addMinutes(15);
