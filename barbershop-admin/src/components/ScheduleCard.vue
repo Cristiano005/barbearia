@@ -18,25 +18,25 @@
             </small>
         </div>
         <div class="col-12 col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center gap-4">
-            <div class="btn-group">
+            <div class="btn-group" v-if="schedule.status === 'pending'">
                 <i class="d-flex align-items-center fs-4 bi bi-pencil-square cursor-pointer"
                     title="Define schedule's status" data-bs-toggle="dropdown" aria-expanded="false"></i>
                 <ul class="dropdown-menu">
                     <li>
-                        <a class="dropdown-item text-success" href="#">
+                        <a class="dropdown-item text-success" @click="$emit('updateStatus', schedule.id, 'success')">
                             <i class="bi bi-check"></i>
                             Success
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item text-secondary" href="#">
+                        <a class="dropdown-item text-secondary" @click="$emit('updateStatus', schedule.id, 'absent')">
                             <i class="bi bi-person-fill-x"></i>
                             Absent
                         </a>
                     </li>
                 </ul>
-            </div> <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit"
-                @click="$emit('edit', schedule)"></i>
+            </div>
+            <i class="fs-4 bi bi-pencil text-warning cursor-pointer" title="Edit" @click="$emit('edit', schedule)"></i>
             <i class=" fs-4 bi bi-calendar-x text-danger cursor-pointer" title="Cancel"
                 @click="$emit('cancel', schedule.id)"></i>
         </div>
@@ -58,6 +58,7 @@ const props = defineProps({
 });
 
 const emits = defineEmits<{
+    (e: "updateStatus", id: number, status: "success" | "absent"): void
     (e: "edit", schedule: ScheduleInterface): void
     (e: "cancel", id: number): void
 }>();

@@ -162,6 +162,7 @@
                     </template>
                     <template v-else-if="schedules && schedules.length">
                         <ScheduleCard v-for="schedule of schedules" :key="`schedule${schedule.id}`" :schedule="schedule"
+                            @update-status="updateStatus"
                             @edit="openEditScheduleModal(schedule)" @cancel="openCancelScheduleModal" />
                     </template>
                     <template v-else="schedules && !schedules.length">
@@ -219,9 +220,6 @@ const pagination = ref<PaginationInterface>({
     quantityOfPages: 1,
     currentPage: 1,
 });
-
-// Parei aqui onde estava formatando os valores pra monetário e aqui precisa de uma refatoração maior... com outros componentes.
-// Já ajustei método do controller e adicionei o novo status 'pending'
 
 const formDataToAddSchedule = ref({
     customerId: 1,
@@ -560,6 +558,22 @@ async function saveChanges() {
             title: error.response.data.message || "An error occurred!",
         });
     }
+}
+
+async function updateStatus(scheduleId: number, status: "success" | "absent") {
+    
+    try {
+        const { data } = await axiosInstance.patch(`/api/v1/admin/schedules/${scheduleId}/status`, {
+            status: status
+        });
+        console.log(data);
+        schedules.value = await getAllSchedules();
+    }
+
+    catch (error) {
+        console.log(error);
+    }
+    
 }
 
 onMounted(async () => {
