@@ -1,6 +1,6 @@
 <template>
     <TheHeader />
-    <main class="p-5" style="background-color: rgb(244, 247, 254)">
+    <main class="container py-5">
         <div class="table-header row flex-wrap justify-content-between">
             <h2 class="col-12 col-lg-9">Dashboard</h2>
             <div class="d-flex col-12 col-lg-3 filters flex-wrap justify-content-end align-items-center gap-3">
@@ -9,32 +9,48 @@
                     @update:model-value="updateDashboard" />
             </div>
         </div>
-        <div class="row analysys bg-light mt-5 gap-5">
-            <div class="card col-lg-3 mb-3">
-                <div class="row align-items-center card-body text-center">
-                    <h4 class="card-title">Total Revenue</h4>
-                    <span class="card-text fs-1" id="revenuePerMonth">
-                        {{ dashboardMetrics.revenueByPeriod.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}
-                    </span>
-                </div>
-            </div>
-            <div class="card col-lg-3 mb-3">
-                <div class="row align-items-center card-body text-center">
-                    <h4 class="card-title">Total Scheduled</h4>
-                    <span class="card-text fs-1"> {{ dashboardMetrics.scheduleCount }} </span>
-                </div>
-            </div>
-            <div class="card col-lg-3 mb-3">
-                <div class="card-body row align-items-center text-center">
-                    <h4 class="card-title">Hours Worked</h4>
-                    <span class="card-text fs-1"> {{ dashboardMetrics.totalWorkedTime }} </span>
+        <div class="row analysys mt-5">
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="card card-highlight">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title text-muted">Total Revenue</h5>
+                        <p class="display-5 text-dark fw-bold"> {{
+                            dashboardMetrics.revenueByPeriod.toLocaleString('pt-BR', {
+                                style: 'currency', currency:
+                                    'BRL'
+                            }) }} </p>
+                        <span class="badge text-bg-dark">Total revenue for the period</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="card col-lg-2 mb-3">
-                <div class="card-body row align-items-center text-center">
-                    <h4 class="card-title">New Customers</h4>
-                    <span class="card-text fs-1"> {{ dashboardMetrics.newCustomers }} </span>
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="card card-highlight">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title text-muted">Total Scheduled</h5>
+                        <p class="display-5 text-dark fw-bold"> {{ dashboardMetrics.scheduleCount }} </p>
+                        <span class="badge text-bg-dark">Total Successful Schedules</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="card card-highlight">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title text-muted">Hours Worked</h5>
+                        <p class="display-5 text-dark fw-bold"> {{ dashboardMetrics.totalWorkedTime }} </p>
+                        <span class="badge text-bg-dark">Total Hours Worked in Period</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 mb-3">
+                <div class="card card-highlight">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title text-muted">New Customers</h5>
+                        <p class="display-5 text-dark fw-bold"> {{ dashboardMetrics.newCustomers }} </p>
+                        <span class="badge bg-dark">New Clients Registered</span>
+                    </div>
                 </div>
             </div>
 
@@ -260,3 +276,13 @@ onMounted(async () => {
 });
 
 </script>
+
+<style lang="scss" scoped>
+
+.card-highlight {
+    border-top: 4px solid black;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+</style>
