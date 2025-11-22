@@ -2,7 +2,6 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { axiosInstance } from '@/helpers/helper';
 import { useRouter } from 'vue-router';
-import Swal from 'sweetalert2';
 
 export const useUserStore = defineStore('user', () => {
 
@@ -29,19 +28,10 @@ export const useUserStore = defineStore('user', () => {
         }
 
         catch (error: any) {
-            if (error.status === 500) {
-                console.log(error);
-            } else {
-                Swal.fire({
-                    title: "Error!",
-                    text: error.response.data.message,
-                    icon: "error",
-                    confirmButtonText: "I got it",
-                    customClass: {
-                        confirmButton: "btn btn-dark"
-                    }
-                });
-            }
+            throw {
+                status: error.response?.status,
+                message: error.response?.data?.message ?? "Unknown error"
+            };
         }
     }
 

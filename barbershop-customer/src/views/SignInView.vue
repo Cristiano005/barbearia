@@ -16,15 +16,21 @@
                 <form class="row mt-5 gap-4">
                     <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
-                        <input type="email" class="form-control p-3" id="email" aria-describedby="emailHelp"
-                            placeholder="Enter your e-mail" ref="emailInput" v-model="email" />
-                        <div ref="emailMessageContainer"></div>
+                        <input type="email" :class="['form-control', 'p-3', errors.email ? 'is-invalid' : '']"
+                            id="email" aria-describedby="emailHelp" placeholder="Enter your e-mail" ref="emailInput"
+                            v-bind="emailAttrs" v-model="email" />
+                        <div :class="errors.email ? 'invalid-feedback' : ''">
+                            {{ errors.email }}
+                        </div>
                     </div>
                     <div class="col-12 has-validation">
                         <label for="password" class="form-label">Password*</label>
-                        <input type="password" class="form-control p-3" id="password" placeholder="Enter your password"
-                            ref="passwordInput" v-model="password" />
-                        <div ref="passwordMessageContainer"></div>
+                        <input type="password" :class="['form-control', 'p-3', errors.password ? 'is-invalid' : '']"
+                            id="password" placeholder="Enter your password" ref="passwordInput" v-bind="passwordAttrs"
+                            v-model="password" />
+                        <div :class="errors.password ? 'invalid-feedback' : ''">
+                            {{ errors.password }}
+                        </div>
                     </div>
                     <div class="col-12">
                         <button type="button" class="btn btn-dark p-3 w-100" @click="authenticate">Sign In</button>
@@ -43,41 +49,73 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue';
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/yup';
+import * as yup from 'yup';
+import Swal from 'sweetalert2';
 
-import { validate } from '@/helpers/helper';
 import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 
-const email = ref<string>("");
-const password = ref<string>("");
+const schema = toTypedSchema(
+    yup.object({
+        email: yup.string().required().email(),
+        password: yup.string().required().min(8)
+    }),
+);
 
-const emailInput = ref<HTMLInputElement | null>(null);
-const passwordInput = ref<HTMLInputElement | null>(null);
+const { defineField, validate, values, errors } = useForm({
+    validationSchema: schema,
+});
 
-const emailMessageContainer = ref<HTMLDivElement | null>(null);
-const passwordMessageContainer = ref<HTMLDivElement | null>(null);
+const [email, emailAttrs] = defineField("email");
+const [password, passwordAttrs] = defineField("password");
 
 async function authenticate() {
 
-    const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
-        name: "email",
-        rules: ["empty", "email"],
-        value: email.value
-    });
+    const result = await validate();
 
-    const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
-        name: "password",
-        rules: ["empty", "password"],
-        value: password.value
-    });
+    if (!result.valid) {
 
-    if (!validatedEmail || !validatedPassword) {
+        Swal.fire({
+            icon: "error",
+            title: "Check your information!",
+            text: "Please fill in all required fields correctly.",
+        });
+
         return;
     }
 
-    await userStore.authenticate(email.value, password.value)
+    Swal.fire({
+        title: "Logging in...",
+        text: "Please wait",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    try {
+        await userStore.authenticate(email.value as string, password.value as string);
+        Swal.close();
+    } catch(error: any) {
+
+        Swal.close();
+
+        if (error.status === 401) {
+            
+            Swal.fire({
+                icon: "error",
+                title: "Invalid credentials",
+                text: "The email or password you entered is incorrect.",
+                confirmButtonText: "I got it"
+            });
+        } else {
+            console.error(error);
+        }
+    }
 }
 
 </script>
