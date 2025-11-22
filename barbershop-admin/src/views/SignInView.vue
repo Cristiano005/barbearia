@@ -12,19 +12,19 @@
                 <form class="row mt-5 gap-4">
                     <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
-                        <input type="text" class="form-control p-3" id="email" placeholder="Enter your e-mail" ref="emailInput" v-model="email" />
-                        <div ref="emailMessageContainer"></div>
+                        <input type="text" :class="['form-control', 'p-3', errors.email ? 'is-invalid' : '']" id="email"
+                            placeholder="Enter your e-mail" ref="emailInput" v-bind="emailAttrs" v-model="email" />
+                        <div :class="errors.email ? 'invalid-feedback' : ''">
+                            {{ errors.email }}
+                        </div>
                     </div>
                     <div class="col-12 has-validation">
                         <label for="password" class="form-label">Password*</label>
-                        <input
-                            type="password"
-                            class="form-control p-3"
-                            id="password"
-                            placeholder="Enter your password"
-                            ref="passwordInput"
-                            v-model="password" />
-                        <div ref="passwordMessageContainer"></div>
+                        <input type="password" :class="['form-control', 'p-3', errors.password ? 'is-invalid' : '']"
+                            id="password" placeholder="Enter your password" v-bind="passwordAttrs" v-model="password" />
+                        <div :class="errors.password ? 'invalid-feedback' : ''">
+                            {{ errors.password }}
+                        </div>
                     </div>
                     <div class="col-12">
                         <button type="button" class="btn btn-dark p-3 w-100" @click="authenticate">Sign In</button>
@@ -32,115 +32,62 @@
                 </form>
             </div>
         </div>
-        <img
-            src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Barber Shop"
-            class="d-none d-xl-block vh-100 object-fit-cover col-xl-6" />
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Barber Shop" class="d-none d-xl-block vh-100 object-fit-cover col-xl-6" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/yup';
+import * as yup from 'yup';
+import Swal from 'sweetalert2';
+
 import router from '@/router';
 
 import { axiosInstance } from '@/helpers/helper';
 
-import Swal from 'sweetalert2';
+const schema = toTypedSchema(
+    yup.object({
+        email: yup.string().required().email(),
+        password: yup.string().required().min(8)
+    }),
+);
 
-const email = ref<string>('');
-const password = ref<string>('');
+const { defineField, validate, values, errors } = useForm({
+    validationSchema: schema
+});
 
-const emailInput = ref<HTMLInputElement | null>(null);
-const passwordInput = ref<HTMLInputElement | null>(null);
-
-const emailMessageContainer = ref<HTMLDivElement | null>(null);
-const passwordMessageContainer = ref<HTMLDivElement | null>(null);
-
-interface FieldAndRule {
-    name: string;
-    rules: string[];
-    value: string;
-}
-
-function validate(elementInput: HTMLInputElement | null, messageContainer: HTMLDivElement | null, fieldsAndRules: FieldAndRule): boolean {
-    let issuesNotFound = true;
-
-    fieldsAndRules.rules.forEach((rule) => {
-        if (issuesNotFound) {
-            const capitalizeWord = `${fieldsAndRules.name.charAt(0).toUpperCase()}${fieldsAndRules.name.slice(1)}`;
-
-            const emailRegex = /([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})/;
-            const passwordRegex = /^.{8,}$/;
-
-            switch (rule) {
-                case 'empty':
-                    if (fieldsAndRules.value.trim().length === 0) {
-                        issuesNotFound = false;
-
-                        if (elementInput && messageContainer) {
-                            elementInput.classList.add('is-invalid');
-                            messageContainer.classList.add('invalid-feedback');
-                            messageContainer.textContent = `Empty ${capitalizeWord}`;
-                        }
-                    }
-
-                    break;
-
-                case 'email':
-                    if (!emailRegex.test(fieldsAndRules.value)) {
-                        issuesNotFound = false;
-
-                        if (elementInput && messageContainer) {
-                            elementInput.classList.add('is-invalid');
-                            messageContainer.classList.add('invalid-feedback');
-                            messageContainer.textContent = `Invalid ${capitalizeWord}`;
-                        }
-                    }
-
-                    break;
-
-                case 'password':
-                    if (!passwordRegex.test(fieldsAndRules.value)) {
-                        issuesNotFound = false;
-
-                        if (elementInput && messageContainer) {
-                            elementInput.classList.add('is-invalid');
-                            messageContainer.classList.add('invalid-feedback');
-                            messageContainer.textContent = `${capitalizeWord} must have at least 8 characters`;
-                        }
-                    }
-
-                    break;
-            }
-        }
-    });
-
-    if (issuesNotFound && elementInput && messageContainer) {
-        elementInput.classList.remove('is-invalid');
-        messageContainer.classList.remove('invalid-feedback');
-        messageContainer.textContent = '';
-    }
-
-    return issuesNotFound;
-}
+const [email, emailAttrs] = defineField("email");
+const [password, passwordAttrs] = defineField("password");
 
 async function authenticate() {
+
+    const result = await validate();
+
+    if (!result.valid) {
+
+        Swal.fire({
+            icon: "error",
+            title: "Check your information!",
+            text: "Please fill in all required fields correctly.",
+        });
+
+        return;
+    }
+
     try {
-        const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
-            name: 'email',
-            rules: ['empty', 'email'],
-            value: email.value
-        });
 
-        const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
-            name: 'password',
-            rules: ['empty', 'password'],
-            value: password.value
+        Swal.fire({
+            title: "Logging in...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
         });
-
-        if (!validatedEmail || !validatedPassword) {
-            return;
-        }
 
         await axiosInstance.get('/sanctum/csrf-cookie');
 
@@ -149,20 +96,26 @@ async function authenticate() {
             password: password.value
         });
 
+        Swal.close();
+
         if (data.success === true) {
             router.push({ path: '/' });
         }
-        
-    } catch (error) {
+
+    } catch (error: any) {
+
+        Swal.close();
+
         Swal.fire({
             title: 'Error!',
-            text: error.response.data.message,
+            text: error?.response?.data?.message || "Unexpected error",
             icon: 'error',
             confirmButtonText: 'I got it',
             customClass: {
                 confirmButton: "btn btn-dark"
             }
         });
+
     }
 }
 </script>
