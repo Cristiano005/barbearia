@@ -1,6 +1,6 @@
 <template>
-    <ServiceAddModal @service-added="getAllServices"/>
-    <ServiceEditModal ref="editModalRef" @service-updated="getAllServices" />
+    <ServiceAddModal @service-added="reloadServices"/>
+    <ServiceEditModal ref="editModalRef" @service-updated="reloadServices" />
     <TheHeader />
     <main class="p-5">
         <div class="container mx-auto">
@@ -75,6 +75,10 @@ async function goToPage(page: number) {
 
 function openEditModal(service: ServiceInterface) {
     editModalRef.value?.openAndSetData(service);
+}
+
+async function reloadServices() {
+    services.value = await getAllServices();
 }
 
 async function getAllServices() {
