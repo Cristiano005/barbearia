@@ -12,21 +12,29 @@
                 <form class="row mt-5 gap-4">
                     <div class="col-12 has-validation">
                         <label for="name" class="form-label">Name*</label>
-                        <input type="text" class="form-control p-3" id="name" placeholder="Enter your name"
-                            ref="nameInput" v-model="name" />
-                        <div ref="nameMessageContainer"></div>
+                        <input type="text" :class="['form-control', 'p-3', errors.name ? 'is-invalid' : '']" id="name"
+                            placeholder="Enter your name" ref="nameInput" v-bind="nameAttrs" v-model="name" />
+                        <div :class="errors.name ? 'invalid-feedback' : ''">
+                            {{ errors.name }}
+                        </div>
                     </div>
                     <div class="col-12 has-validation">
                         <label for="email" class="form-label">Email*</label>
-                        <input type="email" class="form-control p-3" id="email" placeholder="Enter your e-mail"
-                            ref="emailInput" v-model="email" />
-                        <div ref="emailMessageContainer"></div>
+                        <input type="email" :class="['form-control', 'p-3', errors.email ? 'is-invalid' : '']"
+                            id="email" placeholder="Enter your e-mail" ref="emailInput" v-bind="emailAttrs"
+                            v-model="email" />
+                        <div :class="errors.email ? 'invalid-feedback' : ''">
+                            {{ errors.email }}
+                        </div>
                     </div>
                     <div class="col-12 has-validation">
                         <label for="password" class="form-label">Password*</label>
-                        <input type="password" class="form-control p-3" id="password" placeholder="Enter your password"
-                            ref="passwordInput" v-model="password" />
-                        <div ref="passwordMessageContainer"></div>
+                        <input type="password" :class="['form-control', 'p-3', errors.password ? 'is-invalid' : '']"
+                            id="password" placeholder="Enter your password" ref="passwordInput" v-bind="passwordAttrs"
+                            v-model="password" />
+                        <div :class="errors.password ? 'invalid-feedback' : ''">
+                            {{ errors.password }}
+                        </div>
                     </div>
                     <div class="col-12">
                         <button type="button" class="btn btn-dark p-3 w-100" @click="register">Sign Up</button>
@@ -45,68 +53,56 @@
 
 <script setup lang="ts">
 
-import { ref } from 'vue';
-import router from '@/router';
-
-import { axiosInstance, validate } from '@/helpers/helper';
-
+import { useForm } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/yup';
+import * as yup from 'yup';
 import Swal from 'sweetalert2';
 
-const name = ref<string>('');
-const email = ref<string>('');
-const password = ref<string>('');
+import { useUserStore } from '@/stores/user';
 
-const nameInput = ref<HTMLInputElement | null>(null);
-const emailInput = ref<HTMLInputElement | null>(null);
-const passwordInput = ref<HTMLInputElement | null>(null);
+const userStore = useUserStore();
 
-const nameMessageContainer = ref<HTMLDivElement | null>(null);
-const emailMessageContainer = ref<HTMLDivElement | null>(null);
-const passwordMessageContainer = ref<HTMLDivElement | null>(null);
+const schema = toTypedSchema(
+    yup.object({
+        name: yup.string().required().min(2),
+        email: yup.string().required().email(),
+        password: yup.string().required().min(8)
+    }),
+);
+
+const { defineField, validate, errors } = useForm({
+    validationSchema: schema,
+});
+
+const [name, nameAttrs] = defineField("name");
+const [email, emailAttrs] = defineField("email");
+const [password, passwordAttrs] = defineField("password");
 
 async function register() {
 
     try {
-        const validatedName: boolean = validate(nameInput.value, nameMessageContainer.value, {
-            name: 'name',
-            rules: ['empty', 'name'],
-            value: name.value
-        });
 
-        const validatedEmail: boolean = validate(emailInput.value, emailMessageContainer.value, {
-            name: 'email',
-            rules: ['empty', 'email'],
-            value: email.value
-        });
+        const result = await validate();
 
-        const validatedPassword: boolean = validate(passwordInput.value, passwordMessageContainer.value, {
-            name: 'password',
-            rules: ['empty', 'password'],
-            value: password.value
-        });
+        if (!result.valid) {
 
-        if (!validatedEmail || !validatedPassword || !validatedName) {
+            Swal.fire({
+                icon: "error",
+                title: "Check your information!",
+                text: "Please fill in all required fields correctly.",
+            });
+
             return;
         }
 
-        await axiosInstance.get('/sanctum/csrf-cookie');
+        await userStore.register(name.value as string, email.value as string, password.value as string);
 
-        const { data } = await axiosInstance.post('/api/v1/auth/register', {
-            name: name.value,
-            email: email.value,
-            password: password.value
-        });
-
-        if (data.success === true) {
-            router.push({ path: '/' });
-        }
-
-    } catch (error) {
+    } catch (error: any) {
         Swal.fire({
-            title: 'Error!',
+            title: "Error!",
             text: error.response.data.message,
-            icon: 'error',
-            confirmButtonText: 'I got it',
+            icon: "error",
+            confirmButtonText: "I got it",
             customClass: {
                 confirmButton: "btn btn-dark"
             }

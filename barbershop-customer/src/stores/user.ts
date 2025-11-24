@@ -35,6 +35,32 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    async function register(name: string, email: string, password: string) {
+
+        try {
+            await axiosInstance.get('/sanctum/csrf-cookie');
+
+            const { data } = await axiosInstance.post('/api/v1/auth/register', {
+                name: name,
+                email: email,
+                password: password
+            });
+
+            if (data.success === true) {
+                isAuthenticated.value = true; 
+                router.push({ name: 'profile' });
+            }
+        } 
+        
+        catch (error: any) {
+            throw {
+                status: error.response?.status,
+                message: error.response?.data?.message ?? 'Unknown error'
+            };
+        }
+    }
+
+
     async function check() {
         try {
             const { data } = await axiosInstance.get("/api/v1/auth/check", { withCredentials: true });
@@ -54,5 +80,5 @@ export const useUserStore = defineStore('user', () => {
         }
     };
 
-    return { getAuthenticatedStatus, authenticate, check, logout }
+    return { getAuthenticatedStatus, authenticate, register, check, logout }
 });
