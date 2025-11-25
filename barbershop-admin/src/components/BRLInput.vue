@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 
-import { watch } from "vue";
+import { onMounted, watch } from "vue";
 import { useCurrencyInput, type CurrencyInputOptions } from "vue-currency-input";
 
 const props = defineProps<{
@@ -16,6 +16,31 @@ const props = defineProps<{
 const emit = defineEmits(["update:modelValue", "change"]);
 const { inputRef, setValue } = useCurrencyInput(props.options);
 
-watch(() => props.modelValue, (value) => { setValue(value) }, { immediate: true });
+
+onMounted(() => {
+    if (props.modelValue === null && inputRef.value) inputRef.value.value = "";
+});
+
+
+watch(
+    () => props.modelValue,
+    (value, old) => {
+
+        if (value === old) return;
+
+        if (value === null) {
+            if (inputRef.value) inputRef.value.value = "";
+            return;
+        }
+
+        const n = typeof value === "number" ? value : Number(value);
+
+        if (!Number.isNaN(n)) setValue(n);
+        else { 
+            if (inputRef.value) inputRef.value.value = ""; 
+        }
+    },
+    { immediate: false }
+);
 
 </script>

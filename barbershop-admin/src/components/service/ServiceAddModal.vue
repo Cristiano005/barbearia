@@ -116,7 +116,17 @@ async function addService() {
 onMounted(() => {
     bootstrapModalInstance.value = new Modal(modalElement.value, {});
     modalElement.value?.addEventListener('hidden.bs.modal', () => {
-        resetForm();
+        resetForm({
+            values: {
+                serviceName: "",
+                servicePrice: null
+            },
+            touched: {
+                serviceName: false,
+                servicePrice: false
+            },
+            errors: {}
+        });
     });
 });
 
