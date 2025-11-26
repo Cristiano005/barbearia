@@ -11,16 +11,18 @@
                 <div class="modal-body">
                     <form>
                         <input type="hidden" name="serviceId" id="serviceId">
-                        <div class="mb-3">
+                        <div class="mb-3 has-validation">
                             <label for="serviceName" class="form-label">Name*</label>
-                            <input type="text" class="form-control" name="serviceName" id="serviceName"
-                                placeholder="Service name" v-model="serviceName">
-                            <div ref="timeMessageContainer"></div>
+                            <input type="text" :class="['form-control', errors.serviceName ? 'is-invalid' : '']"
+                                name="serviceName" id="serviceName" placeholder="Service name" v-bind="serviceNameAttrs"
+                                v-model="serviceName">
+                            <div :class="errors.serviceName ? 'invalid-feedback' : ''">
+                                {{ errors.serviceName }}
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="servicePrice" class="form-label">Price*</label>
-                            <BRLInput placeholder="R$ 0,00" v-model="servicePrice" :options="BRL_INPUT_OPTIONS" />
-                            <div ref="timeMessageContainer"></div>
+                        <div class="mb-3 has-validation">
+                            <CurrencyInput v-model="servicePrice" v-bind="servicePriceAttrs"
+                                :error="errors.servicePrice" input-id="servicePrice" />
                         </div>
                     </form>
                 </div>
@@ -38,14 +40,30 @@
 
 import { onMounted, ref, useTemplateRef } from "vue";
 
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/yup";
+import * as yup from "yup";
 import { Modal } from "bootstrap";
 import Swal from "sweetalert2";
 
 import { axiosInstance } from "@/helpers/helper";
 import type { ServiceInterface } from "@/helpers/types";
-import { BRL_INPUT_OPTIONS } from "@/utils/currencySettings";
 
-import BRLInput from "../BRLInput.vue";
+import CurrencyInput from "../CurrencyInput.vue";
+
+const schema = toTypedSchema(
+    yup.object({
+        serviceName: yup.string().required("name is a required field").min(2, "name must be at least 2 characters"),
+        servicePrice: yup.number().required("price is a required field").positive().max(200, "price cannot be more than 200"),
+    }),
+);
+
+const { defineField, resetForm, validate, errors } = useForm({
+    validationSchema: schema,
+});
+
+const [serviceName, serviceNameAttrs] = defineField("serviceName");
+const [servicePrice, servicePriceAttrs] = defineField("servicePrice");
 
 const emit = defineEmits(["serviceUpdated"]);
 defineExpose({ openAndSetData });
@@ -54,21 +72,28 @@ const modalElement = useTemplateRef("serviceEditModalRef");
 const bootstrapModalInstance = ref<Modal | null>(null);
 
 const serviceId = ref<number | null>(null);
-const serviceName = ref<string>("");
-const servicePrice = ref<number | null>(null);
 
 function openAndSetData(service: ServiceInterface) {
+
     serviceId.value = service.id;
+    serviceName.value = service.name;
+    servicePrice.value = parseFloat(service.price);
+
     if (bootstrapModalInstance.value) bootstrapModalInstance.value.show();
 }
 
 async function updateService() {
 
-    if (!serviceName.value || !servicePrice.value) {
+    const result = await validate();
+
+    if (!result.valid) {
+
         Swal.fire({
             icon: "error",
-            title: "Please, fill all fields!",
+            title: "Oops...",
+            text: "Please check all fields and fill them correctly!"
         });
+
         return;
     }
 
@@ -84,13 +109,13 @@ async function updateService() {
             emit("serviceUpdated");
 
             serviceId.value = null;
-            serviceName.value = "";
-            servicePrice.value = null;
 
             Swal.fire({
                 icon: "success",
                 title: data.message,
             });
+
+            bootstrapModalInstance.value?.hide();
         }
     }
 
@@ -102,6 +127,9 @@ async function updateService() {
 
 onMounted(() => {
     bootstrapModalInstance.value = new Modal(modalElement.value, {});
+    modalElement.value?.addEventListener('hidden.bs.modal', () => {
+        resetForm();
+    });
 });
 
 </script>
