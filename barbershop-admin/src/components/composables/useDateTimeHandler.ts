@@ -2,7 +2,7 @@ import { ref, type Ref } from "vue";
 
 import type { AvailableDateTimesInterface } from "@/helpers/types";
 
-export function useDateTimeHandler(selectedTime: Ref<string>) {
+export function useDateTimeHandler(selectedTime: Ref<string|undefined>) {
 
     const times = ref<String[]>([]);
     const isDisabled = ref<boolean>(true);
