@@ -54,15 +54,15 @@
                 </div>
             </div>
 
-            <div class="col-12 col-lg-5" style="height: 28rem">
+            <div class="col-12 col-lg-4 mt-lg-3 mt-5" style="height: 28rem">
                 <h2 class="text-center text-dark">Revenue</h2>
                 <Bar :data="revenuePerMonth.data" :options="revenuePerMonth.options" />
             </div>
-            <div class="col-lg-3 text-light rounded" style="height: 28rem">
+            <div class="col-lg-4 mt-lg-3 mt-5 text-light rounded" style="height: 28rem">
                 <h2 class="text-center text-dark">Payments</h2>
                 <Doughnut :data="paymentsByTypes.data" :options="paymentsByTypes.options" />
             </div>
-            <div class="col-lg-3 text-light rounded" style="height: 28rem">
+            <div class="col-lg-4 mt-lg-3 mt-5 text-light rounded" style="height: 28rem">
                 <h2 class="text-center text-dark">Schedules Status</h2>
                 <Doughnut :data="schedulesStatus.data" :options="schedulesStatus.options" />
             </div>
