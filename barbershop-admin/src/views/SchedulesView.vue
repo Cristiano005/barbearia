@@ -2,7 +2,7 @@
     <ScheduleFilterModal v-model:model-value="selectedStatusFilter" @apply-filters="filterSchedule" />
     <ScheduleAddModal :services="services" :payments="payments" :available-date-times="availableDateTimes"
         :only-free-days="onlyFreeDays" />
-    <ScheduleEditModal :services="services" :available-date-times="availableDateTimes" :only-free-days="onlyFreeDays"
+    <ScheduleEditModal :schedule="selectedSchedule" :services="services" :available-date-times="availableDateTimes" :only-free-days="onlyFreeDays"
         :schedule-id="scheduleId" @updated="handleUpdated" />
     <TheHeader />
     <main class="p-5">
@@ -77,6 +77,7 @@ const isLoadingSchedules = ref<boolean>(true);
 
 const payments = ref<PaymentTypeInterface[]>([]);
 
+const selectedSchedule = ref<ScheduleInterface | null>(null);
 const selectedService = ref<number | null>(null);
 const scheduleId = ref<number | null>(null);
 const selectedStatusFilter = ref<string>("Pending");
@@ -157,6 +158,8 @@ async function openAddScheduleModal() {
 async function openEditScheduleModal(schedule: ScheduleInterface) {
 
     await getServices({ all: true });
+
+    selectedSchedule.value = schedule;
 
     selectedService.value = schedule.service.id;
     scheduleId.value = schedule.id;
