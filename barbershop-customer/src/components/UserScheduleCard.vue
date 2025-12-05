@@ -49,3 +49,11 @@ const statusColors = reactive<StatusColorsInterface>({
 });
 
 </script>
+
+<style style="scss" scoped>
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+</style>

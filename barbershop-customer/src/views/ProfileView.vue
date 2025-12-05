@@ -1,5 +1,5 @@
 <template>
-    <EditScheduleModal ref="editModalRef" @schedule-updated="getMyAllSchedules" />
+    <ScheduleEditModal ref="editModalRef" @schedule-updated="refreshSchedules" />
     <TheHeader />
     <main class="d-flex flex-column gap-5 p-5">
         <section class="container mx-auto">
@@ -85,7 +85,7 @@ import Swal from 'sweetalert2';
 import TheHeader from "@/components/TheHeader.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import UserScheduleCard from "@/components/UserScheduleCard.vue";
-import EditScheduleModal from "@/components/profile/EditScheduleModal.vue";
+import ScheduleEditModal from "@/components/profile/ScheduleEditModal.vue";
 
 const editModalRef = ref(null);
 
@@ -179,6 +179,10 @@ async function getMyAllSchedules() {
     finally {
         isLoadingSchedules.value = false;
     }
+}
+
+async function refreshSchedules() {
+    schedules.value = await getMyAllSchedules();
 }
 
 async function openEditModal(schedule: ScheduleInterface) {

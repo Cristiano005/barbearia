@@ -10,6 +10,6 @@ use Illuminate\Http\Request;
 class AvailabilityController extends Controller
 {
     public function index(Request $request) {
-        return AvailabilityResource::collection(Availability::where("status", "available")->get());
+        return AvailabilityResource::collection(Availability::all());
     }
 }
