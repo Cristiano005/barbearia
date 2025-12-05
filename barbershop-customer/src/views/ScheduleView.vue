@@ -13,45 +13,67 @@
                         Welcome back! Sign in to manage your appointments or book a new haircut.
                     </p>
                 </div>
-                <form class="row mt-5">
-                    <div class="col-12 has-validation mb-3">
-                        <label for="service" class="form-label">Service*</label>
-                        <select class="form-control p-3" id="service" v-model="form.serviceId">
-                            <option v-for="service of services" :key="`service${service.id}`" :value="service.id">
-                                {{ service.name.toUpperCase() }} -
-                                {{ currentFormatter(Number(service.price)) }}
-                            </option>
-                        </select>
-                        <div ref="emailMessageContainer"></div>
-                    </div>
-                    <div class="col-sm-6 has-validation mb-3">
-                        <label for="password" class="form-label">Date*</label>
-                        <VueDatePicker v-model="form.date" @update:model-value="handleDate" ref="dateInput"
-                            :enableTimePicker="false" :format="format" :allowed-dates="onlyFreeDays"
-                            placeholder="Select a date" id="date" />
-                        <div ref="dateMessageContainer"></div>
-                    </div>
-                    <div class="col-sm-6 has-validation mb-3">
-                        <label for="password" class="form-label">Time*</label>
-                        <select v-model="form.time" class="form-control p-3" ref="timeInput" :disabled="isDisabled">
-                            <option value=""> Selecione um horário </option>
-                            <option v-for="time of times" :key="`time${time}`" :value="time"> {{ time }}
-                            </option>
-                        </select>
-                        <div ref="timeMessageContainer"></div>
-                    </div>
-                    <div class="col-12 has-validation mb-3">
-                        <label for="password" class="form-label">Payment Type*</label>
-                        <select class="form-control p-3" id="service" v-model="form.paymentId">
-                            <option v-for="payment of payments" :key="`payment${payment.id}`" :value="payment.id">
-                                {{ payment.payment_type }}
-                            </option>
-                        </select>
-                        <div ref="passwordMessageContainer"></div>
-                    </div>
-                    <div class="col-12 mt-3">
-                        <button type="button" class="btn btn-dark p-3 w-100" @click="schedule">Schedule</button>
-                    </div>
+                <form class="row mt-5" style="height: 392px;">
+                    <LoadingSpinner v-if="isLoading" />
+                    <template v-else>
+                        <div class="col-12 has-validation mb-3">
+                            <label for="service" class="form-label">Service*</label>
+                            <select :class="{
+                                'form-select': true,
+                                'p-3': true,
+                                'is-invalid': errors.serviceId
+                            }" id="service" v-model="serviceId" v-bind="serviceIdAttrs">
+                                <option v-for="service of services" :key="`service${service.id}`" :value="service.id">
+                                    {{ service.name.toUpperCase() }} -
+                                    {{ currentFormatter(Number(service.price)) }}
+                                </option>
+                            </select>
+                            <div ref="emailMessageContainer"></div>
+                        </div>
+                        <div class="col-sm-6 has-validation mb-3">
+                            <label for="password" class="form-label">Date*</label>
+                            <VueDatePicker :class="{ 'is-invalid': errors.date }" v-model="date" v-bind="dateAttrs"
+                                @update:model-value="(val: Date) => handleDate(val, availableDateTimes)"
+                                :enableTimePicker="false" :format="formatToHuman" :allowed-dates="onlyFreeDays"
+                                placeholder="Select a date" id="date" />
+                            <div :class="errors.date ? 'invalid-feedback' : ''">
+                                {{ errors.date }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 has-validation mb-3">
+                            <label for="time" class="form-label">Time*</label>
+                            <select v-model="time" v-bind="timeAttrs" :class="{
+                                'form-select': true,
+                                'p-3': true,
+                                'is-invalid': errors.time
+                            }" id="time" :disabled="isDisabled">
+                                <option value=""> Select an hour </option>
+                                <option v-for="time of times" :key="`time${time}`" :value="time"> {{ time }}
+                                </option>
+                            </select>
+                            <div :class="errors.time ? 'invalid-feedback' : ''">
+                                {{ errors.time }}
+                            </div>
+                        </div>
+                        <div class="col-12 has-validation mb-3">
+                            <label for="paymentType" class="form-label">Payment Type*</label>
+                            <select :class="{
+                                'form-select': true,
+                                'p-3': true,
+                                'is-invalid': errors.paymentTypeId
+                            }" id="paymentType" v-model="paymentTypeId" v-bind="paymentTypeIdAttrs">
+                                <option v-for="payment of payments" :key="`payment${payment.id}`" :value="payment.id">
+                                    {{ payment.payment_type }}
+                                </option>
+                            </select>
+                            <div :class="errors.paymentTypeId ? 'invalid-feedback' : ''">
+                                {{ errors.paymentTypeId }}
+                            </div>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button type="button" class="btn btn-dark p-3 w-100" @click="schedule">Schedule</button>
+                        </div>
+                    </template>
                 </form>
             </div>
         </div>
@@ -62,52 +84,59 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref, reactive, computed } from 'vue';
+import { onMounted, ref, computed } from "vue";
 
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/yup";
+import * as yup from "yup";
+import Swal from "sweetalert2";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
-import { axiosInstance, validate, format, getAvailableDateTimes } from '@/helpers/helper';
-import type { ServiceInterface, PaymentTypeInterface, AvailableDateTimesInterface } from '@/helpers/types';
+import { axiosInstance, getAvailableDateTimes } from "@/helpers/helper";
+import type { ServiceInterface, PaymentTypeInterface, AvailableDateTimesInterface } from "@/helpers/types";
 
-import Swal from 'sweetalert2';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import { useDateFormatter } from "@/components/composables/useDateFormatter";
+import { useDateTimeHandler } from "@/components/composables/useDateTimeHandler";
+
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+
+const schema = toTypedSchema(
+    yup.object({
+        serviceId: yup.number().required().positive(),
+        date: yup.date().required(),
+        time: yup.string().required(),
+        paymentTypeId: yup.number().required("payment type field is required").positive().typeError("payment type field must be a number"),
+    }),
+);
+
+const { defineField, resetForm, validate, errors } = useForm({
+    validationSchema: schema,
+});
+
+const [serviceId, serviceIdAttrs] = defineField("serviceId");
+
+const [date, dateAttrs] = defineField("date");
+const [time, timeAttrs] = defineField("time");
+const [paymentTypeId, paymentTypeIdAttrs] = defineField("paymentTypeId");
+
+const { handleDate, times, isDisabled } = useDateTimeHandler(time);
+const { formatToHuman } = useDateFormatter();
+
+const router = useRouter();
 
 const services = ref<ServiceInterface[]>([]);
-const times = ref<String[]>([]);
 const payments = ref<PaymentTypeInterface[]>([]);
 const availableDateTimes = ref<AvailableDateTimesInterface[]>([]);
 
-const form = reactive({
-    serviceId: 1 as number,
-    date: null as Date | null,
-    time: "" as string,
-    paymentId: 2 as number,
-});
-
-const router = useRouter();
-const isDisabled = ref<boolean>(true);
-
-const dateInput = ref<HTMLInputElement | null>(null);
-const timeInput = ref<HTMLInputElement | null>(null);
-
-const dateMessageContainer = ref<HTMLDivElement | null>(null);
-const timeMessageContainer = ref<HTMLDivElement | null>(null);
+const isLoading = ref<boolean>(true);
 
 const currentFormatter = (price: number) => {
     return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
     }).format(price);
-}
-
-const getFormattedDate = (date: Date) => {
-    const newDate = new Date(date);
-    const day = String(newDate.getDate()).padStart(2, '0');
-    const month = String(newDate.getMonth() + 1).padStart(2, '0');
-    const year = newDate.getFullYear();
-
-    return `${year}-${month}-${day}`;
 }
 
 const onlyFreeDays = computed<Date[]>(() => {
@@ -117,34 +146,7 @@ const onlyFreeDays = computed<Date[]>(() => {
     });
 })
 
-const handleDate = (chosenDate: Date) => {
-
-    const fullDate = getFormattedDate(chosenDate);
-
-    times.value = availableDateTimes.value.filter(dateTime => dateTime.date === fullDate).map(dateTime => dateTime.time);
-
-    if (times.value.length > 0) {
-        isDisabled.value = false;
-    } else {
-        isDisabled.value = true;
-        form.time = "";
-    }
-}
-
-async function getAllServices() {
-
-    try {
-        const { data } = await axiosInstance.get("/api/v1/services");
-        return data.data
-    }
-
-    catch (error) {
-        console.log(error);
-    }
-
-}
-
-function schedule() {
+async function schedule() {
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -154,39 +156,36 @@ function schedule() {
         buttonsStyling: false
     });
 
-    const validatedDate: boolean = validate(dateInput.value.$el, dateMessageContainer.value, {
-        name: "date",
-        rules: ["empty"],
-        value: form.date
-    });
+    const result = await validate();
 
-    const validatedTime: boolean = validate(timeInput.value, timeMessageContainer.value, {
-        name: "time",
-        rules: ["empty"],
-        value: form.time
-    });
+    if (!result.valid) {
 
-    if ([validatedDate, validatedTime].includes(false)) {
+        swalWithBootstrapButtons.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please check all fields and fill them correctly!"
+        });
+
         return;
     }
 
     try {
 
-        const foundService: ServiceInterface | undefined = services.value.find(service => service.id === form.serviceId);
+        const foundService: ServiceInterface | undefined = services.value.find(service => service.id === serviceId.value);
         const serviceName: string | undefined = foundService?.name;
         const servicePrice: number = foundService?.price === undefined ? 0 : Number(foundService.price);
 
-        const paymentName = payments.value.find(payment => payment.id === form.paymentId)?.payment_type;
+        const paymentName = payments.value.find(payment => payment.id === paymentTypeId.value)?.payment_type;
 
         swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             html: `
                 <div class="text-start">
                     <p>
-                        <strong>Date:</strong> ${format(form.date)}
+                        <strong>Date:</strong> ${formatToHuman(date.value as Date)}
                     </p>
                     <p>
-                        <strong>Time:</strong> ${form.time}
+                        <strong>Time:</strong> ${time.value}
                     </p>
                     <p>
                         <strong>Service:</strong> ${serviceName}
@@ -212,21 +211,14 @@ function schedule() {
                 try {
 
                     const { data } = await axiosInstance.post("/api/v1/schedules", {
-                        service_id: form.serviceId,
-                        payment_id: form.paymentId,
-                        date: format(form.date),
-                        time: form.time,
+                        service_id: serviceId.value,
+                        payment_id: paymentTypeId.value,
+                        date: formatToHuman(date.value as Date),
+                        time: time.value,
                     });
 
                     if (data.success === true) {
-
-                        swalWithBootstrapButtons.fire("Success", data.message, "success");
-
-                        form.serviceId = 1;
-                        form.date = null;
-                        form.time = "";
-                        form.paymentId = 2;
-
+                        swalWithBootstrapButtons.fire("success", data.message, "success");
                         router.push("/profile");
                     }
 
@@ -257,23 +249,32 @@ function schedule() {
 
 }
 
-async function getAllTypeOfPayments() {
+onMounted(async () => {
 
     try {
-        const { data } = await axiosInstance.get("/api/v1/payments");
-        return data.data;
+        const [servicesRes, paymentsRes, availableRes] = await Promise.all([
+            axiosInstance.get("/api/v1/services"),
+            axiosInstance.get("/api/v1/payments"),
+            getAvailableDateTimes()
+        ]);
+
+        services.value = servicesRes.data.data;
+        payments.value = paymentsRes.data.data;
+        availableDateTimes.value = availableRes;
+
+        resetForm({
+            values: {
+                serviceId: serviceId.value = services.value.length ? Math.max(...services.value.map(s => s.id)) : 0,
+                time: "",
+                paymentTypeId: 3,
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isLoading.value = false;
     }
-
-    catch (error) {
-        console.log(error);
-    }
-
-}
-
-onMounted(async () => {
-    services.value = await getAllServices();
-    payments.value = await getAllTypeOfPayments();
-    availableDateTimes.value = await getAvailableDateTimes();
 });
 
 </script>

@@ -154,6 +154,7 @@ async function saveChanges() {
 
         return;
     }
+    
     try {
 
         const { data } = await axiosInstance.put(`/api/v1/schedules/${scheduleId.value}`, {
