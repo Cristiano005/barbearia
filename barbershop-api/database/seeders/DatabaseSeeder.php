@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Availability;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,10 +12,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserSeeder::class,
-            ServiceSeeder::class,
+            PaymentTypesSeeder::class, 
+            UserSeeder::class,  
+            ServiceSeeder::class,      
+            AvailabilitySeeder::class, 
             ScheduleSeeder::class,
-            Availability::class,
         ]);
     }
 }
