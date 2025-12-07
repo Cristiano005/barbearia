@@ -1,5 +1,6 @@
 import { useUserStore } from "@/stores/user";
-import { createRouter, createWebHistory } from "vue-router"
+import { createRouter, createWebHistory } from "vue-router";
+import Swal from "sweetalert2";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,12 +45,27 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
 
     const userStore = useUserStore();
-    await userStore.check();
 
-    const isAuthenticated: boolean = userStore.getAuthenticatedStatus;
+    const isAuth = userStore.isAuthenticated;
+    const currentUser = userStore.user;
 
-    if (to.meta.requiresGuest && isAuthenticated) return next({ name: "home" });
-    if (to.meta.requiresAuth && !isAuthenticated) return next({ name: "signin" });
+    if (to.meta.requiresGuest && isAuth) {
+        return next({ name: "home" });
+    }
+
+    if (to.meta.requiresAuth && !isAuth) {
+        return next({ name: "signin" });
+    }
+
+    if (to.name === "schedule" && currentUser?.has_pending_schedule) {
+        Swal.fire({
+            icon: "info",
+            title: "Attention",
+            text: "You already have a pending appointment.",
+        });
+
+        return next({ name: "profile" });
+    }
 
     next();
 });

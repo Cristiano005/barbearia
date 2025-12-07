@@ -35,7 +35,7 @@
                         </template>
 
                         <template v-if="!isChecking">
-                            <template v-if="!userStore.getAuthenticatedStatus">
+                            <template v-if="!isAuthenticated">
                                 <li class="nav-item">
                                     <RouterLink class="btn btn-outline-light" to="/signin">Sign In</RouterLink>
                                 </li>
@@ -56,7 +56,7 @@
                                             </RouterLink>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" @click="userStore.logout">Logout</a>
+                                            <a class="dropdown-item" @click="logout">Logout</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -78,11 +78,10 @@ import { useUserStore } from "@/stores/user";
 
 const route = useRoute();
 
-const userStore = useUserStore();
+const { isAuthenticated, logout } = useUserStore();
 const isChecking = ref<boolean>(true);
 
 onMounted(async () => {
-    await userStore.check();
     isChecking.value = false;
 });
 

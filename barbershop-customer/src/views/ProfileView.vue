@@ -41,21 +41,30 @@
             <LoadingSpinner v-if="isLoadingSchedules" />
             <template v-else>
                 <form class="row align-items-center mt-4">
-                    <div class="col-4 mb-3">
+                    <div class="col-4 mb-3 has-validation">
                         <label class="mb-1" for=""> Name: </label>
-                        <input type="text" class="form-control" placeholder="Input Name" aria-label="Name"
-                            aria-describedby="basic-addon1" v-model="profileData.name">
+                        <input type="text" :class="['form-control', errors.name ? 'is-invalid' : '']" placeholder="Input Name" aria-label="Name"
+                            aria-describedby="basic-addon1" v-model="name" v-bind="nameAttrs">
+                        <div :class="errors.name ? 'invalid-feedback' : ''">
+                            {{ errors.name }}
+                        </div>
                     </div>
-                    <div class="col-4 mb-3">
+                    <div class="col-4 mb-3 has-validation">
                         <label class="mb-1" for=""> Email: </label>
-                        <input type="email" class="form-control" placeholder="Input E-mail" aria-label="Email"
-                            aria-describedby="basic-addon1" disabled readonly v-model="profileData.email">
+                        <input type="email" :class="['form-control', errors.email ? 'is-invalid' : '']" placeholder="Input E-mail" aria-label="Email"
+                            aria-describedby="basic-addon1" disabled readonly v-model="email" v-bind="emailAttrs">
+                        <div :class="errors.email ? 'invalid-feedback' : ''">
+                            {{ errors.email }}
+                        </div>
                     </div>
-                    <div class="col-4 mb-3">
+                    <div class="col-4 mb-3 has-validation">
                         <label class="mb-1" for=""> Phone Number: </label>
-                        <input type="text" class="form-control" placeholder="Input Phone Number"
-                            aria-label="Phone Number" aria-describedby="basic-addon1"
-                            v-model="profileData.phone_number">
+                        <input type="text" :class="['form-control', errors.phone_number ? 'is-invalid' : '']" placeholder="Input Phone Number"
+                            aria-label="Phone Number" aria-describedby="basic-addon1" v-model="phoneNumber"
+                            v-bind="phoneNumberAttrs">
+                            <div :class="errors.phone_number ? 'invalid-feedback' : ''">
+                                {{ errors.phone_number }}
+                            </div>
                     </div>
                     <div class="d-flex justify-content-end align-items-center gap-3 col-12">
                         <button type="button" class="btn btn-warning col-auto">
@@ -75,17 +84,42 @@
 
 <script setup lang="ts">
 
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref } from "vue";
+
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/yup";
+import * as yup from "yup";
+import Swal from "sweetalert2";
 
 import { axiosInstance } from "@/helpers/helper";
-import type { ScheduleInterface, ProfileDataInterface } from "@/helpers/types";
-
-import Swal from 'sweetalert2';
+import type { ScheduleInterface } from "@/helpers/types";
+import { useUserStore } from "@/stores/user";
 
 import TheHeader from "@/components/TheHeader.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 import UserScheduleCard from "@/components/UserScheduleCard.vue";
 import ScheduleEditModal from "@/components/profile/ScheduleEditModal.vue";
+
+const { refreshUser, update } = useUserStore();
+
+const schema = toTypedSchema(
+    yup.object({
+        name: yup.string().required("name is a required field").min(2),
+        email: yup.string().email().required(),
+        phone_number: yup.string().required("phone number is a required field").matches(
+            /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/,
+            "Invalid phone number"
+        ),
+    }),
+);
+
+const { defineField, resetForm, validate, errors } = useForm({
+    validationSchema: schema,
+});
+
+const [name, nameAttrs] = defineField("name");
+const [email, emailAttrs] = defineField("email");
+const [phoneNumber, phoneNumberAttrs] = defineField("phone_number");
 
 const editModalRef = ref(null);
 
@@ -93,12 +127,6 @@ const isLoadingSchedules = ref<boolean>(true);
 const isLoadingProfileData = ref<boolean>(true);
 
 const schedules = ref<ScheduleInterface[] | null>(null);
-
-const profileData = reactive<ProfileDataInterface>({
-    name: "",
-    email: "",
-    phone_number: "",
-});
 
 const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
@@ -108,29 +136,18 @@ const swalWithBootstrapButtons = Swal.mixin({
     buttonsStyling: false
 });
 
-async function getProfileData() {
+async function updateProfileData() {
 
-    try {
-        const { data } = await axiosInstance.get("/api/v1/user/me");
-        return data.data;
-    }
+    const result = await validate();
 
-    catch (error) {
-        console.log(error);
-    }
+    if (!result.valid) {
 
-    finally {
-        isLoadingProfileData.value = false;
-    }
-}
-
-function updateProfileData() {
-
-    if (!profileData.name || !profileData.phone_number) {
-        Swal.fire({
+        swalWithBootstrapButtons.fire({
             icon: "error",
-            title: "Please, fill all fields!",
+            title: "Oops...",
+            text: "Please check all fields and fill them correctly!"
         });
+
         return;
     }
 
@@ -143,24 +160,25 @@ function updateProfileData() {
 
         if (result.isConfirmed) {
 
-            try {
+            const response = await update(
+                name.value as string,
+                phoneNumber.value as string
+            );
 
-                const { data } = await axiosInstance.put(`/api/v1/user/update`, {
-                    name: profileData.name,
-                    phone_number: profileData.phone_number
+            if (response.success) {
+
+                swalWithBootstrapButtons.fire({
+                    icon: "success",
+                    title: "Data updated successfully!",
                 });
 
-                if (data.success) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Data updated successfully!",
-                    });
-                }
+                return;
             }
 
-            catch (error) {
-                console.log(error);
-            }
+            Swal.fire({
+                icon: "error",
+                title: response.message ?? "Update failed",
+            });
         }
     });
 }
@@ -176,9 +194,6 @@ async function getMyAllSchedules() {
         console.log(error);
     }
 
-    finally {
-        isLoadingSchedules.value = false;
-    }
 }
 
 async function refreshSchedules() {
@@ -225,23 +240,45 @@ async function deleteSchedule(id: number) {
 }
 
 onMounted(async () => {
-    const response = await getProfileData();
-    schedules.value = await getMyAllSchedules();
-    Object.assign(profileData, response);
+
+    try {
+
+        const [fetchedSchedules, userData] = await Promise.all([
+            getMyAllSchedules(),
+            refreshUser(),
+        ]);
+
+        schedules.value = fetchedSchedules;
+        name.value = userData.name;
+        email.value = userData.email;
+        phoneNumber.value = userData.phone_number;
+
+    } catch (error) {
+        console.error(error);
+    } finally {
+        isLoadingSchedules.value = false;
+        isLoadingProfileData.value = false;
+    }
 });
 
 </script>
 
 <style scoped lang="scss">
+
 .cursor-pointer {
     cursor: pointer;
 }
 
 main {
     margin-top: 4.5rem;
+
+    .has-validation {
+        height: 91px;
+    }
 }
 
 section {
     padding: 0;
 }
+
 </style>

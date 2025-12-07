@@ -29,7 +29,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        "email_verified_at", "password", "is_admin", "remember_token",
+        "email_verified_at",
+        "password",
+        "is_admin",
+        "remember_token",
     ];
 
     /**
@@ -43,5 +46,10 @@ class User extends Authenticatable
             "email_verified_at" => "datetime",
             "password" => "hashed",
         ];
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
     }
 }

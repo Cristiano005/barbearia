@@ -94,6 +94,7 @@ import Swal from "sweetalert2";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
+import { useUserStore } from "@/stores/user";
 import { axiosInstance, getAvailableDateTimes } from "@/helpers/helper";
 import type { ServiceInterface, PaymentTypeInterface, AvailableDateTimesInterface } from "@/helpers/types";
 
@@ -121,6 +122,7 @@ const [date, dateAttrs] = defineField("date");
 const [time, timeAttrs] = defineField("time");
 const [paymentTypeId, paymentTypeIdAttrs] = defineField("paymentTypeId");
 
+const userStore = useUserStore();
 const { handleDate, times, isDisabled } = useDateTimeHandler(time);
 const { formatToHuman } = useDateFormatter();
 
@@ -218,6 +220,7 @@ async function schedule() {
                     });
 
                     if (data.success === true) {
+                        await userStore.refreshUser(); // update has_pending_schedule status
                         swalWithBootstrapButtons.fire("success", data.message, "success");
                         router.push("/profile");
                     }

@@ -13,8 +13,18 @@ class UserController extends Controller
 {
     public function me()
     {
+        $user = Auth::user();
+
         return response()->json([
-            "data" => Auth::user(),
+            "data" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "phone_number" => $user->phone_number,
+                "has_pending_schedule" => $user->schedules()
+                    ->where("status", "pending")
+                    ->exists(),
+            ],
         ])->setStatusCode(200);
     }
 
@@ -46,7 +56,6 @@ class UserController extends Controller
                 "success" => true,
                 "message" => "Data updated successfully!",
             ])->setStatusCode(200);
-            
         } catch (Throwable $th) {
 
             Log::error("User update failed: {$th->getMessage()}");

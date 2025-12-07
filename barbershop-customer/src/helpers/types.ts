@@ -32,6 +32,7 @@ interface ProfileDataInterface {
     name: string,
     email: string,
     phone_number: string,
+    has_pending_schedule: boolean,
 };
 
 interface StatusColorsInterface {
