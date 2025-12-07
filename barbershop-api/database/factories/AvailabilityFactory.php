@@ -16,7 +16,7 @@ class AvailabilityFactory extends Factory
     public function definition(): array
     {
         return [
-            "schedule_date" => $this->faker->dateTimeBetween("2024-12-04", "2024-12-31")->format("Y-m-d"),
+            "schedule_date" => $this->faker->dateTimeBetween("tomorrow", "+10 days")->format("Y-m-d"),
             "schedule_time" => $this->faker->unique()->randomElement($this->allowedTimes),
         ];
     }
