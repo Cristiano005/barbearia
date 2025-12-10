@@ -5,10 +5,10 @@
 </p>
 
 <p align="center">
-  <a href="#tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#orientações">Orientações</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#desafios">Desafios</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#technologies">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#project">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#guidelines">Orientações</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#challenges">Desafios</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#extras">Extras</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#memo-licença">Licença</a>
 </p>
@@ -20,12 +20,12 @@
 <br>
 
 <p align="center">
-  <img alt="Demonstração do Projeto" src=".github/assets/project_demo.gif" width="100%">
+  <img alt="Demonstração do Projeto" src=".github/assets/barbershop.png" width="100%">
 </p>
 
 <h2> 🚀 Tecnologias </h2>
 
-<p id="tecnologias">Este projeto foi desenvolvido com:</p>
+<p id="technologies">Este projeto foi desenvolvido com:</p>
 
 <h3> Frontend </h3>
 
@@ -61,7 +61,7 @@
 
 ## 💻 Projeto
 
-Este projeto é um sistema completo de agendamento para barbearias, desenvolvido para facilitar tanto a experiência do cliente quanto o gerenciamento do barbeiro.
+<p id="project"> Este projeto é um sistema completo de agendamento para barbearias, desenvolvido para facilitar tanto a experiência do cliente quanto o gerenciamento do barbeiro. </p>
 
 Os usuários podem criar, visualizar e editar seus agendamentos de forma simples e intuitiva. O sistema conta também com um painel administrativo destinado ao barbeiro, onde é possível:
 
@@ -79,11 +79,42 @@ Os usuários podem criar, visualizar e editar seus agendamentos de forma simples
 
 ## 🗺️ Orientações
 
-<p id="orientações">Certifique-se de ter o Docker instalado antes de iniciar.</p>
+<p id="guidelines"> Antes de começar, certifique-se de ter o Docker instalado na sua máquina. Todo o restante — PHP, Composer, Node, NPM e MySQL — já está dentro dos containers. </p>
+
+1 - Na pasta barbershop-api, abra-a, renomei o arquivo ".env.example" para ".env", garantindo que as variáveis de ambiente sejam localizadas.
+
+2 - No mesmo arquivo, preencha as variavéis de ambiente de banco de dados para prosseguir:
+
+    DB_CONNECTION=mysql
+    DB_HOST=barbershop-mysql
+    DB_PORT=3306
+    DB_DATABASE=barbershop_api
+    DB_USERNAME=
+    DB_PASSWORD=
+
+3 - Abra o projeto na pasta barbershop/.
+No terminal, execute:
+    
+    docker compose up
+
+Este comando irá subir todo o ambiente já com todas as dependências instaladas automaticamente pelos containers.
+
+4 - Após toda a preparação do ambiente, é hora de gerar o "app key" da API, da aplicação Laravel. Para isso entre no container da API:
+        
+    docker exec -it barbershop-api bash
+
+Logo após, execute o seguinte comando:
+        
+    php artisan key:generate
+
+5 - Dentro do próprio container da API, rode o seguinte comando para executar as migrations para criar as tabelas e também para popular as mesmas com dados para testes.
+
+    php artisan migrate --seed
+
 
 ## ⚔️ Desafios enfrentados
 
-<p id="desafios">
+<p id="challenges">
 
 Durante o desenvolvimento, enfrentei desafios relacionados tanto ao ambiente quanto à lógica do projeto. Trabalhar com várias ferramentas em conjunto exigiu bastante atenção para entender como tudo se integra. A configuração do Docker e a organização do ambiente de desenvolvimento foram etapas que demandaram tempo e cuidado.
 
@@ -95,4 +126,4 @@ Apesar disso, cada obstáculo contribuiu para um aprendizado sólido e uma evolu
 
 ## ➕ Extras
 
-Fique à vontade para explorar ou se inspirar.
+<p id="extras"> Fique à vontade para explorar ou se inspirar. </p>
